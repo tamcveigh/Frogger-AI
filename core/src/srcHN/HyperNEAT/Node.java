@@ -1,6 +1,4 @@
-package neat;
-
-import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
+package srcHN.HyperNEAT;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +27,10 @@ public class Node {
 
     /** The layer this node resides in. */
     private int layer;
+
+    /**The random activation function*/
+    private int randomActive = new Random().nextInt(4);
+
 
     /**
      * Constructor for a node. Takes an identification number and layer for this node.
@@ -121,7 +123,21 @@ public class Node {
      */
     public void activate() {
         if(layer != INPUT_BIAS_LAYER) {
-            outputValue = activationFunctionS(inputValue);
+            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            switch(randomActive){
+                case 0:
+                    outputValue = activationFunctionS(inputValue); //previous activation function
+                    break;
+                case 1:
+                    outputValue = activationFunctionT(inputValue);
+                    break;
+                case 2:
+                    outputValue = activationFunctionPR(inputValue);
+                    break;
+                case 3:
+                    outputValue = acitvationFunctionSw(inputValue);
+            }
+            //////////////////////////////////////////////////////////////////////////////////////////////////
         }
 
         for(Link link : outgoingLinks) {
