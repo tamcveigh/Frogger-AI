@@ -1,5 +1,6 @@
-# NEAT
-##### Authors: Chance Simmons and Brandon Townsend
+# Kittener AI
+##### Original Authors: Chance Simmons and Brandon Townsend
+##### Current Authors: Tyler McVeigh and Brooke Kiser
 
 Contained here is an implementation of NEAT in Java. It is a project built for learning more
  about genetic algorithms, specifically NEAT. It is a work-in-progress that contains a few bugs
