@@ -1,4 +1,4 @@
-package srcHN.HyperNEAT;
+package hyperneat;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;

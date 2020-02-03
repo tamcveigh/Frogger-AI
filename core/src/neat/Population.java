@@ -1,6 +1,7 @@
 package neat;
 
 import com.mygdx.kittener.game.Agent;
+import AIinterfaces.PopulationInterface;
 
 import java.util.*;
 
@@ -10,7 +11,7 @@ import java.util.*;
  * @author Chance Simmons and Brandon Townsend
  * @version 21 January 2020
  */
-public class Population {
+public class Population implements PopulationInterface{
     /** Keeps track of the generation of organisms we're at. */
     private int generation;
 
@@ -56,12 +57,13 @@ public class Population {
     }
 
     /**
-     * Returns the network mapped to the supplied agent ID number.
+     * Returns the network output given the supplied agent ID number and it's vision.
      * @param id The agent ID number to search for in our mapping.
-     * @return The network mapped to by the supplied agent ID number.
+     * @param agentVision The array of what the agent can see
+     * @return The network output by the supplied agent ID number.
      */
-    public Network getNetwork(int id) {
-        return organisms.get(id);
+    public double[] getNetworkOutput(int id, float[] agentVision) {
+        return organisms.get(id).feedForward(agentVision);
     }
 
     /**

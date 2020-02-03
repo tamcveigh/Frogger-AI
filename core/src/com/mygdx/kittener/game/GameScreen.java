@@ -1,5 +1,7 @@
 package com.mygdx.kittener.game;
 
+
+import AIinterfaces.AlgorithmName;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
@@ -11,7 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import neat.Population;
+import AIinterfaces.PopulationInterface;
 
 import java.util.ArrayList;
 
@@ -67,7 +69,7 @@ public class GameScreen extends ScreenAdapter {
     private ArrayList<Agent> agents;
 
     /** Population of all organisms in the game. */
-    private Population population;
+    private PopulationInterface population;
 
     /** Keeps track of if we've already performed natural selection for this generation. */
     private boolean performedNS;
@@ -112,7 +114,13 @@ public class GameScreen extends ScreenAdapter {
         spawnAgents();
 
         // Assigning our constructed agents to our population.
-        population = new Population(agents, hazards.size(), 5);
+        if (this.game.aiName == AlgorithmName.NEAT){
+            population = new neat.Population(agents, hazards.size(), 5);
+        }else if(this.game.aiName == AlgorithmName.HyperNEAT){
+            population = new hyperneat.Population(agents, hazards.size(), 5);
+        }else{
+            System.exit(10);
+        }
         performedNS = false;
 
         // Creating the tiled map background.
@@ -279,7 +287,7 @@ public class GameScreen extends ScreenAdapter {
             if(!agent.isDead()) {
                 updateAgentVision(agent);
 
-                double[] output = population.getNetwork(agent.getId()).feedForward(agent.getVision());
+                double[] output = population.getNetworkOutput(agent.getId(), agent.getVision() );
 
                 int dir = 0;
                 for(int i = 0; i < output.length; i++) {

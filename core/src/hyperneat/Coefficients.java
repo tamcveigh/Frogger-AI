@@ -1,4 +1,4 @@
-package srcHN.HyperNEAT;
+package hyperneat;
 
 /**
  * This enumeration contains coefficients that are used, so they are located in one single place.

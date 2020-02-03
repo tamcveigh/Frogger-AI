@@ -1,4 +1,4 @@
-package srcHN.HyperNEAT;
+package hyperneat;
 
 import java.util.Random;
 

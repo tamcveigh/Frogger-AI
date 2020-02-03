@@ -1,5 +1,6 @@
 package com.mygdx.kittener.game;
 
+import AIinterfaces.AlgorithmName;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -29,14 +30,18 @@ public class MainGame extends com.badlogic.gdx.Game {
     /** The screen for the main menu of the game. */
     public Screen mainMenuScreen;
 
+    /** The type of AI algorithm being used */
+    AlgorithmName aiName;
+
     /**
      * Passing the application window size to the game.
      * @param width The width of the window.
      * @param height The height of the window.
      */
-    public MainGame(int width, int height) {
+    public MainGame(int width, int height, AlgorithmName aiName) {
         this.width  = width;
         this.height = height;
+        this.aiName = aiName;
     }
 
     /**

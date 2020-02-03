@@ -1,5 +1,6 @@
 package com.mygdx.kittener.desktop;
 
+import AIinterfaces.AlgorithmName;
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.Files;
@@ -13,7 +14,7 @@ import com.mygdx.kittener.game.MainGame;
  * @author Chance Simmons and Brandon Townsend
  * @version 16 December 2019
  */
-public class DesktopLauncher {
+public class NEATDesktopLauncher {
 	/** The pixel height and height of a square block, representing a game tile. */
 	private static final int BLOCK_SIZE = 32;
 
@@ -41,7 +42,7 @@ public class DesktopLauncher {
 		config.x = 0;
 		config.y = 0;
 
-		ApplicationListener game = new MainGame(config.width, config.height);
+		ApplicationListener game = new MainGame(config.width, config.height, AlgorithmName.NEAT);
 		Application app = new LwjglApplication(game, config);
 	}
 }
