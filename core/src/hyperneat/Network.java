@@ -72,6 +72,8 @@ public class Network {
 
         // Links our input nodes to output nodes and attaches the bias node to each output node.
         generateNetwork();
+
+        System.err.println(fitness);
     }
 
     /**
@@ -97,6 +99,8 @@ public class Network {
             this.outputNodes[i] = new Node(network.outputNodes[i]);
         }
         copyLinks(network);
+
+        System.err.println(fitness);
     }
 
     /**
@@ -244,7 +248,7 @@ public class Network {
 
         // Activate the nodes in order from input node -> bias -> hidden -> output.
         for(Node node : listNodesByLayer()) {
-            node.activate();
+            node.activate(fitness);
         }
 
         // Write the output values to a double array to pass back as the decisions of this network.
