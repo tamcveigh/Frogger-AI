@@ -34,9 +34,11 @@ public class Node {
     /*TODO Take the fitness and math to get the new a value for PR
     proportional to the fitness level...
      */
-    private int slope = 4;
+    private double slope = 4.0;
 
-    private int prev_fit = 0;
+    private int count_pr = 0;
+
+    private boolean active = false;
 
 
     /**
@@ -58,6 +60,7 @@ public class Node {
         this.outputValue = node.outputValue;
         this.outgoingLinks = new ArrayList<>();
         this.layer = node.layer;
+        this.randomActive = node.randomActive;
         this.slope = node.slope;
     }
 
@@ -124,14 +127,17 @@ public class Node {
         this.layer++;
     }
 
+
     /**
      * Activates the node. Calls the activation function if this node is not on the bias or input
      * layer. Then, grabs each of the connected output nodes and send something to that output
      * nodes input.
      */
-    public void activate(int fitness) {
+    public void activate() {
         if(layer != INPUT_BIAS_LAYER) {
+            active = true;
             ///////////////////////////////////////////////////////////////////////////////////////////////////
+            System.err.println(id + " ...... " + randomActive);
             switch(randomActive){
                 case 0:
                     outputValue = activationFunctionS(inputValue); //previous activation function
@@ -140,7 +146,7 @@ public class Node {
                     outputValue = activationFunctionT(inputValue);
                     break;
                 case 2:
-                    outputValue = activationFunctionPR(inputValue, fitness);
+                    outputValue = activationFunctionPR(inputValue);
                     break;
                 case 3:
                     outputValue = acitvationFunctionSw(inputValue);
@@ -181,8 +187,7 @@ public class Node {
 
     /**Helper function for the Parameterized ReLU*/
 
-    private double activationFunctionPR(double value, int fitness){
-        slopeCalc(fitness);
+    private double activationFunctionPR(double value){
         if(value < 0){
             return slope * value;
         } else {
@@ -199,12 +204,9 @@ public class Node {
     /**Learns the slope value (a) of the parameterized ReLU by taking the current a and modifying it proportionally
      * to the fitness of the network
      */
-    public void slopeCalc(int fitness) {
-        if (fitness != 0 && slope != 0) {
-            slope = slope * ((prev_fit - fitness)/100);
-            System.err.println("l*generation: " + id + ", " + slope + ", " + fitness);
-            prev_fit = fitness;
-        }
+    public void slopeCalc() {
+        System.err.println("*---------------------------" + id);
+        slope = slope + 1;
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

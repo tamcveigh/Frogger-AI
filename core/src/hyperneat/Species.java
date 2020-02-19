@@ -171,7 +171,6 @@ public class Species {
      */
     public void cull() {
         Map<Integer, Network> survivors = new HashMap<>();
-        System.err.println("Start Cull Organisms: " + organisms.size());
         for(Map.Entry<Integer, Network> organism : organisms.entrySet()) {
             int maxOrganism = organism.getKey();
             int maxFitness = organism.getValue().getFitness();
@@ -193,7 +192,6 @@ public class Species {
             }
         }
         organisms = survivors;
-        System.err.println("End Cull Organisms: " + organisms.size());
     }
 
     /**

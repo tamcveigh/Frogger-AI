@@ -39,6 +39,8 @@ public class Network {
     /** The fitness that the agent assigned to this network scored. */
     private int fitness;
 
+    private int network_id = new Random().nextInt(1000000);
+
     /**
      * Our network constructor. Builds an initial fully connected network of input and output nodes.
      * @param inputNum The number of input nodes to have.
@@ -73,7 +75,7 @@ public class Network {
         // Links our input nodes to output nodes and attaches the bias node to each output node.
         generateNetwork();
 
-        System.err.println(fitness);
+        System.err.println("---" + network_id + "---\n" + fitness);
     }
 
     /**
@@ -247,8 +249,9 @@ public class Network {
         }
 
         // Activate the nodes in order from input node -> bias -> hidden -> output.
+        System.err.println("--" + network_id + "--");///////////////////////////////////////////////////////////////
         for(Node node : listNodesByLayer()) {
-            node.activate(fitness);
+            node.activate();
         }
 
         // Write the output values to a double array to pass back as the decisions of this network.
@@ -264,6 +267,17 @@ public class Network {
 
         return outputs;
     }
+
+    /**
+     * Mutate a node in the hidden node list. The node will have a mutated parameterized slope if that activation
+     * function is in this nodes phenotype. Otherwise the node will not express the mutation.
+     */
+    public void mutatePR(){
+        int random = new Random().nextInt(hiddenNodes.size());
+        System.err.println("**** " + network_id + " ****");
+        hiddenNodes.get(random).slopeCalc();
+    }
+
 
     /**
      * Mutates this network, either with only link weights possibly being modified or by adding
@@ -288,6 +302,12 @@ public class Network {
         // Mutation for adding a new node where a link previously was.
         if(Math.random() < Coefficients.ADD_NODE_MUT.getValue()) {
             addNodeMutation();
+        }
+
+        // Mutation for adding a new node where a link previously was.
+        if(hiddenNodes.size() != 0 && Math.random() < Coefficients.NODE_PR_MUT.getValue()) {
+            System.err.println("\nMUTATE PR\n");
+            mutatePR();
         }
     }
 
@@ -365,6 +385,7 @@ public class Network {
 
         // Actually add the node now so it avoids having it's own layer incremented.
         Node toAdd = new Node(numNodes++, layer);
+        toAdd.activate();
         hiddenNodes.add(toAdd);
 
         // Now add links to either side of the new node. The link going from the old input to the

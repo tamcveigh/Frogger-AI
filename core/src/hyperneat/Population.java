@@ -125,10 +125,6 @@ public class Population implements PopulationInterface {
         double avgSum = getAvgFitnessSum();
         List<Network> babies = new ArrayList<>();
 
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        System.err.println("species: " + species.size());
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
         for(Species s : species) {
             // Directly clone the best network of the species.
             babies.add(new Network(s.getOrganisms().get(s.getBestOrgID())));
@@ -196,7 +192,6 @@ public class Population implements PopulationInterface {
      * species average fitness.
      */
     private void cullSpecies() {
-        System.err.println("cull Species: " + species.size());
         for(Species s : species) {
             s.cull();
             s.setStaleness();
