@@ -115,16 +115,19 @@ public class Population implements PopulationInterface {
      */
     public void naturalSelection() {
         // Set up for producing babies.
+        setBestAgentID();
         speciate();
         cullSpecies();
-        setBestAgentID();
         removeStaleSpecies();
         removeBadSpecies();
 
         double avgSum = getAvgFitnessSum();
         List<Network> babies = new ArrayList<>();
-
+        System.err.println( getGeneration() + ";" + organisms.size() );
+        System.err.println( bestAgentID );
         for(Species s : species) {
+
+            System.err.println( s.toString() + ":" + s.getOrganisms().size() );
             // Directly clone the best network of the species.
             babies.add(new Network(s.getOrganisms().get(s.getBestOrgID())));
 
