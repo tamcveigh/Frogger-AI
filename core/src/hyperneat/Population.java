@@ -54,6 +54,7 @@ public class Population implements PopulationInterface {
      */
     public void incrementGeneration() {
         generation++;
+        System.err.println("Generation: " + generation + "\n");
     }
 
     /**
@@ -133,6 +134,7 @@ public class Population implements PopulationInterface {
 
             // Find the correct number of babies and reproduce them.
             int numBabies = (int) Math.floor(s.getAverageFitness() / avgSum * organisms.size()) - 1;
+
             for(int i = 0; i < numBabies; i++) {
                 babies.add(s.reproduce());
             }
@@ -210,6 +212,12 @@ public class Population implements PopulationInterface {
             if(!species.get(i).getOrganisms().containsKey(bestAgentID)) {
                 if(species.get(i).getStaleness() >= Coefficients.STALENESS_THRESH.getValue()) {
                     Species.takenColors.remove(species.get(i).getColor());
+                    /////////////////////////////////////////////////////////////////////
+                    System.err.println("\nStale " + species.get(i).getBestOrgID());
+                    System.err.println(species.get(i).getBestOrgID() == bestAgentID);
+                    System.err.println("BestOrgID: " + species.get(i).getBestOrgID());
+                    System.err.println("BestAgentID: " + bestAgentID + "\n");
+                    /////////////////////////////////////////////////////////////////////
                     species.remove(species.get(i));
                     i--;
                 }

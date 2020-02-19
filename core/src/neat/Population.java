@@ -54,6 +54,7 @@ public class Population implements PopulationInterface{
      */
     public void incrementGeneration() {
         generation++;
+        System.err.println("Generation: " + generation + "\n");
     }
 
     /**
@@ -124,12 +125,22 @@ public class Population implements PopulationInterface{
         double avgSum = getAvgFitnessSum();
         List<Network> babies = new ArrayList<>();
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        System.err.println("species: " + species.size());
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
         for(Species s : species) {
             // Directly clone the best network of the species.
             babies.add(new Network(s.getOrganisms().get(s.getBestOrgID())));
 
             // Find the correct number of babies and reproduce them.
             int numBabies = (int) Math.floor(s.getAverageFitness() / avgSum * organisms.size()) - 1;
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            System.err.println("numBabies: " + numBabies);
+            System.err.println("node size: " + organisms.size());
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
             for(int i = 0; i < numBabies; i++) {
                 babies.add(s.reproduce());
             }
@@ -143,6 +154,9 @@ public class Population implements PopulationInterface{
             // accident from a species.
             babies.add(species.get(new Random().nextInt(species.size())).reproduce());
         }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        System.err.println("babies: " + babies.size());
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         // Set up our agent's with their new networks.
         int i = 0;
@@ -150,6 +164,11 @@ public class Population implements PopulationInterface{
             organism.setValue(babies.get(i));
             i++;
         }
+
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        System.err.println("species: " + species.size() + "\n");
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     /**

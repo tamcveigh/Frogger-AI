@@ -171,7 +171,6 @@ public class Species {
      */
     public void cull() {
         Map<Integer, Network> survivors = new HashMap<>();
-
         for(Map.Entry<Integer, Network> organism : organisms.entrySet()) {
             int maxOrganism = organism.getKey();
             int maxFitness = organism.getValue().getFitness();

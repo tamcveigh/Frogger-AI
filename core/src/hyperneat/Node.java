@@ -31,6 +31,15 @@ public class Node {
     /**The random activation function*/
     private int randomActive = new Random().nextInt(4);
 
+    /*TODO Take the fitness and math to get the new a value for PR
+    proportional to the fitness level...
+     */
+    private double slope = 4.0;
+
+    private int count_pr = 0;
+
+    private boolean active = false;
+
 
     /**
      * Constructor for a node. Takes an identification number and layer for this node.
@@ -51,6 +60,8 @@ public class Node {
         this.outputValue = node.outputValue;
         this.outgoingLinks = new ArrayList<>();
         this.layer = node.layer;
+        this.randomActive = node.randomActive;
+        this.slope = node.slope;
     }
 
     /**
@@ -116,6 +127,7 @@ public class Node {
         this.layer++;
     }
 
+
     /**
      * Activates the node. Calls the activation function if this node is not on the bias or input
      * layer. Then, grabs each of the connected output nodes and send something to that output
@@ -123,7 +135,9 @@ public class Node {
      */
     public void activate() {
         if(layer != INPUT_BIAS_LAYER) {
+            active = true;
             ///////////////////////////////////////////////////////////////////////////////////////////////////
+            System.err.println(id + " ...... " + randomActive);
             switch(randomActive){
                 case 0:
                     outputValue = activationFunctionS(inputValue); //previous activation function
@@ -136,6 +150,12 @@ public class Node {
                     break;
                 case 3:
                     outputValue = acitvationFunctionSw(inputValue);
+                    break;
+                /*case 4:
+                    outputValue = activationFunctionSine(inputValue);
+                    break;
+                case 5:
+                    outputValue = activationFunctionCos(inputValue);*/
             }
             //////////////////////////////////////////////////////////////////////////////////////////////////
         }
@@ -162,14 +182,14 @@ public class Node {
     /**Helper function for the Tanh activation function option.*/
 
     private double activationFunctionT(double value){
-        return 2 * activationFunctionS(2 * value) - 1;
+        return (2 * (1.0 / (1.0 + Math.pow(Math.E, (-1 * (2*value))))) - 1);
     }
 
-    /**Helper function for the Leaky ReLU*/
+    /**Helper function for the Parameterized ReLU*/
 
     private double activationFunctionPR(double value){
         if(value < 0){
-            return 2 * value;
+            return slope * value;
         } else {
             return value;
         }
@@ -178,8 +198,17 @@ public class Node {
     /**Helper function for the Swish activation function*/
 
     private double acitvationFunctionSw(double value){
-        return value * activationFunctionS(value);
+        return value * (1.0 / (1.0 + Math.pow(Math.E, (-1 * value))));
     }
+
+    /**Learns the slope value (a) of the parameterized ReLU by taking the current a and modifying it proportionally
+     * to the fitness of the network
+     */
+    public void slopeCalc() {
+        System.err.println("*---------------------------" + id);
+        slope = slope + 1;
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
