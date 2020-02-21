@@ -142,10 +142,10 @@ public class Population implements PopulationInterface {
 
         // If we don't have enough babies, produce them from random species.
         while(babies.size() < organisms.size()) {
-            //FIXME: 1/22/2020 Sometimes when we get to this step we have a species size of 0. I
-            // have no idea how that occurs since removing the stale and bad should remove all
-            // but one. I think that somehow the best organism is being set wrong or removed on
-            // accident from a species.
+            // FIXME: POSSIBLY RESOLVED 2/19/2020 Sometimes when we get to this step we have a species size of 0.
+            //  I have no idea how that occurs since removing the stale and bad should remove all
+            //  but one. I think that somehow the best organism is being set wrong or removed on
+            //  accident from a species.
 
             babies.add(species.get(new Random().nextInt(species.size() ) ).reproduce());
         }
