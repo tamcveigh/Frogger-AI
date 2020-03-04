@@ -116,11 +116,12 @@ public class Population implements PopulationInterface {
      */
     public void naturalSelection() {
         // Set up for producing babies.
-        setBestAgentID();
         speciate();
+        setBestAgentID();
         cullSpecies();
         removeStaleSpecies();
         removeBadSpecies();
+
 
         double avgSum = getAvgFitnessSum();
         List<Network> babies = new ArrayList<>();

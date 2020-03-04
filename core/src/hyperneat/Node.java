@@ -136,7 +136,7 @@ public class Node {
     public void activate() {
         if(layer != INPUT_BIAS_LAYER) {
             active = true;
-            ///////////////////////////////////////////////////////////////////////////////////////////////////
+            /////////////////////////////////////////////////////   //////////////////////////////////////////////
             System.err.println(id + " ...... " + randomActive);
             switch(randomActive){
                 case 0:
