@@ -14,7 +14,7 @@ public enum Coefficients {
     NODE_PR_MUT(.2),
 
     // CPPN Thresholds
-    MIN_WEIGHT(0.02),
+    MIN_WEIGHT(0.0002),
     SUBSTRATE_SIZE(11),
 
     // Other coefficients.

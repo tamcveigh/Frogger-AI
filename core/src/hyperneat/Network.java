@@ -253,7 +253,7 @@ public class Network {
         }
 
         // Activate the nodes in order from input node -> bias -> hidden -> output.
-        System.err.println("--" + network_id + "--");///////////////////////////////////////////////////////////////
+        //System.err.println("--" + network_id + "--");///////////////////////////////////////////////////////////////
         for(Node node : listNodesByLayer()) {
             node.activate();
         }

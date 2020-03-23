@@ -137,7 +137,7 @@ public class Node {
         if(layer != INPUT_BIAS_LAYER) {
             active = true;
             /////////////////////////////////////////////////////   //////////////////////////////////////////////
-            System.err.println(id + " ...... " + randomActive);
+            //System.err.println(id + " ...... " + randomActive);
             switch(randomActive){
                 case 0:
                     outputValue = activationFunctionS(inputValue); //previous activation function

@@ -213,8 +213,11 @@ public class Species {
      */
     public CPPN reproduce() {
 
-        CPPN baby = this.organisms.get(this.bestOrgID);
+        CPPN baby = this.organisms.get(this.bestOrgID).clone();
+
         //TODO: Create mutation for CPPNs
+
+        baby.mutate();
         /*
         if(Math.random() < Coefficients.CROSSOVER_THRESH.getValue()) {
             Object[] networks = organisms.values().toArray();

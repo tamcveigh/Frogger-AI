@@ -110,6 +110,11 @@ public class CPPN {
 
     }
 
+    public void mutate(){
+        this.CPPNFunction.mutate();
+        this.generateNetwork();
+    }
+
     /**
      * Getter method for the Generated neural network
      * @return the generated neural network
