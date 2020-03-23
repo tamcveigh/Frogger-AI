@@ -19,7 +19,7 @@ public class Population implements PopulationInterface {
     private List<Species> species;
 
     /** Mapping of each game agent to their network. */
-    private Map<Integer, Network> organisms;
+    private Map<Integer, CPPN> organisms;
 
     /** Identification number of the best agent. */
     private int bestAgentID;
@@ -37,7 +37,7 @@ public class Population implements PopulationInterface {
         bestAgentID = 0;
 
         for(Agent agent : agents) {
-            organisms.put(agent.getId(), new Network(input, output));
+            organisms.put(agent.getId(), new CPPN(input, output));
         }
     }
 
@@ -64,7 +64,7 @@ public class Population implements PopulationInterface {
      * @return The network output by the supplied agent ID number.
      */
     public double[] getNetworkOutput(int id, float[] agentVision) {
-        return organisms.get(id).feedForward(agentVision);
+        return organisms.get(id).getGeneratedNetwork().feedForward(agentVision);
     }
 
     /**
@@ -74,7 +74,7 @@ public class Population implements PopulationInterface {
      * @param fitness The score to be passed to the network.
      */
     public void assignFitness(int id, int fitness) {
-        organisms.get(id).setFitness(fitness);
+        organisms.get(id).getCPPNetwork().setFitness(fitness);
     }
 
     /**
@@ -87,7 +87,11 @@ public class Population implements PopulationInterface {
         // assigned the wrong color, but I'm not sure.
 
         for(Species s : species) {
-            if(organisms.get(agent.getId()).isCompatibleTo(s.getCompatibilityNetwork())) {
+            if(organisms.get(agent.getId()) == null){
+                break;
+            }
+
+            if(s.getCompatibilityNetwork().isCompatibleTo(organisms.get(agent.getId()).getCPPNetwork())) {
                 agent.setColor(s.getColor());
                 break;
             }
@@ -100,10 +104,10 @@ public class Population implements PopulationInterface {
      * being the best over all the generations and retain it through all of them.
      */
     private void setBestAgentID() {
-        int bestFitness = organisms.get(0).getFitness();
-        for(Map.Entry<Integer, Network> organism : organisms.entrySet()) {
-            if(organism.getValue().getFitness() > bestFitness) {
-                bestFitness = organism.getValue().getFitness();
+        int bestFitness = organisms.get(0).getCPPNetwork().getFitness();
+        for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
+            if(organism.getValue().getCPPNetwork().getFitness() > bestFitness) {
+                bestFitness = organism.getValue().getCPPNetwork().getFitness();
                 bestAgentID = organism.getKey();
             }
         }
@@ -124,20 +128,27 @@ public class Population implements PopulationInterface {
 
 
         double avgSum = getAvgFitnessSum();
-        List<Network> babies = new ArrayList<>();
+        List<CPPN> babies = new ArrayList<>();
         System.err.println( getGeneration() + ";" + organisms.size() );
         System.err.println( bestAgentID );
         for(Species s : species) {
 
             System.err.println( s.toString() + ":" + s.getOrganisms().size() );
             // Directly clone the best network of the species.
-            babies.add(new Network(s.getOrganisms().get(s.getBestOrgID())));
+
+            CPPN baby = s.getOrganisms().get(s.getBestOrgID());
+            if (baby != null ){
+                babies.add( baby );
+            }
 
             // Find the correct number of babies and reproduce them.
-            int numBabies = (int) Math.floor(s.getAverageFitness() / avgSum * organisms.size()) - 1;
+            int numBabies = (int) Math.floor( (s.getAverageFitness() / avgSum) * organisms.size() ) - 1;
 
             for(int i = 0; i < numBabies; i++) {
-                babies.add(s.reproduce());
+                baby = s.reproduce();
+                if (baby != null) {
+                    babies.add(s.reproduce());
+                }
             }
         }
 
@@ -147,13 +158,14 @@ public class Population implements PopulationInterface {
             //  I have no idea how that occurs since removing the stale and bad should remove all
             //  but one. I think that somehow the best organism is being set wrong or removed on
             //  accident from a species.
-
-            babies.add(species.get(new Random().nextInt(species.size() ) ).reproduce());
+            Random r = new Random();
+            Species s = species.get( r.nextInt(species.size() ) );
+            babies.add(s.reproduce() );
         }
 
         // Set up our agent's with their new networks.
         int i = 0;
-        for(Map.Entry<Integer, Network> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
             organism.setValue(babies.get(i));
             i++;
         }
@@ -172,13 +184,13 @@ public class Population implements PopulationInterface {
         }
 
         // For each organism in the population, see if it is compatible with any existing species.
-        for(Map.Entry<Integer, Network> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
             int agentID = organism.getKey();
-            Network agentNetwork = organism.getValue();
+            CPPN agentNetwork = organism.getValue();
             boolean speciesFound = false;
             for(int i = 0; !speciesFound && i < species.size(); i++) {
                 Species s = species.get(i);
-                if(agentNetwork.isCompatibleTo(s.getCompatibilityNetwork())) {
+                if(agentNetwork.getCPPNetwork().isCompatibleTo(s.getCompatibilityNetwork())) {
                     s.addOrganism(agentID, agentNetwork);
                     speciesFound = true;
                 }
@@ -188,6 +200,10 @@ public class Population implements PopulationInterface {
             if(!speciesFound) {
                 species.add(new Species(agentID, agentNetwork));
             }
+        }
+
+        for (Species s: species) {
+            s.setAverageFitness();
         }
     }
 

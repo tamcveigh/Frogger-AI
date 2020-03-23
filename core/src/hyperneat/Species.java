@@ -25,7 +25,7 @@ public class Species {
     private Network compatibilityNetwork;
 
     /** A mapping of agent IDs to their networks. */
-    private Map<Integer, Network> organisms;
+    private Map<Integer, CPPN> organisms;
 
     /** The ID number of the best organism in this species this generation. */
     private int bestOrgID;
@@ -47,10 +47,10 @@ public class Species {
      * @param agentID The ID number of the first agent to be assigned to this species.
      * @param agentNetwork The network used by the first agent to be assigned to this species.
      */
-    public Species(int agentID, Network agentNetwork) {
-        compatibilityNetwork = new Network(agentNetwork);
+    public Species(int agentID, CPPN agentNetwork) {
+        compatibilityNetwork = agentNetwork.clone().getCPPNetwork() ;
         organisms = new HashMap<>();
-        organisms.put(agentID, compatibilityNetwork);
+        organisms.put(agentID, agentNetwork.clone() );
         bestOrgID = agentID;
         bestFitness = 0;
         averageFitness = 0.0;
@@ -84,16 +84,17 @@ public class Species {
      * Sets the compatibility network to a random organism that is in this species.
      */
     public void setCompatibilityNetwork() {
-        Object[] networks = organisms.values().toArray();
-        compatibilityNetwork =
-                new Network((Network) networks[new Random().nextInt(networks.length)]);
+        Random r = new Random();
+        Set<Integer> keySet = organisms.keySet();
+        int key = (int) keySet.toArray()[r.nextInt(keySet.size())];
+        compatibilityNetwork = organisms.get(key ).getCPPNetwork();
     }
 
     /**
      * Returns the mapping of agent IDs and their networks.
      * @return The mapping of agent IDs and their networks.
      */
-    public Map<Integer, Network> getOrganisms() {
+    public Map<Integer, CPPN> getOrganisms() {
         return organisms;
     }
 
@@ -102,8 +103,8 @@ public class Species {
      * @param agentID The ID number of the agent.
      * @param agentNetwork The network the agent uses.
      */
-    public void addOrganism(int agentID, Network agentNetwork) {
-        organisms.put(agentID, new Network(agentNetwork));
+    public void addOrganism(int agentID, CPPN agentNetwork) {
+        organisms.put(agentID, agentNetwork.clone() );
     }
 
     /**
@@ -127,8 +128,8 @@ public class Species {
      */
     public void setAverageFitness() {
         double fitnessSum = 0.0;
-        for(Network network : organisms.values()) {
-            fitnessSum += network.getFitness();
+        for(CPPN network : organisms.values()) {
+            fitnessSum += network.getCPPNetwork().getFitness();
         }
         if(organisms.isEmpty()) {
             averageFitness = 0;
@@ -151,9 +152,9 @@ public class Species {
      */
     public void setStaleness() {
         int generationMaxFitness = -1;
-        for(Map.Entry<Integer, Network> organism : organisms.entrySet()) {
-            if(organism.getValue().getFitness() > generationMaxFitness) {
-                generationMaxFitness = organism.getValue().getFitness();
+        for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
+            if(organism.getValue().getCPPNetwork().getFitness() > generationMaxFitness) {
+                generationMaxFitness = organism.getValue().getCPPNetwork().getFitness();
                 bestOrgID = organism.getKey();
             }
         }
@@ -170,22 +171,22 @@ public class Species {
      * that they will not pollute the gene pool.
      */
     public void cull() {
-        Map<Integer, Network> survivors = new HashMap<>();
-        for(Map.Entry<Integer, Network> organism : organisms.entrySet()) {
+        Map<Integer, CPPN> survivors = new HashMap<>();
+        for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
             int maxOrganism = organism.getKey();
-            int maxFitness = organism.getValue().getFitness();
+            int maxFitness = organism.getValue().getCPPNetwork().getFitness();
 
-            for(Map.Entry<Integer, Network> other : organisms.entrySet()) {
+            for(Map.Entry<Integer, CPPN> other : organisms.entrySet()) {
                 int otherOrganism = other.getKey();
-                int otherFitness = other.getValue().getFitness();
+                int otherFitness = other.getValue().getCPPNetwork().getFitness();
 
                 if(!survivors.containsKey(otherOrganism) && otherFitness > maxFitness) {
                     maxOrganism = otherOrganism;
                     maxFitness = otherFitness;
                 }
             }
-            survivors.put(maxOrganism, new Network(organisms.get(maxOrganism)));
-            organisms.get(maxOrganism).setFitness(-1);
+            survivors.put(maxOrganism, organisms.get(maxOrganism).clone() );
+            organisms.get(maxOrganism).getCPPNetwork().setFitness(-1);
 
             if(survivors.size() >= organisms.size() * Coefficients.CULL_THRESH.getValue()) {
                 break;
@@ -199,8 +200,8 @@ public class Species {
      * too large. This should prevent any one species from taking over the entire population.
      */
     public void shareFitness() {
-        for(Network network : organisms.values()) {
-            network.setFitness(network.getFitness() / organisms.size());
+        for(CPPN network : organisms.values()) {
+            network.getCPPNetwork().setFitness(network.getCPPNetwork().getFitness() / organisms.size());
         }
     }
 
@@ -210,8 +211,11 @@ public class Species {
      * hopes that we find a favorable mutation.
      * @return The new network we have produced and mutated.
      */
-    public Network reproduce() {
-        Network baby;
+    public CPPN reproduce() {
+
+        CPPN baby = this.organisms.get(this.bestOrgID);
+        //TODO: Create mutation for CPPNs
+        /*
         if(Math.random() < Coefficients.CROSSOVER_THRESH.getValue()) {
             Object[] networks = organisms.values().toArray();
             Network parent1 = (Network) networks[new Random().nextInt(networks.length)];
@@ -226,7 +230,7 @@ public class Species {
             baby = new Network((Network) networks[new Random().nextInt(networks.length)]);
         }
 
-        baby.mutate();
+        baby.mutate(); */
         return baby;
     }
 }

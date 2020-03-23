@@ -129,6 +129,10 @@ public class Network {
         return links;
     }
 
+    protected Node[] getInputNodes() {return this.inputNodes;}
+
+    protected Node[] getOutputNodes() {return this.outputNodes;}
+
     /**
      * Performs a deep copy of the links from a supplied network to this one.
      * @param network The network to copy the links from.
@@ -172,7 +176,7 @@ public class Network {
      * @param output The output node to connect to.
      * @param weight The weight that should be given to the link.
      */
-    private void addLink(Node input, Node output, double weight) {
+    protected void addLink(Node input, Node output, double weight) {
         int inputID = input.getId();
         int outputID = output.getId();
 

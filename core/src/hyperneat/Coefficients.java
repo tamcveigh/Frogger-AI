@@ -13,6 +13,10 @@ public enum Coefficients {
     ADD_NODE_MUT(.05),      // Chance that a new node will be added.
     NODE_PR_MUT(.2),
 
+    // CPPN Thresholds
+    MIN_WEIGHT(0.02),
+    SUBSTRATE_SIZE(11),
+
     // Other coefficients.
     DISJOINT_CO(1),
     WEIGHT_CO(.5),
