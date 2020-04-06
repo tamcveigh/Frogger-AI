@@ -104,6 +104,10 @@ public class Node {
         this.outputValue = outputValue;
     }
 
+    public void addLink(Link link) {
+        this.outgoingLinks.add(link);
+    }
+
     /**
      * Returns this nodes outgoing links.
      * @return This nodes outgoing links.
@@ -248,4 +252,5 @@ public class Node {
         }
         return false;
     }
+
 }

@@ -64,7 +64,7 @@ public class Population implements PopulationInterface {
      * @return The network output by the supplied agent ID number.
      */
     public double[] getNetworkOutput(int id, float[] agentVision) {
-        return organisms.get(id).getGeneratedNetwork().feedForward(agentVision);
+        return organisms.get(id).runSubstrate(agentVision);
     }
 
     /**

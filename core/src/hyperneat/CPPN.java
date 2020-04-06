@@ -10,39 +10,24 @@ import static java.lang.Math.abs;
 public class CPPN {
 
     /** Array holding the weights between any two nodes on the substrate*/
-    private double[][][][] substrateWeights;
+    private Substrate substrate;
 
     private Network CPPNFunction;
 
-    private Network generatedNetwork;
+    private int inputSize;
 
-    private final int[][] INPUT_NODES;
+    private int outputSize;
 
-    private final int[][] OUTPUT_NODES;
+    private static final int SUBSTRATE_SIZE = 11;
 
     /**
      *
      * @param inputSize the size of the square matrix of the substrate
      */
     public CPPN(int inputSize, int outputSize){
-        int size = (int) Coefficients.SUBSTRATE_SIZE.getValue();
-        this.substrateWeights = new double[size][size][size][size];
-        this.CPPNFunction = new Network(4,1);//2 pairs of input points, 1 output weight
-        this.generatedNetwork = new Network(inputSize, outputSize);
-
-        int[][] tempInput = new int[inputSize][2];
-        for(int i = 0; i < inputSize; i++){
-            tempInput[i] = new int[]{0, i};
-        }
-        INPUT_NODES = tempInput;
-
-        int[][] tempOutput = new int[outputSize][2];
-        for(int i = 0; i < outputSize; i++){
-            tempOutput[i] = new int[]{size -1, i};
-        }
-        OUTPUT_NODES = tempOutput;
-
-
+        this.substrate = new Substrate(inputSize, outputSize, CPPN.SUBSTRATE_SIZE);
+        //2 pairs of input points, 1 output weight
+        this.CPPNFunction = new Network(4,1);
         this.generateNetwork();
     }
 
@@ -52,9 +37,8 @@ public class CPPN {
      */
     @Override
     public CPPN clone(){
-        CPPN clone = new CPPN(this.INPUT_NODES.length,this.OUTPUT_NODES.length);
-        clone.substrateWeights = this.substrateWeights.clone();
-        clone.generatedNetwork = new Network(this.generatedNetwork);
+        CPPN clone = new CPPN(this.inputSize,this.outputSize);
+        clone.substrate= this.substrate;
         clone.CPPNFunction = new Network(this.CPPNFunction);
         return clone;
     }
@@ -85,28 +69,14 @@ public class CPPN {
                     for(int l = 0; l < Coefficients.SUBSTRATE_SIZE.getValue(); l++){
                         double output  = this.outputWeight(i,j,k,l);
                         if( abs(output) > Coefficients.MIN_WEIGHT.getValue() ){
-                            this.substrateWeights[i][j][k][l] = output;
+                            this.substrate.setLinkWeight(i,j,k,l,output);
                         }else{
-                            this.substrateWeights[i][j][k][l] = 0;
+                            this.substrate.setLinkWeight(i,j,k,l,0);
                         }
                     }
                 }
             }
         }//end nested loops
-
-        //Get the nodes and links from the phenotype network and place weights there
-        Node[] inputNodes = this.generatedNetwork.getInputNodes();
-        Node[] outputNodes = this.generatedNetwork.getOutputNodes();
-        List<Link> linkList = this.generatedNetwork.getLinks();
-        linkList.clear();
-
-        for(int i = 0; i < inputNodes.length; i++){
-            for(int j = 0; j < outputNodes.length; j++){
-                this.generatedNetwork.addLink(inputNodes[i],outputNodes[j],
-                        this.substrateWeights[0][i][this.substrateWeights.length -1][j]);
-            }
-        }
-
 
     }
 
@@ -115,15 +85,12 @@ public class CPPN {
         this.generateNetwork();
     }
 
-    /**
-     * Getter method for the Generated neural network
-     * @return the generated neural network
-     */
-    public Network getGeneratedNetwork(){
-        return this.generatedNetwork;
-    }
 
     public Network getCPPNetwork(){
         return this.CPPNFunction;
+    }
+
+    public double[] runSubstrate(float[] agentVision) {
+        return this.substrate.feedForward(agentVision);
     }
 }
