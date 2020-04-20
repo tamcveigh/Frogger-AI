@@ -136,6 +136,18 @@ public class Substrate {
             }
         }
 
+        for (Node[] nodes : sandwichLayer){
+            for( Node node: nodes){
+                node.activate();
+            }
+        }
+
+        for (Node[] nodes: outputLayer){
+            for( Node node : nodes){
+                node.activate();
+            }
+        }
+
         // Write the output values to a double array to pass back as the decisions of this network.
         double[] outputs = new double[outputNodes.size()];
         for (int i = 0; i < outputNodes.size(); i++) {

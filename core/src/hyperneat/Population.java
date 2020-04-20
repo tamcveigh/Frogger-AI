@@ -74,7 +74,7 @@ public class Population implements PopulationInterface {
      * @param fitness The score to be passed to the network.
      */
     public void assignFitness(int id, int fitness) {
-        organisms.get(id).getCPPNetwork().setFitness(fitness);
+        organisms.get(id).setFitness(fitness);
     }
 
     /**
@@ -104,7 +104,7 @@ public class Population implements PopulationInterface {
      * being the best over all the generations and retain it through all of them.
      */
     private void setBestAgentID() {
-        int bestFitness = organisms.get(0).getCPPNetwork().getFitness();
+        int bestFitness = organisms.get(0).getFitness();
         for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
             if(organism.getValue().getCPPNetwork().getFitness() > bestFitness) {
                 bestFitness = organism.getValue().getCPPNetwork().getFitness();
@@ -129,8 +129,8 @@ public class Population implements PopulationInterface {
 
         double avgSum = getAvgFitnessSum();
         List<CPPN> babies = new ArrayList<>();
-        System.err.println( getGeneration() + ";" + organisms.size() );
-        System.err.println( bestAgentID );
+        //System.err.println( getGeneration() + ";" + organisms.size() );
+        //System.err.println( bestAgentID );
         for(Species s : species) {
 
             System.err.println( s.toString() + ":" + s.getOrganisms().size() );

@@ -290,26 +290,27 @@ public class Network {
     public void mutate() {
         //todo add a toggle enabled mutation where the first disabled link encountered is toggled
         // back on.
-
+        System.err.println("Network mutate reached");
+        Random random = new Random();
         // Mutation for link weight. Each link is either mutated or not each generation.
         for(Link link : links) {
-            if(Math.random() < Coefficients.LINK_WEIGHT_MUT.getValue()) {
+            if(random.nextDouble() < Coefficients.LINK_WEIGHT_MUT.getValue()) {
                 link.mutateWeight();
             }
         }
 
         // Mutation for adding a link between two random, unlinked nodes.
-        if(Math.random() < Coefficients.ADD_LINK_MUT.getValue()) {
+        if(random.nextDouble() < Coefficients.ADD_LINK_MUT.getValue()) {
             addLinkMutation();
         }
 
         // Mutation for adding a new node where a link previously was.
-        if(Math.random() < Coefficients.ADD_NODE_MUT.getValue()) {
+        if(random.nextDouble() < Coefficients.ADD_NODE_MUT.getValue()) {
             addNodeMutation();
         }
 
         // Mutation for adding a new node where a link previously was.
-        if(hiddenNodes.size() != 0 && Math.random() < Coefficients.NODE_PR_MUT.getValue()) {
+        if(hiddenNodes.size() != 0 && random.nextDouble() < Coefficients.NODE_PR_MUT.getValue()) {
             System.err.println("\nMUTATE PR\n");
             mutatePR();
         }

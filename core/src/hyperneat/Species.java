@@ -216,13 +216,10 @@ public class Species {
         CPPN baby = this.organisms.get(this.bestOrgID).clone();
 
         //TODO: Create mutation for CPPNs
-
-        baby.mutate();
-        /*
         if(Math.random() < Coefficients.CROSSOVER_THRESH.getValue()) {
             Object[] networks = organisms.values().toArray();
-            Network parent1 = (Network) networks[new Random().nextInt(networks.length)];
-            Network parent2 = (Network) networks[new Random().nextInt(networks.length)];
+            CPPN parent1 = (CPPN) networks[new Random().nextInt(networks.length)];
+            CPPN parent2 = (CPPN) networks[new Random().nextInt(networks.length)];
             if(parent1.getFitness() < parent2.getFitness()) {
                 baby = parent2.crossover(parent1);
             } else {
@@ -230,10 +227,11 @@ public class Species {
             }
         } else {
             Object[] networks = organisms.values().toArray();
-            baby = new Network((Network) networks[new Random().nextInt(networks.length)]);
+            CPPN parent = (CPPN) networks[new Random().nextInt(networks.length)];
+            baby = parent.clone();
         }
 
-        baby.mutate(); */
+        baby.mutate();
         return baby;
     }
 }

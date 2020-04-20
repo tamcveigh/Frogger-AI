@@ -1,7 +1,5 @@
 package hyperneat;
 
-import java.util.List;
-
 import static java.lang.Math.abs;
 
 /**
@@ -38,8 +36,8 @@ public class CPPN {
     @Override
     public CPPN clone(){
         CPPN clone = new CPPN(this.inputSize,this.outputSize);
-        clone.substrate= this.substrate;
         clone.CPPNFunction = new Network(this.CPPNFunction);
+        clone.generateNetwork();
         return clone;
     }
 
@@ -81,7 +79,9 @@ public class CPPN {
     }
 
     public void mutate(){
+        System.err.println("Cppn mutate reached");
         this.CPPNFunction.mutate();
+
         this.generateNetwork();
     }
 
@@ -92,5 +92,19 @@ public class CPPN {
 
     public double[] runSubstrate(float[] agentVision) {
         return this.substrate.feedForward(agentVision);
+    }
+
+    public int getFitness() {
+        return this.CPPNFunction.getFitness();
+    }
+
+    public void setFitness(int fitness){
+        this.CPPNFunction.setFitness(fitness);
+    }
+
+    public CPPN crossover(CPPN otherParent) {
+        CPPN baby = this.clone();
+        baby.CPPNFunction.crossover(otherParent.CPPNFunction);
+        return baby;
     }
 }
