@@ -74,7 +74,8 @@ public class Population implements PopulationInterface {
      * @param fitness The score to be passed to the network.
      */
     public void assignFitness(int id, int fitness) {
-        organisms.get(id).setFitness(fitness);
+        CPPN organism = organisms.get(id);
+        organism.setFitness(fitness);
     }
 
     /**
@@ -133,7 +134,7 @@ public class Population implements PopulationInterface {
         //System.err.println( bestAgentID );
         for(Species s : species) {
 
-            System.err.println( s.toString() + ":" + s.getOrganisms().size() );
+            //System.err.println( s.toString() + ":" + s.getOrganisms().size() );
             // Directly clone the best network of the species.
 
             CPPN baby = s.getOrganisms().get(s.getBestOrgID());
@@ -147,7 +148,7 @@ public class Population implements PopulationInterface {
             for(int i = 0; i < numBabies; i++) {
                 baby = s.reproduce();
                 if (baby != null) {
-                    babies.add(s.reproduce());
+                    babies.add(baby);
                 }
             }
         }
@@ -250,12 +251,13 @@ public class Population implements PopulationInterface {
 
         for(int i = 0; i < species.size(); i++) {
             if(!species.get(i).getOrganisms().containsKey(bestAgentID)) {
-                if(species.get(i).getAverageFitness() / avgSum * organisms.size() < 1) {
+                if(species.get(i).getAverageFitness() / avgSum * organisms.size() < 1 || species.get(i).size() < 1) {
                     Species.takenColors.remove(species.get(i).getColor());
                     species.remove(i);
                     i--;
                 }
             }
+
         }
     }
 

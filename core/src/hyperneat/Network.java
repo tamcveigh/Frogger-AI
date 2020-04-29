@@ -75,7 +75,7 @@ public class Network {
         // Links our input nodes to output nodes and attaches the bias node to each output node.
         generateNetwork();
 
-        System.err.println("---" + network_id + "---\n" + fitness);
+        //System.err.println("---" + network_id + "---\n" + fitness);
     }
 
     /**
@@ -102,7 +102,7 @@ public class Network {
         }
         copyLinks(network);
 
-        System.err.println(fitness);
+        //System.err.println(fitness);
     }
 
     /**
@@ -278,7 +278,7 @@ public class Network {
      */
     public void mutatePR(){
         int random = new Random().nextInt(hiddenNodes.size());
-        System.err.println("**** " + network_id + " ****");
+        //System.err.println("**** " + network_id + " ****");
         hiddenNodes.get(random).slopeCalc();
     }
 
@@ -290,7 +290,7 @@ public class Network {
     public void mutate() {
         //todo add a toggle enabled mutation where the first disabled link encountered is toggled
         // back on.
-        System.err.println("Network mutate reached");
+        //System.err.println("Network mutate reached");
         Random random = new Random();
         // Mutation for link weight. Each link is either mutated or not each generation.
         for(Link link : links) {
@@ -311,7 +311,7 @@ public class Network {
 
         // Mutation for adding a new node where a link previously was.
         if(hiddenNodes.size() != 0 && random.nextDouble() < Coefficients.NODE_PR_MUT.getValue()) {
-            System.err.println("\nMUTATE PR\n");
+            //System.err.println("\nMUTATE PR\n");
             mutatePR();
         }
     }

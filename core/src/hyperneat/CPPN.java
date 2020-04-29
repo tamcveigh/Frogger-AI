@@ -18,15 +18,20 @@ public class CPPN {
 
     private static final int SUBSTRATE_SIZE = 11;
 
+    private int fitness;
+
     /**
      *
      * @param inputSize the size of the square matrix of the substrate
      */
     public CPPN(int inputSize, int outputSize){
+        this.inputSize = inputSize;
+        this.outputSize = outputSize;
         this.substrate = new Substrate(inputSize, outputSize, CPPN.SUBSTRATE_SIZE);
         //2 pairs of input points, 1 output weight
         this.CPPNFunction = new Network(4,1);
         this.generateNetwork();
+        this.fitness = 0;
     }
 
     /**
@@ -79,7 +84,7 @@ public class CPPN {
     }
 
     public void mutate(){
-        System.err.println("Cppn mutate reached");
+        //System.err.println("Cppn mutate reached");
         this.CPPNFunction.mutate();
 
         this.generateNetwork();
@@ -95,11 +100,11 @@ public class CPPN {
     }
 
     public int getFitness() {
-        return this.CPPNFunction.getFitness();
+        return this.fitness;
     }
 
     public void setFitness(int fitness){
-        this.CPPNFunction.setFitness(fitness);
+        this.fitness = fitness;
     }
 
     public CPPN crossover(CPPN otherParent) {

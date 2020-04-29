@@ -42,6 +42,8 @@ public class Species {
     /** The color assigned to the agents that belong to this species. */
     private Color color;
 
+    private int size;
+
     /**
      * Constructor for an organism's species.
      * @param agentID The ID number of the first agent to be assigned to this species.
@@ -55,6 +57,7 @@ public class Species {
         bestFitness = 0;
         averageFitness = 0.0;
         staleness = 0;
+        this.size = organisms.size();
 
         Array<Color> colors = Colors.getColors().values().toArray();
         do {
@@ -104,7 +107,9 @@ public class Species {
      * @param agentNetwork The network the agent uses.
      */
     public void addOrganism(int agentID, CPPN agentNetwork) {
+
         organisms.put(agentID, agentNetwork.clone() );
+        this.size = organisms.size();
     }
 
     /**
@@ -193,6 +198,7 @@ public class Species {
             }
         }
         organisms = survivors;
+        this.size = organisms.size();
     }
 
     /**
@@ -213,9 +219,8 @@ public class Species {
      */
     public CPPN reproduce() {
 
-        CPPN baby = this.organisms.get(this.bestOrgID).clone();
+        CPPN baby;
 
-        //TODO: Create mutation for CPPNs
         if(Math.random() < Coefficients.CROSSOVER_THRESH.getValue()) {
             Object[] networks = organisms.values().toArray();
             CPPN parent1 = (CPPN) networks[new Random().nextInt(networks.length)];
@@ -233,5 +238,9 @@ public class Species {
 
         baby.mutate();
         return baby;
+    }
+
+    public int size(){
+        return this.size;
     }
 }

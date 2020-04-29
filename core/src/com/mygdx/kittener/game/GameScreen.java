@@ -234,7 +234,7 @@ public class GameScreen extends ScreenAdapter {
                 }
                 performedNS = true;
             }
-            if(delayTimer >= 4f) {
+            if(delayTimer >= 2f) {
                 resetGame();
                 population.incrementGeneration();
                 performedNS = false;

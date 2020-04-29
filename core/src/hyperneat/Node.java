@@ -209,7 +209,7 @@ public class Node {
      * to the fitness of the network
      */
     public void slopeCalc() {
-        System.err.println("*---------------------------" + id);
+        //System.err.println("*---------------------------" + id);
         slope = slope + 1;
     }
 
