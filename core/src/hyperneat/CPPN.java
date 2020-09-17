@@ -96,10 +96,12 @@ public class CPPN {
     }
 
     public int getFitness() {
+        System.err.println("CPPN Get " + fitness);
         return this.fitness;
     }
 
     public void setFitness(int fitness){
+        System.err.println("CPPN " + fitness);
         this.fitness = fitness;
     }
 

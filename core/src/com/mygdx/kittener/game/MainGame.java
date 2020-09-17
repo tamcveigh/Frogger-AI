@@ -5,6 +5,11 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.time.Instant;
+
 /**
  * Class which controls the screen we are viewing in our game and holds all sprites, fonts, and
  * the application width and height.
@@ -33,6 +38,9 @@ public class MainGame extends com.badlogic.gdx.Game {
     /** The type of AI algorithm being used */
     AlgorithmName aiName;
 
+    /** CSV file to hold statistics of the run*/
+    public static File STAT_LOG;
+
     /**
      * Passing the application window size to the game.
      * @param width The width of the window.
@@ -42,6 +50,20 @@ public class MainGame extends com.badlogic.gdx.Game {
         this.width  = width;
         this.height = height;
         this.aiName = aiName;
+
+        try{
+            Instant timestamp = Instant.now();
+            MainGame.STAT_LOG = new File("logs",aiName + "-" + timestamp.getEpochSecond() + ".csv" );
+            MainGame.STAT_LOG.createNewFile();
+            FileWriter statSetup = new FileWriter(MainGame.STAT_LOG);
+            statSetup.write("Generation,Average,Maximum");
+            statSetup.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.err.println("ERROR: Unable to create statistics log file");
+
+        }
+
     }
 
     /**

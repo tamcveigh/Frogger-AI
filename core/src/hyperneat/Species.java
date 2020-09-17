@@ -52,7 +52,7 @@ public class Species {
     public Species(int agentID, CPPN agentNetwork) {
         compatibilityNetwork = agentNetwork.clone().getCPPNetwork() ;
         organisms = new HashMap<>();
-        organisms.put(agentID, agentNetwork.clone() );
+        organisms.put(agentID, agentNetwork);
         bestOrgID = agentID;
         bestFitness = 0;
         averageFitness = 0.0;
@@ -108,7 +108,7 @@ public class Species {
      */
     public void addOrganism(int agentID, CPPN agentNetwork) {
 
-        organisms.put(agentID, agentNetwork.clone() );
+        organisms.put(agentID, agentNetwork );
         this.size = organisms.size();
     }
 
@@ -134,7 +134,7 @@ public class Species {
     public void setAverageFitness() {
         double fitnessSum = 0.0;
         for(CPPN network : organisms.values()) {
-            fitnessSum += network.getCPPNetwork().getFitness();
+            fitnessSum += network.getFitness();
         }
         if(organisms.isEmpty()) {
             averageFitness = 0;
@@ -158,8 +158,8 @@ public class Species {
     public void setStaleness() {
         int generationMaxFitness = -1;
         for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
-            if(organism.getValue().getCPPNetwork().getFitness() > generationMaxFitness) {
-                generationMaxFitness = organism.getValue().getCPPNetwork().getFitness();
+            if(organism.getValue().getFitness() > generationMaxFitness) {
+                generationMaxFitness = organism.getValue().getFitness();
                 bestOrgID = organism.getKey();
             }
         }
@@ -179,11 +179,11 @@ public class Species {
         Map<Integer, CPPN> survivors = new HashMap<>();
         for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
             int maxOrganism = organism.getKey();
-            int maxFitness = organism.getValue().getCPPNetwork().getFitness();
+            int maxFitness = organism.getValue().getFitness();
 
             for(Map.Entry<Integer, CPPN> other : organisms.entrySet()) {
                 int otherOrganism = other.getKey();
-                int otherFitness = other.getValue().getCPPNetwork().getFitness();
+                int otherFitness = other.getValue().getFitness();
 
                 if(!survivors.containsKey(otherOrganism) && otherFitness > maxFitness) {
                     maxOrganism = otherOrganism;
@@ -207,7 +207,7 @@ public class Species {
      */
     public void shareFitness() {
         for(CPPN network : organisms.values()) {
-            network.getCPPNetwork().setFitness(network.getCPPNetwork().getFitness() / organisms.size());
+            network.getCPPNetwork().setFitness(network.getFitness() / organisms.size());
         }
     }
 
