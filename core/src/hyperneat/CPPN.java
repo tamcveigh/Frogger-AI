@@ -71,11 +71,7 @@ public class CPPN {
                 for(int k = 0; k < Coefficients.SUBSTRATE_SIZE.getValue(); k++){
                     for(int l = 0; l < Coefficients.SUBSTRATE_SIZE.getValue(); l++){
                         double output  = this.outputWeight(i,j,k,l);
-                        if( abs(output) > Coefficients.MIN_WEIGHT.getValue() ){
-                            this.substrate.setLinkWeight(i,j,k,l,output);
-                        }else{
-                            this.substrate.setLinkWeight(i,j,k,l,0);
-                        }
+                        this.substrate.setLinkWeight(i,j,k,l,output);
                     }
                 }
             }
