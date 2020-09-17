@@ -2,7 +2,10 @@ package hyperneat;
 
 import AIinterfaces.PopulationInterface;
 import com.mygdx.kittener.game.Agent;
+import com.mygdx.kittener.game.MainGame;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -54,7 +57,7 @@ public class Population implements PopulationInterface {
      */
     public void incrementGeneration() {
         generation++;
-        System.err.println("Generation: " + generation + "\n");
+        //System.err.println("Generation: " + generation + "\n");
     }
 
     /**
@@ -74,6 +77,7 @@ public class Population implements PopulationInterface {
      * @param fitness The score to be passed to the network.
      */
     public void assignFitness(int id, int fitness) {
+        System.err.println("Pop " +fitness);
         CPPN organism = organisms.get(id);
         organism.setFitness(fitness);
     }
@@ -107,8 +111,8 @@ public class Population implements PopulationInterface {
     private void setBestAgentID() {
         int bestFitness = organisms.get(0).getFitness();
         for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
-            if(organism.getValue().getCPPNetwork().getFitness() > bestFitness) {
-                bestFitness = organism.getValue().getCPPNetwork().getFitness();
+            if(organism.getValue().getFitness() > bestFitness) {
+                bestFitness = organism.getValue().getFitness();
                 bestAgentID = organism.getKey();
             }
         }
@@ -172,6 +176,38 @@ public class Population implements PopulationInterface {
         }
     }
 
+    private void statisticsTrack() {
+
+        List<CPPN> organisms = new ArrayList<>();
+        for(Species s: species){
+            organisms.addAll(s.getOrganisms().values());
+        }
+
+        int max = 0;
+        for(CPPN o: organisms){
+            int oFit = o.getFitness();
+            //System.err.println(oFit);
+            if(oFit > max){
+                max = oFit;
+            }
+        }
+
+        int average = 0;
+        for(CPPN o: organisms){
+            average += o.getFitness();
+        }
+        average = average / organisms.size();
+
+        try {
+            FileWriter statWriter = new FileWriter(MainGame.STAT_LOG, true);
+            statWriter.write("\n" + generation + "," + average + "," + max);
+            statWriter.close();
+        } catch (IOException e) {
+            System.err.println("ERROR: Unable to track statistics for generation " + generation);
+        }
+
+    }
+
     /**
      * Separates this populations list of organisms into separate species.
      */
@@ -203,6 +239,8 @@ public class Population implements PopulationInterface {
             }
         }
 
+        statisticsTrack();
+
         for (Species s: species) {
             s.setAverageFitness();
         }
@@ -231,10 +269,10 @@ public class Population implements PopulationInterface {
                 if(species.get(i).getStaleness() >= Coefficients.STALENESS_THRESH.getValue()) {
                     Species.takenColors.remove(species.get(i).getColor());
                     /////////////////////////////////////////////////////////////////////
-                    System.err.println("\nStale " + species.get(i).getBestOrgID());
-                    System.err.println(species.get(i).getBestOrgID() == bestAgentID);
-                    System.err.println("BestOrgID: " + species.get(i).getBestOrgID());
-                    System.err.println("BestAgentID: " + bestAgentID + "\n");
+                    //System.err.println("\nStale " + species.get(i).getBestOrgID());
+                    //System.err.println(species.get(i).getBestOrgID() == bestAgentID);
+                    //System.err.println("BestOrgID: " + species.get(i).getBestOrgID());
+                    //System.err.println("BestAgentID: " + bestAgentID + "\n");
                     /////////////////////////////////////////////////////////////////////
                     species.remove(species.get(i));
                     i--;
