@@ -14,14 +14,15 @@ import java.time.Instant;
  * Class which controls the screen we are viewing in our game and holds all sprites, fonts, and
  * the application width and height.
  * @author Brandon Townsend
- * @version 16 December 2019
+ * @additions Brooke Kiser and Tyler McVeigh
+ * @version 23 September 2020
  */
 public class MainGame extends com.badlogic.gdx.Game {
     /** The width of the application window. */
-    private int width;
+    private final int width;
 
     /** The height of the application window. */
-    private int height;
+    private final int height;
 
     /** Sprite batch used to draw 2D shapes. */
     public SpriteBatch batch;
@@ -60,7 +61,7 @@ public class MainGame extends com.badlogic.gdx.Game {
             statSetup.close();
         } catch (IOException e) {
             e.printStackTrace();
-            System.err.println("ERROR: Unable to create statistics log file");
+            //System.err.println("ERROR: Unable to create statistics log file");
 
         }
 

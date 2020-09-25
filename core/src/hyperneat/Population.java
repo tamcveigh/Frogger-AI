@@ -12,17 +12,18 @@ import java.util.*;
  * Class which handles all overhead NEAT functionality and is connected to the game. Keeps track
  * of the generation, the list of species, and a mapping of agents to their networks.
  * @author Chance Simmons and Brandon Townsend
- * @version 21 January 2020
+ * @additions Brooke Kiser and Tyler McVeigh
+ * @version 24 September 2020
  */
 public class Population implements PopulationInterface {
     /** Keeps track of the generation of organisms we're at. */
     private int generation;
 
     /** List of every species in the game. */
-    private List<Species> species;
+    private final List<Species> species;
 
     /** Mapping of each game agent to their network. */
-    private Map<Integer, CPPN> organisms;
+    private final Map<Integer, CPPN> organisms;
 
     /** Identification number of the best agent. */
     private int bestAgentID;
@@ -39,6 +40,7 @@ public class Population implements PopulationInterface {
         organisms   = new HashMap<>();
         bestAgentID = 0;
 
+        //Place each agent and corresponding CPPN in the organisms
         for(Agent agent : agents) {
             organisms.put(agent.getId(), new CPPN(input, output));
         }
@@ -57,7 +59,6 @@ public class Population implements PopulationInterface {
      */
     public void incrementGeneration() {
         generation++;
-        //System.err.println("Generation: " + generation + "\n");
     }
 
     /**
@@ -87,9 +88,6 @@ public class Population implements PopulationInterface {
      * @param agent The agent to modify the color of.
      */
     public void assignColor(Agent agent) {
-
-        //FIXME: 1/22/2020 This method should be checked. It looks like they could be getting
-        // assigned the wrong color, but I'm not sure.
 
         for(Species s : species) {
             if(organisms.get(agent.getId()) == null){
@@ -131,16 +129,11 @@ public class Population implements PopulationInterface {
         removeStaleSpecies();
         removeBadSpecies();
 
-
         double avgSum = getAvgFitnessSum();
         List<CPPN> babies = new ArrayList<>();
-        //System.err.println( getGeneration() + ";" + organisms.size() );
-        //System.err.println( bestAgentID );
         for(Species s : species) {
 
-            //System.err.println( s.toString() + ":" + s.getOrganisms().size() );
             // Directly clone the best network of the species.
-
             CPPN baby = s.getOrganisms().get(s.getBestOrgID());
             if (baby != null ){
                 babies.add( baby );
@@ -159,7 +152,7 @@ public class Population implements PopulationInterface {
 
         // If we don't have enough babies, produce them from random species.
         while(babies.size() < organisms.size()) {
-            // FIXME: POSSIBLY RESOLVED 2/19/2020 Sometimes when we get to this step we have a species size of 0.
+            // FIXME: Sometimes when we get to this step we have a species size of 0.
             //  I have no idea how that occurs since removing the stale and bad should remove all
             //  but one. I think that somehow the best organism is being set wrong or removed on
             //  accident from a species.
@@ -176,28 +169,35 @@ public class Population implements PopulationInterface {
         }
     }
 
+    /**
+     * Writes statistics to a csv file. The statistic will include the generation, average fitness,
+     * and max fitness.
+     */
     private void statisticsTrack() {
 
         List<CPPN> organisms = new ArrayList<>();
+        //Adds all the CPPNs for a species to organisms
         for(Species s: species){
             organisms.addAll(s.getOrganisms().values());
         }
 
         int max = 0;
+        //Find the max fitness of all the CPPNs for this generation
         for(CPPN o: organisms){
             int oFit = o.getFitness();
-            //System.err.println(oFit);
             if(oFit > max){
                 max = oFit;
             }
         }
 
         int average = 0;
+        //Get the average of the fitnesses for this generation
         for(CPPN o: organisms){
             average += o.getFitness();
         }
         average = average / organisms.size();
 
+        //Write to the log file
         try {
             FileWriter statWriter = new FileWriter(MainGame.STAT_LOG, true);
             statWriter.write("\n" + generation + "," + average + "," + max);
@@ -240,7 +240,7 @@ public class Population implements PopulationInterface {
         }
 
         statisticsTrack();
-
+        //Set the average fitness for a species
         for (Species s: species) {
             s.setAverageFitness();
         }
@@ -268,12 +268,6 @@ public class Population implements PopulationInterface {
             if(!species.get(i).getOrganisms().containsKey(bestAgentID)) {
                 if(species.get(i).getStaleness() >= Coefficients.STALENESS_THRESH.getValue()) {
                     Species.takenColors.remove(species.get(i).getColor());
-                    /////////////////////////////////////////////////////////////////////
-                    //System.err.println("\nStale " + species.get(i).getBestOrgID());
-                    //System.err.println(species.get(i).getBestOrgID() == bestAgentID);
-                    //System.err.println("BestOrgID: " + species.get(i).getBestOrgID());
-                    //System.err.println("BestAgentID: " + bestAgentID + "\n");
-                    /////////////////////////////////////////////////////////////////////
                     species.remove(species.get(i));
                     i--;
                 }
@@ -286,7 +280,6 @@ public class Population implements PopulationInterface {
      */
     private void removeBadSpecies() {
         double avgSum = getAvgFitnessSum();
-
         for(int i = 0; i < species.size(); i++) {
             if(!species.get(i).getOrganisms().containsKey(bestAgentID)) {
                 if(species.get(i).getAverageFitness() / avgSum * organisms.size() < 1 || species.get(i).size() < 1) {

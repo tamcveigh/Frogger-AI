@@ -16,6 +16,7 @@ public class Hazard extends Rectangle {
     /** The speed at which this hazard should be currently traveling. */
     private float speed;
 
+    /** The start position on the x,y plane and the start speed. */
     private int startXPos;
     private int startYPos;
     private float startSpeed;

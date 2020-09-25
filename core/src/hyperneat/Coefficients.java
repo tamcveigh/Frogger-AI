@@ -3,6 +3,7 @@ package hyperneat;
 /**
  * This enumeration contains coefficients that are used, so they are located in one single place.
  * @author Chance Simmons and Brandon Townsend
+ * @additions Brooke Kiser and Tyler McVeigh
  * @version 21 January 2020
  */
 public enum Coefficients {

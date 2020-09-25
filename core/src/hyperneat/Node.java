@@ -7,6 +7,7 @@ import java.util.Random;
 /**
  * The node class contains all data needed by nodes to connect networks.
  * @author Chance Simmons and Brandon Townsend
+ * @additions Brooke Kiser and Tyler McVeigh
  * @version 18 January 2020
  */
 public class Node {
@@ -14,7 +15,7 @@ public class Node {
     private final static int INPUT_BIAS_LAYER = 0;
 
     /** The identification number for this node. */
-    private int id;
+    private final int id;
 
     /** The sum of inputs before the node is activated. */
     private double inputValue;
@@ -23,22 +24,16 @@ public class Node {
     private double outputValue;
 
     /** List of all outgoing links. */
-    private List<Link> outgoingLinks;
+    private final List<Link> outgoingLinks;
 
     /** The layer this node resides in. */
     private int layer;
 
-    /**The random activation function*/
+    /**The random activation function. */
     private int randomActive = new Random().nextInt(4);
 
-    /*TODO Take the fitness and math to get the new a value for PR
-    proportional to the fitness level...
-     */
+    /** The slope for the activation function. */
     private double slope = 4.0;
-
-    private int count_pr = 0;
-
-    private boolean active = false;
 
 
     /**
@@ -54,6 +49,10 @@ public class Node {
         this.layer = layer;
     }
 
+    /**
+     * Copy constructor for a node
+     * @param node The node to copt into a new node
+     */
     public Node(Node node) {
         this.id = node.id;
         this.inputValue = node.inputValue;
@@ -104,6 +103,10 @@ public class Node {
         this.outputValue = outputValue;
     }
 
+    /**
+     * Adds a link to the outgoing links
+     * @param link The link that is being added
+     */
     public void addLink(Link link) {
         this.outgoingLinks.add(link);
     }
@@ -131,17 +134,15 @@ public class Node {
         this.layer++;
     }
 
-
     /**
      * Activates the node. Calls the activation function if this node is not on the bias or input
      * layer. Then, grabs each of the connected output nodes and send something to that output
      * nodes input.
      */
     public void activate() {
+
         if(layer != INPUT_BIAS_LAYER) {
-            active = true;
-            /////////////////////////////////////////////////////   //////////////////////////////////////////////
-            //System.err.println(id + " ...... " + randomActive);
+            // finds the activation function of this node
             switch(randomActive){
                 case 0:
                     outputValue = activationFunctionS(inputValue); //previous activation function
@@ -155,15 +156,10 @@ public class Node {
                 case 3:
                     outputValue = acitvationFunctionSw(inputValue);
                     break;
-                /*case 4:
-                    outputValue = activationFunctionSine(inputValue);
-                    break;
-                case 5:
-                    outputValue = activationFunctionCos(inputValue);*/
             }
-            //////////////////////////////////////////////////////////////////////////////////////////////////
         }
 
+        //Change the links to include the activated node
         for(Link link : outgoingLinks) {
             if(link.isEnabled()) {
                 Node outputNode = link.getOutputNode();
@@ -182,15 +178,18 @@ public class Node {
         return 1.0 / (1.0 + Math.pow(Math.E, (-1 * value)));
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**Helper function for the Tanh activation function option.*/
-
+    /**Helper function for the Tanh activation function option.
+     * @param value The value to call the function on.
+     * @return The value after the function has finished.
+     */
     private double activationFunctionT(double value){
         return (2 * (1.0 / (1.0 + Math.pow(Math.E, (-1 * (2*value))))) - 1);
     }
 
-    /**Helper function for the Parameterized ReLU*/
-
+    /**Helper function for the Parameterized ReLU
+     * @param value The value to call the function on.
+     * @return The value after the function has finished.
+     */
     private double activationFunctionPR(double value){
         if(value < 0){
             return slope * value;
@@ -199,8 +198,10 @@ public class Node {
         }
     }
 
-    /**Helper function for the Swish activation function*/
-
+    /**Helper function for the Swish activation function
+     * @param value The value to call the function on.
+     * @return The value after the function has finished.
+     */
     private double acitvationFunctionSw(double value){
         return value * (1.0 / (1.0 + Math.pow(Math.E, (-1 * value))));
     }
@@ -209,11 +210,8 @@ public class Node {
      * to the fitness of the network
      */
     public void slopeCalc() {
-        //System.err.println("*---------------------------" + id);
         slope = slope + 1;
     }
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Checks to see whether this node is connected to the supplied node.
@@ -252,5 +250,4 @@ public class Node {
         }
         return false;
     }
-
 }

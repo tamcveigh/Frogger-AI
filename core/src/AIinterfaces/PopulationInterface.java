@@ -3,7 +3,9 @@ package AIinterfaces;
 import com.mygdx.kittener.game.Agent;
 
 /**
- *
+ * Interface to allow the Population classes to be interchangeable
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 24 September 2020
  */
 public interface PopulationInterface {
 

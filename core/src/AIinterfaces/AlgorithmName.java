@@ -2,6 +2,8 @@ package AIinterfaces;
 
 /**
  * Enum to allow launchers to use the same base code but select which algorithm to use
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 24 September 2020
  */
 public enum AlgorithmName {
 
@@ -15,13 +17,13 @@ public enum AlgorithmName {
 
     /**
      * Constructor for this Enum
-     * @param value
+     * @param value The value of the algorithm
      */
     AlgorithmName(int value) { this.value = value;}
 
     /**
-     *
-     * @return
+     * Get the value of the algorithm Enum
+     * @return The value of the Enum
      */
     public int getValue(){ return this.value;}
 }

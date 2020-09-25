@@ -48,7 +48,7 @@ public class GameScreen extends ScreenAdapter {
     /** Map renderer. */
     private TiledMapRenderer renderer;
 
-    // All textures the game should use.
+    /** All textures the game should use. */
     private Texture bus;
     private Texture raceCar;
     private Texture yellowCar;

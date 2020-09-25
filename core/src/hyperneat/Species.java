@@ -11,7 +11,8 @@ import java.util.*;
  * protects new innovations in each network as organisms will compete within their species
  * instead of the total population.
  * @author Chance Simmons and Brandon Townsend
- * @version 21 January 2020
+ * @additions Brooke Kiser and Tyler McVeigh
+ * @version 24 September 2020
  */
 public class Species {
 
@@ -42,6 +43,7 @@ public class Species {
     /** The color assigned to the agents that belong to this species. */
     private Color color;
 
+    /** The size of the organisms. */
     private int size;
 
     /**
@@ -177,10 +179,11 @@ public class Species {
      */
     public void cull() {
         Map<Integer, CPPN> survivors = new HashMap<>();
+        //Go through each organism
         for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
             int maxOrganism = organism.getKey();
             int maxFitness = organism.getValue().getFitness();
-
+            //Find the max fitness and organism
             for(Map.Entry<Integer, CPPN> other : organisms.entrySet()) {
                 int otherOrganism = other.getKey();
                 int otherFitness = other.getValue().getFitness();
@@ -240,6 +243,10 @@ public class Species {
         return baby;
     }
 
+    /**
+     * The size of the organisms
+     * @return The number of organisms
+     */
     public int size(){
         return this.size;
     }

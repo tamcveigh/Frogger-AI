@@ -1,27 +1,35 @@
 package hyperneat;
 
-import static java.lang.Math.abs;
-
 /**
- * This class will
+ * This class models a CPPN in the 4th dimension. This will set up the substrate and the CPPN network
+ * The substrate will consist of a input and output size that is a parameter into the CPPN class. Within
+ * the CPPN class the substrate link weights are also set since the substrate in a part of the CPPN itself.
+ *
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 23 September 2020
  */
 public class CPPN {
 
-    /** Array holding the weights between any two nodes on the substrate*/
-    private Substrate substrate;
+    /** Array holding the weights between any two nodes on the substrate. */
+    private final Substrate substrate;
 
+    /** The CPPN network. */
     private Network CPPNFunction;
 
-    private int inputSize;
+    /** The input number of nodes for the substrate. */
+    private final int inputSize;
 
-    private int outputSize;
+    /** The output number of nodes for the substrate. */
+    private final int outputSize;
 
+    /** The size of the substrate . */
     private static final int SUBSTRATE_SIZE = 11;
 
+    /** The fitness of the CPPN. */
     private int fitness;
 
     /**
-     *
+     * Constructor of the CPPN. Creates the substrate and network for the CPPN to run with.
      * @param inputSize the size of the square matrix of the substrate
      */
     public CPPN(int inputSize, int outputSize){
@@ -36,7 +44,7 @@ public class CPPN {
 
     /**
      * Creates a  copy of this CPPN
-     * @return
+     * @return the cloned CPPN
      */
     @Override
     public CPPN clone(){
@@ -47,7 +55,8 @@ public class CPPN {
     }
 
     /**
-     * Takes any two points on an array
+     * Takes any two points on an array and feeds those points forward in the CPPN network
+     * to get an output
      *
      * @param xOne x coordinate of the first point on the substrate
      * @param yOne y coordinate of the first point on the substrate
@@ -62,7 +71,8 @@ public class CPPN {
     }
 
     /**
-     * Function that will take the generated weights and create a Neural Network from them
+     * Function that will take the generated weights and create a Neural Network from them. This creates
+     * a 4 dimensional CPPN with 4 substrates
      */
     private void generateNetwork(){
         //Create the node weights
@@ -79,32 +89,53 @@ public class CPPN {
 
     }
 
+    /**
+     * Mutates the CPPN network
+     */
     public void mutate(){
-        //System.err.println("Cppn mutate reached");
         this.CPPNFunction.mutate();
-
         this.generateNetwork();
     }
 
-
+    /**
+     * Gets the CPPN network
+     * @return This CPPN network
+     */
     public Network getCPPNetwork(){
         return this.CPPNFunction;
     }
 
+    /**
+     * Feeds the network to get new output values
+     * @param agentVision The array of what the agent can see
+     * @return The array of the output values
+     */
     public double[] runSubstrate(float[] agentVision) {
         return this.substrate.feedForward(agentVision);
     }
 
+    /**
+     * Gets the fitness of this CPPN
+     * @return The fitness of the CPPN
+     */
     public int getFitness() {
-        System.err.println("CPPN Get " + fitness);
         return this.fitness;
     }
 
+    /**
+     * Sets the fitness for the CPPN
+     *
+     * @param fitness The new fitness for the CPPN
+     */
     public void setFitness(int fitness){
-        System.err.println("CPPN " + fitness);
         this.fitness = fitness;
     }
 
+    /**
+     * Crossover a baby CPPN with this CPPN and another parent
+     * @param otherParent The second parent to make the baby
+     * @return The baby of the two parent CPPNs
+     */
     public CPPN crossover(CPPN otherParent) {
         CPPN baby = this.clone();
         baby.CPPNFunction.crossover(otherParent.CPPNFunction);

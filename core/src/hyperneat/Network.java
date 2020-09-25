@@ -6,29 +6,30 @@ import java.util.*;
  * Class which represents the "brain" of an organism. It is a connection of nodes via links in
  * which values are passed through and a certain value is chosen as the "correct" output.
  * @author Chance Simmons and Brandon Townsend
- * @version 21 January 2020
+ * @additions Brooke Kiser and Tyler McVeigh
+ * @version 23 September 2020
  */
 public class Network {
     /**
      * A static mapping of innovation numbers. These help in identifying similar links across
      * multiple networks during crossover.
      */
-    private static Map<Integer, String> innovationList = new HashMap<>();
+    private static final Map<Integer, String> innovationList = new HashMap<>();
 
     /** A list of all links in this network. */
-    private List<Link> links;
+    private final List<Link> links;
 
     /** A list of all input nodes in this network. No new input nodes should be added over time.*/
-    private Node[] inputNodes;
+    private final Node[] inputNodes;
 
     /** A list of all output nodes in this network. No new output nodes should be added over time.*/
-    private Node[] outputNodes;
+    private final Node[] outputNodes;
 
     /** A list of all hidden nodes in this network. This part can grow over time. */
-    private List<Node> hiddenNodes;
+    private final List<Node> hiddenNodes;
 
     /** A single bias node which should be connected to all non-input nodes. Helps with outputs. */
-    private Node biasNode;
+    private final Node biasNode;
 
     /** Counter to keep track of the number of nodes there are in our network. */
     private int numNodes;
@@ -39,7 +40,7 @@ public class Network {
     /** The fitness that the agent assigned to this network scored. */
     private int fitness;
 
-    private int network_id = new Random().nextInt(1000000);
+    private final int network_id = new Random().nextInt(1000000);
 
     /**
      * Our network constructor. Builds an initial fully connected network of input and output nodes.
@@ -58,6 +59,7 @@ public class Network {
         biasNode.setOutputValue(1);
         numNodes++;
 
+        //Creates the input layer
         for(int i = 0; i < inputNum; i++) {
             inputNodes[i] = new Node(i, numLayers);
             numNodes++;
@@ -65,6 +67,7 @@ public class Network {
 
         numLayers++;
 
+        //Creates the output layer
         for(int i = 0; i < outputNum; i++) {
             // Our initial output layer is 1 since it is the layer specifically behind our input.
             // If we add a node in the hidden layer, our output layer should grow.
@@ -74,8 +77,6 @@ public class Network {
 
         // Links our input nodes to output nodes and attaches the bias node to each output node.
         generateNetwork();
-
-        //System.err.println("---" + network_id + "---\n" + fitness);
     }
 
     /**
@@ -91,18 +92,23 @@ public class Network {
         this.outputNodes = new Node[network.outputNodes.length];
         this.hiddenNodes = new ArrayList<>();
         this.biasNode = new Node(network.biasNode);
+
+        //Copy the input layer into the new input layer
         for(int i = 0; i < network.inputNodes.length; i++) {
             this.inputNodes[i] = new Node(network.inputNodes[i]);
         }
+
+        //Copy the hidden nodes into the new network
         for(Node node : network.hiddenNodes) {
             this.hiddenNodes.add(new Node(node));
         }
+
+        //Copy the output layer into the new output layer
         for(int i = 0; i < network.outputNodes.length; i++) {
             this.outputNodes[i] = new Node(network.outputNodes[i]);
         }
-        copyLinks(network);
 
-        //System.err.println(fitness);
+        copyLinks(network);
     }
 
     /**
@@ -128,10 +134,6 @@ public class Network {
     public List<Link> getLinks() {
         return links;
     }
-
-    protected Node[] getInputNodes() {return this.inputNodes;}
-
-    protected Node[] getOutputNodes() {return this.outputNodes;}
 
     /**
      * Performs a deep copy of the links from a supplied network to this one.

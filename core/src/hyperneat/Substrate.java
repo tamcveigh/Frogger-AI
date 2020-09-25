@@ -2,28 +2,30 @@ package hyperneat;
 
 import java.util.*;
 
+/**
+ * This models a substrate with input layer, output layer, or sandwich layers.
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 24 September 2020
+ */
 public class Substrate {
 
     /** Size of the substrate layers*/
-    private int substrateSize;
+    private final int substrateSize;
 
     /** A list of all input nodes in this network. No new input nodes should be added over time.*/
-    private List<Node> inputNodes;
+    private final List<Node> inputNodes;
 
     /** A list of all output nodes in this network. No new output nodes should be added over time.*/
-    private List<Node> outputNodes;
+    private final List<Node> outputNodes;
 
-    private Node[][] inputLayer;
+    /** A double array for the input layer */
+    private final Node[][] inputLayer;
 
-    private Node[][] sandwichLayer;
+    /** A double array for the sandwich layer */
+    private final Node[][] sandwichLayer;
 
-    private Node[][] outputLayer;
-
-    /** Counter to keep track of the number of nodes there are in our network. */
-    private int numNodes;
-
-    /** Constant to keep track of the number of current layers there are in our network. */
-    private final int numLayers = 3;
+    /** A double array for the output layer */
+    private final Node[][] outputLayer;
 
     /**
      * Our network constructor. Builds an initial fully connected network of input and output nodes.
@@ -42,17 +44,22 @@ public class Substrate {
         this.generateLinks(this.inputLayer, this.sandwichLayer);
         this.generateLinks(this.sandwichLayer, this.outputLayer);
 
+        //Populate the input nodes from the input layer
         for(int i = 0; i < inputNum; i++){
             this.inputNodes.add(this.inputLayer[0][i]);
         }
 
+        //Populate the output nodes from the output layer
         for(int i = 0; i < outputNum; i++){
             this.outputNodes.add(this.outputLayer[this.substrateSize - 1][i]);
         }
-
-
     }
 
+    /**
+     * Populates a layer of the substrate with nodes
+     * @param layerNum The number responding to the layer
+     * @return The double array containing the populated layer
+     */
     private Node[][] generateNodes(int layerNum) {
         Node[][] layerNodes = new Node[this.substrateSize][this.substrateSize];
         int id = 0;
@@ -60,12 +67,17 @@ public class Substrate {
             for(int j = 0; j < this.substrateSize; j++){
                 layerNodes[i][j] = new Node(id, layerNum);
                 id++;
-                this.numNodes++;
             }
         }
         return layerNodes;
     }
 
+    /**
+     * Create the links between all the layers. The weight of the links will initially be set to 0. This will
+     * set up the links between the input and outgoing nodes in the substrate.
+     * @param inputLayer The layer with the input nodes
+     * @param outgoingLayer The output layer to set to the input layer
+     */
     private void generateLinks(Node[][] inputLayer, Node[][] outgoingLayer){
         int innoNum = 0;
         for(int i = 0; i < this.substrateSize; i++){
@@ -81,6 +93,14 @@ public class Substrate {
         }//end nested loops
     }
 
+    /**
+     * Connects an input node to an output node by a link of a determined link weight.
+     * @param inputX The first value of the input node
+     * @param inputY The second value of the input node
+     * @param outX The first value of the output node
+     * @param outY The second value of the output node
+     * @param weight The weight of the link
+     */
     public void setLinkWeight(int inputX, int inputY, int outX, int outY, double weight){
         Node inputNode = this.inputLayer[inputX][inputY];
         Node sandwichFromIn = this.sandwichLayer[outX][outY];
@@ -107,14 +127,7 @@ public class Substrate {
                 link.setWeight(weight);
             }
         }
-
     }
-
-
-    protected Node[] getInputNodes() {return (Node[])this.inputNodes.toArray();}
-
-    protected Node[] getOutputNodes() {return (Node[])this.outputNodes.toArray();}
-
 
     /**
      * Activates every node in the network in a certain specified order. Should traverse from
@@ -129,7 +142,6 @@ public class Substrate {
         }
 
         // Activate the nodes in order from input node -> bias -> hidden -> output.
-        //System.err.println("--" + network_id + "--");///////////////////////////////////////////////////////////////
         for (Node[] nodes : inputLayer) {
             for (Node node : nodes) {
                 node.activate();
@@ -160,17 +172,18 @@ public class Substrate {
                 node.setInputValue(0);
             }
         }
+
         for (Node[] nodes : sandwichLayer){
-            for (Node node : nodes) {
-                node.setInputValue(0);
-            }
-        }for (Node[] nodes : outputLayer){
             for (Node node : nodes) {
                 node.setInputValue(0);
             }
         }
 
-
+        for (Node[] nodes : outputLayer){
+            for (Node node : nodes) {
+                node.setInputValue(0);
+            }
+        }
         return outputs;
     }
 

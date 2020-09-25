@@ -11,8 +11,8 @@ import com.mygdx.kittener.game.MainGame;
 
 /**
  * Launches the game of "Kittener", which is based upon the classic arcade game "Frogger".
- * @author Chance Simmons and Brandon Townsend
- * @version 16 December 2019
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 24 September 2020
  */
 public class HyperNEATDesktopLauncher {
 	/** The pixel height and height of a square block, representing a game tile. */
