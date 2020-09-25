@@ -142,54 +142,6 @@ public class Node {
         return 1.0 / (1.0 + Math.pow(Math.E, (-1 * value)));
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**Helper function for the Tanh activation function option.*/
-
-    private double activationFunctionT(double value){
-        return 2 * activationFunctionS(2 * value) - 1;
-    }
-
-    /**Helper function for the Leaky ReLU*/
-
-    private double activationFunctionPR(double value){
-        if(value < 0){
-            return 2 * value;
-        } else {
-            return value;
-        }
-    }
-
-    /**Helper function for the Swish activation function*/
-
-    private double acitvationFunctionSw(double value){
-        return value * activationFunctionS(value);
-    }
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * Checks to see whether this node is connected to the supplied node.
-     * @param node The supplied node to check connection with.
-     * @return True if the nodes are connected, false otherwise.
-     */
-    public boolean isConnectedTo(Node node) {
-        if(layer != node.getLayer()) {
-            if(layer < node.getLayer()) {
-                for(Link link : outgoingLinks) {
-                    if(link.getOutputNode().equals(node)) {
-                        return true;
-                    }
-                }
-            } else {
-                for(Link link : node.getOutgoingLinks()) {
-                    if(link.getOutputNode().equals(this)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
     /**
      * Returns whether or not this node's id number is the same as the supplied object.
      * @param obj The supplied object.

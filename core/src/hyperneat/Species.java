@@ -17,7 +17,7 @@ import java.util.*;
 public class Species {
 
     /** Static list of colors that are already being used by species. */
-    static List<Color> takenColors = new ArrayList<>();
+    public static List<Color> takenColors = new ArrayList<>();
 
     /**
      * The network other networks will be tested against to see if they are compatible with this

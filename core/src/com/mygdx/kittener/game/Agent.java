@@ -14,22 +14,22 @@ import java.util.Arrays;
  */
 public class Agent extends Rectangle {
     /** The identification number of this agent. */
-    private int     id;
+    private final int id;
 
     /** The texture this agent should be currently displayed as. */
     private Texture texture;
 
     /** The score of this agent. */
-    private int     score;
+    private int score;
 
     /** The last y-coordinate the agent was located at. */
-    private float   lastY;
+    private float lastY;
 
     /** Boolean to determine whether or not this agent is dead. */
     private boolean isDead;
 
     /** Timer to keep track of how long the agent has "stood still". */
-    private float   stillTimer;
+    private float stillTimer;
 
     /** What color this agent should be displayed as. */
     private Color color;
@@ -69,7 +69,7 @@ public class Agent extends Rectangle {
 
     /**
      * Returns the texture currently being displayed for this agent.
-     * @return The texture currently being displayed for this agent.
+     * @return The  texture currently being displayed for this agent.
      */
     public Texture getTexture() {
         return texture;

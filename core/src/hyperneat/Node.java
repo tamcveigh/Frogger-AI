@@ -214,30 +214,6 @@ public class Node {
     }
 
     /**
-     * Checks to see whether this node is connected to the supplied node.
-     * @param node The supplied node to check connection with.
-     * @return True if the nodes are connected, false otherwise.
-     */
-    public boolean isConnectedTo(Node node) {
-        if(layer != node.getLayer()) {
-            if(layer < node.getLayer()) {
-                for(Link link : outgoingLinks) {
-                    if(link.getOutputNode().equals(node)) {
-                        return true;
-                    }
-                }
-            } else {
-                for(Link link : node.getOutgoingLinks()) {
-                    if(link.getOutputNode().equals(this)) {
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
-
-    /**
      * Returns whether or not this node's id number is the same as the supplied object.
      * @param obj The supplied object.
      * @return True if the supplied objects id number is the same as this nodes.

@@ -96,24 +96,6 @@ public class Link {
     }
 
     /**
-     * Mutates the weight of this link either completely or slightly.
-     */
-    public void mutateWeight() {
-        if(Math.random() < 0.1) {      // Completely change the weight.
-            weight = Math.random() * 2 - 1;
-        } else {                // Slightly change the weight.
-            Random random = new Random();
-            weight += random.nextGaussian() / 50;
-
-            if(weight > 1) {
-                weight = 1;
-            } else if(weight < -1) {
-                weight = -1;
-            }
-        }
-    }
-
-    /**
      * Checks to see if a supplied object is the same link as this one.
      * @param obj The object to check equality against.
      * @return True if the object is a link and the innovation numbers are the same, false

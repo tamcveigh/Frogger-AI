@@ -217,22 +217,6 @@ public class Population implements PopulationInterface{
     }
 
     /**
-     * Removes all species that are over the staleness threshold, except the one that contains
-     * the current best organism.
-     */
-    private void removeStaleSpecies() {
-        for(int i = 0; i < species.size(); i++) {
-            if(!species.get(i).getOrganisms().containsKey(bestAgentID)) {
-                if(species.get(i).getStaleness() >= Coefficients.STALENESS_THRESH.getValue()) {
-                    Species.takenColors.remove(species.get(i).getColor());
-                    species.remove(species.get(i));
-                    i--;
-                }
-            }
-        }
-    }
-
-    /**
      * Removes any species who would produce zero babies this generation.
      */
     private void removeBadSpecies() {

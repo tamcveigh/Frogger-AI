@@ -1,6 +1,7 @@
 package hyperneat;
 
 import AIinterfaces.PopulationInterface;
+import AIinterfaces.ReusedCode;
 import com.mygdx.kittener.game.Agent;
 import com.mygdx.kittener.game.MainGame;
 
@@ -15,7 +16,7 @@ import java.util.*;
  * @additions Brooke Kiser and Tyler McVeigh
  * @version 24 September 2020
  */
-public class Population implements PopulationInterface {
+public class Population extends ReusedCode implements PopulationInterface {
     /** Keeps track of the generation of organisms we're at. */
     private int generation;
 
@@ -94,7 +95,7 @@ public class Population implements PopulationInterface {
                 break;
             }
 
-            if(s.getCompatibilityNetwork().isCompatibleTo(organisms.get(agent.getId()).getCPPNetwork())) {
+            if(isCompatibleTo(s.getCompatibilityNetwork(), organisms.get(agent.getId()).getCPPNetwork())) {
                 agent.setColor(s.getColor());
                 break;
             }
@@ -126,7 +127,7 @@ public class Population implements PopulationInterface {
         speciate();
         setBestAgentID();
         cullSpecies();
-        removeStaleSpecies();
+        removeStaleSpecies(this);
         removeBadSpecies();
 
         double avgSum = getAvgFitnessSum();
@@ -227,7 +228,7 @@ public class Population implements PopulationInterface {
             boolean speciesFound = false;
             for(int i = 0; !speciesFound && i < species.size(); i++) {
                 Species s = species.get(i);
-                if(agentNetwork.getCPPNetwork().isCompatibleTo(s.getCompatibilityNetwork())) {
+                if(isCompatibleTo(agentNetwork.getCPPNetwork(), s.getCompatibilityNetwork())) {
                     s.addOrganism(agentID, agentNetwork);
                     speciesFound = true;
                 }
@@ -260,22 +261,6 @@ public class Population implements PopulationInterface {
     }
 
     /**
-     * Removes all species that are over the staleness threshold, except the one that contains
-     * the current best organism.
-     */
-    private void removeStaleSpecies() {
-        for(int i = 0; i < species.size(); i++) {
-            if(!species.get(i).getOrganisms().containsKey(bestAgentID)) {
-                if(species.get(i).getStaleness() >= Coefficients.STALENESS_THRESH.getValue()) {
-                    Species.takenColors.remove(species.get(i).getColor());
-                    species.remove(species.get(i));
-                    i--;
-                }
-            }
-        }
-    }
-
-    /**
      * Removes any species who would produce zero babies this generation.
      */
     private void removeBadSpecies() {
@@ -302,5 +287,21 @@ public class Population implements PopulationInterface {
             avgSum += s.getAverageFitness();
         }
         return avgSum;
+    }
+
+    /**
+     * Gets the list of the species
+     * @return The list of species
+     */
+    public List<Species> getSpecies() {
+        return species;
+    }
+
+    /**
+     * The best agent of the population
+     * @return The ID of the best agent
+     */
+    public int getBestAgentID(){
+        return bestAgentID;
     }
 }

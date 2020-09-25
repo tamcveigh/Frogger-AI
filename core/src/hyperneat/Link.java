@@ -1,6 +1,5 @@
 package hyperneat;
 
-import java.util.Random;
 
 /**
  * Represents a connection between two nodes in our network. Each connection is given an
@@ -10,13 +9,13 @@ import java.util.Random;
  */
 public class Link {
     /** The innovation number assigned to this link. */
-    private int innovationNum;
+    private final int innovationNum;
 
     /** The input node this link is connected to. */
-    private int inputNodeID;
+    private final int inputNodeID;
 
     /** The output node this link is connected to. */
-    private Node outputNode;
+    private final Node outputNode;
 
     /** The weight that is assigned to this link. Should be between -1 and 1. */
     private double weight;
@@ -93,24 +92,6 @@ public class Link {
      */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
-    }
-
-    /**
-     * Mutates the weight of this link either completely or slightly.
-     */
-    public void mutateWeight() {
-        if(Math.random() < 0.1) {      // Completely change the weight.
-            weight = Math.random() * 2 - 1;
-        } else {                // Slightly change the weight.
-            Random random = new Random();
-            weight += random.nextGaussian() / 50;
-
-            if(weight > 1) {
-                weight = 1;
-            } else if(weight < -1) {
-                weight = -1;
-            }
-        }
     }
 
     /**
