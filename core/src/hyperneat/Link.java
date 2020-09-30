@@ -1,13 +1,16 @@
 package hyperneat;
 
 
+import AIinterfaces.LinkIF;
+import AIinterfaces.NodeIF;
+
 /**
  * Represents a connection between two nodes in our network. Each connection is given an
  * innovation number which assists in crossover between two separate networks.
  * @author Chance Simmons and Brandon Townsend
  * @version 21 January 2020
  */
-public class Link {
+public class Link implements LinkIF {
     /** The innovation number assigned to this link. */
     private final int innovationNum;
 
@@ -15,7 +18,7 @@ public class Link {
     private final int inputNodeID;
 
     /** The output node this link is connected to. */
-    private final Node outputNode;
+    private final NodeIF outputNode;
 
     /** The weight that is assigned to this link. Should be between -1 and 1. */
     private double weight;
@@ -30,7 +33,7 @@ public class Link {
      * @param inputNodeID The supplied id number for this links input node.
      * @param outputNode The supplied node for this links output node.
      */
-    public Link(int innovationNum, int inputNodeID, Node outputNode, double weight) {
+    public Link(int innovationNum, int inputNodeID, NodeIF outputNode, double weight) {
         this.innovationNum = innovationNum;
         this.inputNodeID = inputNodeID;
         this.outputNode = outputNode;
@@ -58,7 +61,7 @@ public class Link {
      * Returns this links output node.
      * @return This links output node.
      */
-    public Node getOutputNode() {
+    public NodeIF getOutputNode() {
         return outputNode;
     }
 

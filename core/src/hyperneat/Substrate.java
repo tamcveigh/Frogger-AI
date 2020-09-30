@@ -1,5 +1,7 @@
 package hyperneat;
 
+import AIinterfaces.LinkIF;
+
 import java.util.*;
 
 /**
@@ -107,9 +109,9 @@ public class Substrate {
         Node sandwichToOut = this.sandwichLayer[inputX][inputY];
         Node outputNode = this.outputLayer[outX][outY];
 
-        Link link;
+        LinkIF link;
         boolean found = false;
-        List<Link> links = inputNode.getOutgoingLinks();
+        List<LinkIF> links = inputNode.getOutgoingLinks();
         for(int i = 0; i < links.size() && !found; i++){
             link = links.get(i);
             if (link.getOutputNode().equals(sandwichFromIn)){

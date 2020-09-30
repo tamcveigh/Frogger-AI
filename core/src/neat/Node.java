@@ -1,5 +1,8 @@
 package neat;
 
+import AIinterfaces.LinkIF;
+import AIinterfaces.NodeIF;
+import AIinterfaces.ReusedCode;
 import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
 
 import java.util.ArrayList;
@@ -11,12 +14,12 @@ import java.util.Random;
  * @author Chance Simmons and Brandon Townsend
  * @version 18 January 2020
  */
-public class Node {
+public class Node extends ReusedCode implements NodeIF {
     /** The input or bias layer should always been a value of 0. */
     private final static int INPUT_BIAS_LAYER = 0;
 
     /** The identification number for this node. */
-    private int id;
+    private final int id;
 
     /** The sum of inputs before the node is activated. */
     private double inputValue;
@@ -25,7 +28,7 @@ public class Node {
     private double outputValue;
 
     /** List of all outgoing links. */
-    private List<Link> outgoingLinks;
+    private final List<LinkIF> outgoingLinks;
 
     /** The layer this node resides in. */
     private int layer;
@@ -43,12 +46,12 @@ public class Node {
         this.layer = layer;
     }
 
-    public Node(Node node) {
-        this.id = node.id;
-        this.inputValue = node.inputValue;
-        this.outputValue = node.outputValue;
+    public Node(NodeIF node) {
+        this.id = node.getId();
+        this.inputValue = node.getInputValue();
+        this.outputValue = node.getOutputValue();
         this.outgoingLinks = new ArrayList<>();
-        this.layer = node.layer;
+        this.layer = node.getLayer();
     }
 
     /**
@@ -67,6 +70,27 @@ public class Node {
         return inputValue;
     }
 
+    @Override
+    public int getInputBiasLayer() {
+        return 0;
+    }
+
+    /**
+     * The activation function for this node
+     * @return The activation number
+     */
+    public int getRandomActive() {
+        return 0;
+    }
+
+    /**
+     * Gets the slope of the activation function
+     * @return The slope of the activation function
+     */
+    public double getSlope() {
+        return 0.0;
+    }
+
     /**
      * Sets this nodes input value to the supplied one.
      * @param inputValue The supplied input value.
@@ -83,6 +107,11 @@ public class Node {
         return outputValue;
     }
 
+    /**Learns the slope value (a) of the parameterized ReLU by taking the current a and modifying it proportionally
+     * to the fitness of the network
+     */
+    public void slopeCalc() {}
+
     /**
      * Sets this nodes output value to the supplied one.
      * @param outputValue The supplied output value.
@@ -95,7 +124,7 @@ public class Node {
      * Returns this nodes outgoing links.
      * @return This nodes outgoing links.
      */
-    public List<Link> getOutgoingLinks() {
+    public List<LinkIF> getOutgoingLinks() {
         return outgoingLinks;
     }
 
@@ -124,9 +153,9 @@ public class Node {
             outputValue = activationFunctionS(inputValue);
         }
 
-        for(Link link : outgoingLinks) {
+        for(LinkIF link : outgoingLinks) {
             if(link.isEnabled()) {
-                Node outputNode = link.getOutputNode();
+                NodeIF outputNode = link.getOutputNode();
                 double oldInputValue = outputNode.getInputValue();
                 outputNode.setInputValue(oldInputValue + link.getWeight() * outputValue);
             }

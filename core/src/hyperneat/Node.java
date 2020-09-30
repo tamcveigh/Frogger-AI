@@ -1,5 +1,8 @@
 package hyperneat;
 
+import AIinterfaces.LinkIF;
+import AIinterfaces.NodeIF;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -10,7 +13,7 @@ import java.util.Random;
  * @additions Brooke Kiser and Tyler McVeigh
  * @version 18 January 2020
  */
-public class Node {
+public class Node implements NodeIF {
     /** The input or bias layer should always been a value of 0. */
     private final static int INPUT_BIAS_LAYER = 0;
 
@@ -24,7 +27,7 @@ public class Node {
     private double outputValue;
 
     /** List of all outgoing links. */
-    private final List<Link> outgoingLinks;
+    private final List<LinkIF> outgoingLinks;
 
     /** The layer this node resides in. */
     private int layer;
@@ -53,14 +56,14 @@ public class Node {
      * Copy constructor for a node
      * @param node The node to copt into a new node
      */
-    public Node(Node node) {
-        this.id = node.id;
-        this.inputValue = node.inputValue;
-        this.outputValue = node.outputValue;
+    public Node(NodeIF node) {
+        this.id = node.getId();
+        this.inputValue = node.getInputValue();
+        this.outputValue = node.getOutputValue();
         this.outgoingLinks = new ArrayList<>();
-        this.layer = node.layer;
-        this.randomActive = node.randomActive;
-        this.slope = node.slope;
+        this.layer = node.getLayer();
+        this.randomActive = node.getRandomActive();
+        this.slope = node.getSlope();
     }
 
     /**
@@ -77,6 +80,11 @@ public class Node {
      */
     public double getInputValue() {
         return inputValue;
+    }
+
+
+    public int getInputBiasLayer() {
+        return INPUT_BIAS_LAYER;
     }
 
     /**
@@ -107,7 +115,7 @@ public class Node {
      * Adds a link to the outgoing links
      * @param link The link that is being added
      */
-    public void addLink(Link link) {
+    public void addLink(LinkIF link) {
         this.outgoingLinks.add(link);
     }
 
@@ -115,7 +123,7 @@ public class Node {
      * Returns this nodes outgoing links.
      * @return This nodes outgoing links.
      */
-    public List<Link> getOutgoingLinks() {
+    public List<LinkIF> getOutgoingLinks() {
         return outgoingLinks;
     }
 
@@ -160,9 +168,9 @@ public class Node {
         }
 
         //Change the links to include the activated node
-        for(Link link : outgoingLinks) {
+        for(LinkIF link : outgoingLinks) {
             if(link.isEnabled()) {
-                Node outputNode = link.getOutputNode();
+                NodeIF outputNode = link.getOutputNode();
                 double oldInputValue = outputNode.getInputValue();
                 outputNode.setInputValue(oldInputValue + link.getWeight() * outputValue);
             }
@@ -225,5 +233,21 @@ public class Node {
             return id == other.getId();
         }
         return false;
+    }
+
+    /**
+     * The activation function for this node
+     * @return The activation number
+     */
+    public int getRandomActive() {
+        return randomActive;
+    }
+
+    /**
+     * Gets the slope of the activation function
+     * @return The slope of the activation function
+     */
+    public double getSlope() {
+        return slope;
     }
 }

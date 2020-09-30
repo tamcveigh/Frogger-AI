@@ -1,6 +1,9 @@
 package AIinterfaces;
 
 import com.mygdx.kittener.game.Agent;
+import hyperneat.Species;
+
+import java.util.List;
 
 /**
  * Interface to allow the Population classes to be interchangeable
@@ -48,4 +51,16 @@ public interface PopulationInterface {
      * reproduces.
      */
     void naturalSelection();
+
+    /**
+     * Gets the list of the species
+     * @return The list of species
+     */
+    List<SpeciesIF> getSpecies();
+
+    /**
+     * The best agent of the population
+     * @return The ID of the best agent
+     */
+    int getBestAgentID();
 }

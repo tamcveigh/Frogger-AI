@@ -1,5 +1,13 @@
 package hyperneat;
 
+import AIinterfaces.LinkIF;
+import AIinterfaces.NetworkIF;
+import AIinterfaces.NodeIF;
+import AIinterfaces.ReusedCode;
+
+import java.util.List;
+import java.util.Map;
+
 /**
  * This class models a CPPN in the 4th dimension. This will set up the substrate and the CPPN network
  * The substrate will consist of a input and output size that is a parameter into the CPPN class. Within
@@ -8,13 +16,13 @@ package hyperneat;
  * @author Brooke Kiser and Tyler McVeigh
  * @version 23 September 2020
  */
-public class CPPN {
+public class CPPN extends ReusedCode implements NetworkIF{
 
     /** Array holding the weights between any two nodes on the substrate. */
     private final Substrate substrate;
 
     /** The CPPN network. */
-    private Network CPPNFunction;
+    private NetworkIF CPPNFunction;
 
     /** The input number of nodes for the substrate. */
     private final int inputSize;
@@ -66,7 +74,7 @@ public class CPPN {
      */
     private double outputWeight( int xOne, int yOne, int xTwo, int yTwo){
         float[] inputValues = { xOne, yOne, xTwo, yTwo };
-        double[] outputArray = this.CPPNFunction.feedForward(inputValues);
+        double[] outputArray = feedForward(CPPNFunction, inputValues);
         return outputArray[0];
     }
 
@@ -101,7 +109,7 @@ public class CPPN {
      * Gets the CPPN network
      * @return This CPPN network
      */
-    public Network getCPPNetwork(){
+    public NetworkIF getCPPNetwork(){
         return this.CPPNFunction;
     }
 
@@ -138,7 +146,142 @@ public class CPPN {
      */
     public CPPN crossover(CPPN otherParent) {
         CPPN baby = this.clone();
-        baby.CPPNFunction.crossover(otherParent.CPPNFunction);
+        crossover(otherParent.CPPNFunction, baby.CPPNFunction);
         return baby;
+    }
+
+    /**
+     * Returns the node with the specified ID.
+     *
+     * @param id The ID number to search by.
+     *
+     * @return The node that corresponds to the ID number or null.
+     */
+    @Override
+    public NodeIF getNode(int id) {
+        return null;
+    }
+
+    /**
+     * Returns the list of links that this network holds.
+     *
+     * @return The list of links that this network holds.
+     */
+    @Override
+    public List<LinkIF> getLinks() {
+        return null;
+    }
+
+    /**
+     * Get the innovation list
+     */
+    @Override
+    public Map<Integer, String> getInnovationList() {
+        return null;
+    }
+
+    /**
+     * Get the input nodes of the network
+     *
+     * @return Array containing the input nodes
+     */
+    @Override
+    public NodeIF[] getInputNodes() {
+        return new NodeIF[0];
+    }
+
+    /**
+     * Get the output nodes of the network
+     *
+     * @return Array containing the output nodes
+     */
+    @Override
+    public NodeIF[] getOutputNodes() {
+        return new NodeIF[0];
+    }
+
+    /**
+     * Get the hidden nodes of the network
+     *
+     * @return List containing the hidden nodes
+     */
+    @Override
+    public List<NodeIF> getHiddenNodes() {
+        return null;
+    }
+
+    /**
+     * Increment the number of layers
+     */
+    @Override
+    public void incrementLayer() {
+
+    }
+
+    /**
+     * Gets the total of number of nodes
+     *
+     * @return the number of nodes
+     */
+    @Override
+    public int getNumNodes() {
+        return 0;
+    }
+
+    /**
+     * Returns whether or not a link can be formed between two nodes. If the nodes are already connected, it is a bad
+     * link and if both nodes are from the same layer, it is a bad link.
+     *
+     * @param node1 One of the nodes on the link.
+     * @param node2 The other node on the link.
+     *
+     * @return True if the future link is bad, false otherwise.
+     */
+    @Override
+    public boolean isBadLink(NodeIF node1, NodeIF node2) {
+        return false;
+    }
+
+    /**
+     * Increment the total number of nodes
+     */
+    @Override
+    public void incrementNodes() {
+
+    }
+
+    /**
+     * Gets the bias node
+     *
+     * @return The bias node
+     */
+    @Override
+    public NodeIF getBiasNode() {
+        return null;
+    }
+
+    /**
+     * Gets the total number of layers
+     *
+     * @return The number of layers
+     */
+    @Override
+    public int getNumLayers() {
+        return 0;
+    }
+
+    @Override
+    public NetworkIF getCompatibilityNetwork() {
+        return null;
+    }
+
+    @Override
+    public Integer getBestOrgID() {
+        return null;
+    }
+
+    @Override
+    public void setCompatibilityNetwork() {
+
     }
 }

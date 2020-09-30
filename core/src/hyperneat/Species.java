@@ -1,5 +1,7 @@
 package hyperneat;
 
+import AIinterfaces.NetworkIF;
+import AIinterfaces.SpeciesIF;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.Array;
@@ -14,7 +16,7 @@ import java.util.*;
  * @additions Brooke Kiser and Tyler McVeigh
  * @version 24 September 2020
  */
-public class Species {
+public class Species implements SpeciesIF {
 
     /** Static list of colors that are already being used by species. */
     public static List<Color> takenColors = new ArrayList<>();
@@ -23,10 +25,10 @@ public class Species {
      * The network other networks will be tested against to see if they are compatible with this
      * species.
      */
-    private Network compatibilityNetwork;
+    private NetworkIF compatibilityNetwork;
 
     /** A mapping of agent IDs to their networks. */
-    private Map<Integer, CPPN> organisms;
+    private Map<Integer, NetworkIF> organisms;
 
     /** The ID number of the best organism in this species this generation. */
     private int bestOrgID;
@@ -51,8 +53,8 @@ public class Species {
      * @param agentID The ID number of the first agent to be assigned to this species.
      * @param agentNetwork The network used by the first agent to be assigned to this species.
      */
-    public Species(int agentID, CPPN agentNetwork) {
-        compatibilityNetwork = agentNetwork.clone().getCPPNetwork() ;
+    public Species(int agentID, NetworkIF agentNetwork) {
+        compatibilityNetwork = ((CPPN) agentNetwork).clone().getCPPNetwork();
         organisms = new HashMap<>();
         organisms.put(agentID, agentNetwork);
         bestOrgID = agentID;
@@ -81,7 +83,7 @@ public class Species {
      * Returns the network used to test compatibility with this species.
      * @return The network used to test compatibility with this species.
      */
-    public Network getCompatibilityNetwork() {
+    public NetworkIF getCompatibilityNetwork() {
         return compatibilityNetwork;
     }
 
@@ -92,14 +94,14 @@ public class Species {
         Random r = new Random();
         Set<Integer> keySet = organisms.keySet();
         int key = (int) keySet.toArray()[r.nextInt(keySet.size())];
-        compatibilityNetwork = organisms.get(key ).getCPPNetwork();
+        compatibilityNetwork = (NetworkIF) organisms.get(key ).getCPPNetwork();
     }
 
     /**
      * Returns the mapping of agent IDs and their networks.
      * @return The mapping of agent IDs and their networks.
      */
-    public Map<Integer, CPPN> getOrganisms() {
+    public Map<Integer, NetworkIF> getOrganisms() {
         return organisms;
     }
 
@@ -108,9 +110,9 @@ public class Species {
      * @param agentID The ID number of the agent.
      * @param agentNetwork The network the agent uses.
      */
-    public void addOrganism(int agentID, CPPN agentNetwork) {
+    public void addOrganism(int agentID, NetworkIF agentNetwork) {
 
-        organisms.put(agentID, agentNetwork );
+        organisms.put(agentID, (CPPN) agentNetwork);
         this.size = organisms.size();
     }
 
@@ -135,7 +137,7 @@ public class Species {
      */
     public void setAverageFitness() {
         double fitnessSum = 0.0;
-        for(CPPN network : organisms.values()) {
+        for(NetworkIF network : organisms.values()) {
             fitnessSum += network.getFitness();
         }
         if(organisms.isEmpty()) {
@@ -159,7 +161,7 @@ public class Species {
      */
     public void setStaleness() {
         int generationMaxFitness = -1;
-        for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, NetworkIF> organism : organisms.entrySet()) {
             if(organism.getValue().getFitness() > generationMaxFitness) {
                 generationMaxFitness = organism.getValue().getFitness();
                 bestOrgID = organism.getKey();
@@ -178,13 +180,13 @@ public class Species {
      * that they will not pollute the gene pool.
      */
     public void cull() {
-        Map<Integer, CPPN> survivors = new HashMap<>();
+        Map<Integer, NetworkIF> survivors = new HashMap<>();
         //Go through each organism
-        for(Map.Entry<Integer, CPPN> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, NetworkIF> organism : organisms.entrySet()) {
             int maxOrganism = organism.getKey();
             int maxFitness = organism.getValue().getFitness();
             //Find the max fitness and organism
-            for(Map.Entry<Integer, CPPN> other : organisms.entrySet()) {
+            for(Map.Entry<Integer, NetworkIF> other : organisms.entrySet()) {
                 int otherOrganism = other.getKey();
                 int otherFitness = other.getValue().getFitness();
 
@@ -193,7 +195,7 @@ public class Species {
                     maxFitness = otherFitness;
                 }
             }
-            survivors.put(maxOrganism, organisms.get(maxOrganism).clone() );
+            survivors.put(maxOrganism, ((CPPN)organisms.get(maxOrganism)).clone());
             organisms.get(maxOrganism).getCPPNetwork().setFitness(-1);
 
             if(survivors.size() >= organisms.size() * Coefficients.CULL_THRESH.getValue()) {
@@ -209,7 +211,7 @@ public class Species {
      * too large. This should prevent any one species from taking over the entire population.
      */
     public void shareFitness() {
-        for(CPPN network : organisms.values()) {
+        for(NetworkIF network : organisms.values()) {
             network.getCPPNetwork().setFitness(network.getFitness() / organisms.size());
         }
     }
