@@ -1,6 +1,7 @@
 package neat;
 
 import AIinterfaces.*;
+import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
 import AIinterfaces.NodeIF.HNNodeIF;
 import AIinterfaces.NodeIF.NEATNodeIF;
@@ -178,7 +179,7 @@ public class Network extends ReusedCode implements NEATNetworkIF {
             link = links.get(random.nextInt(links.size()));
         } while(link.getInputNodeID() == biasNode.getId());
 
-        addNode(this, link);
+        addNode(link);
     }
 
     /**
@@ -277,5 +278,27 @@ public class Network extends ReusedCode implements NEATNetworkIF {
     @Override
     public int getNumLayers() {
         return numLayers;
+    }
+
+    /**
+     * Adds a node where the specified link used to be.
+     * @param link The location where the new node should be added.
+     */
+    public void addNode(LinkIF link) {
+        link.setEnabled(false);
+        NEATNodeIF oldInput = getNode(link.getInputNodeID());
+        int layer = addNodeHelper(this, link, oldInput);
+        NEATNodeIF toAdd = new neat.Node(getNumNodes(), layer);
+        toAdd.activate();
+        getHiddenNodes().add(toAdd);
+
+        // Now add links to either side of the new node. The link going from the old input to the
+        // new node gets a weight of 1 while the link going from the new node to the old output
+        // receives the weight of the now-disabled link.
+        addLink(this, oldInput, toAdd, 1);
+        addLink(this, toAdd, link.getOutputNode(), link.getWeight());
+
+        // Finally connect our bias node with a weight of 0 to minimize the bias' initial impact.
+        addLink(this, getBiasNode(), toAdd, 0);
     }
 }
