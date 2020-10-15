@@ -1,6 +1,7 @@
 package hyperneat;
 
 import AIinterfaces.LinkIF;
+import AIinterfaces.NetworkIF.CPPNNetworkIF;
 import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NetworkIF;
 import AIinterfaces.NodeIF.HNNodeIF;
@@ -46,6 +47,8 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /** The fitness that the agent assigned to this network scored. */
     private int fitness;
+
+    private boolean type = true;
 
     /**
      * Our network constructor. Builds an initial fully connected network of input and output nodes.
@@ -193,6 +196,11 @@ public class Network extends ReusedCode implements HNNetworkIF {
         return isConnectedTo(node1, node2) || node1.getLayer() == node2.getLayer();
     }
 
+    @Override
+    public boolean getType() {
+        return type;
+    }
+
     /**
      * Adds a new node to our network where a random link used to be. Two new links appear
      * connecting the old input and old output to the new node. The old link gets disabled so it
@@ -312,5 +320,16 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
         // Finally connect our bias node with a weight of 0 to minimize the bias' initial impact.
         addLink(this, getBiasNode(), toAdd, 0);
+    }
+
+    /**
+     * Creates a  copy of this CPPN
+     * @return the cloned CPPN
+     */
+    @Override
+    public Network clone(){
+        Network clone = new Network(this.getInputNodes().length, this.getOutputNodes().length);
+        generateNetwork(clone, clone.getInputNodes(), getOutputNodes(), clone.getBiasNode());
+        return clone;
     }
 }

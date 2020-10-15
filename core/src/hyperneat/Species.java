@@ -2,6 +2,7 @@ package hyperneat;
 
 import AIinterfaces.NetworkIF.CPPNNetworkIF;
 import AIinterfaces.NetworkIF.HNNetworkIF;
+import AIinterfaces.NetworkIF.NetworkIF;
 import AIinterfaces.ReusedCode;
 import AIinterfaces.SpeciesIF.HNSpeciesIF;
 import com.badlogic.gdx.graphics.Color;
@@ -27,7 +28,7 @@ public class Species extends ReusedCode implements HNSpeciesIF {
      * The network other networks will be tested against to see if they are compatible with this
      * species.
      */
-    private HNNetworkIF compatibilityNetwork;
+    private CPPNNetworkIF compatibilityNetwork;
 
     /** A mapping of agent IDs to their networks. */
     private Map<Integer, CPPNNetworkIF> organisms;
@@ -55,10 +56,10 @@ public class Species extends ReusedCode implements HNSpeciesIF {
      * @param agentID The ID number of the first agent to be assigned to this species.
      * @param agentNetwork The network used by the first agent to be assigned to this species.
      */
-    public Species(int agentID, HNNetworkIF agentNetwork) {
-        compatibilityNetwork =  ((CPPN) agentNetwork).clone().getCPPNetwork();
+    public Species(int agentID, CPPNNetworkIF agentNetwork) {
+        compatibilityNetwork = (agentNetwork).clone();
         organisms = new HashMap<>();
-        organisms.put(agentID, (CPPNNetworkIF) agentNetwork);
+        organisms.put(agentID, agentNetwork);
         bestOrgID = agentID;
         bestFitness = 0;
         averageFitness = 0.0;
@@ -86,7 +87,7 @@ public class Species extends ReusedCode implements HNSpeciesIF {
      * @return The network used to test compatibility with this species.
      */
     public HNNetworkIF getCompatibilityNetwork() {
-        return compatibilityNetwork;
+        return compatibilityNetwork.getCPPNetwork();
     }
 
     /**
@@ -96,7 +97,7 @@ public class Species extends ReusedCode implements HNSpeciesIF {
         Random r = new Random();
         Set<Integer> keySet = organisms.keySet();
         int key = (int) keySet.toArray()[r.nextInt(keySet.size())];
-        compatibilityNetwork = organisms.get(key ).getCPPNetwork();
+        compatibilityNetwork = organisms.get(key);
     }
 
     /**
@@ -226,21 +227,22 @@ public class Species extends ReusedCode implements HNSpeciesIF {
      */
     public CPPNNetworkIF reproduce() {
 
-        CPPNNetworkIF baby;
+        CPPN baby;
 
         if(Math.random() < Coefficients.CROSSOVER_THRESH.getValue()) {
             Object[] networks = organisms.values().toArray();
-            CPPNNetworkIF parent1 = (CPPNNetworkIF) networks[new Random().nextInt(networks.length)];
-            CPPNNetworkIF parent2 = (CPPNNetworkIF) networks[new Random().nextInt(networks.length)];
+            CPPN parent1 = (CPPN) networks[new Random().nextInt(networks.length)];
+            CPPN parent2 = (CPPN) networks[new Random().nextInt(networks.length)];
             if(parent1.getFitness() < parent2.getFitness()) {
-                baby = (CPPNNetworkIF) crossover(parent1, parent2);
+                baby = (CPPN) crossover(parent1, parent2);
             } else {
-                baby = (CPPNNetworkIF) crossover(parent2, parent1);
+                baby = (CPPN) crossover(parent2, parent1);
             }
         } else {
             Object[] networks = organisms.values().toArray();
+            System.err.println(organisms.values());
             CPPN parent = (CPPN) networks[new Random().nextInt(networks.length)];
-            baby = parent.clone();
+            baby = (CPPN) parent.clone();
         }
 
         baby.mutate();

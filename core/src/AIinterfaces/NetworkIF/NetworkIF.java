@@ -115,4 +115,5 @@ public interface NetworkIF {
      */
     public boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2);
 
+    boolean getType();
 }

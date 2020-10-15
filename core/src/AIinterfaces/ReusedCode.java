@@ -1,6 +1,7 @@
 package AIinterfaces;
 
 import AIinterfaces.NetworkIF.HNNetworkIF;
+import AIinterfaces.NetworkIF.NEATNetworkIF;
 import AIinterfaces.NetworkIF.NetworkIF;
 import AIinterfaces.NetworkIF.NetworkIF;
 import AIinterfaces.NodeIF.HNNodeIF;
@@ -320,7 +321,12 @@ public class ReusedCode {
      * @return The crossed over network.
      */
     public static NetworkIF crossover(NetworkIF otherParent, NetworkIF thisNetwork) {
-        NetworkIF baby = new Network((HNNetworkIF) thisNetwork);
+        NetworkIF baby;
+        if(otherParent.getType()){
+            baby = new CPPN(thisNetwork.getInputNodes().length, thisNetwork.getOutputNodes().length);
+        } else {
+            baby = new Network((HNNetworkIF) thisNetwork);
+        }
 
         // Randomly inherit traits from one of the matching links.
         for(LinkIF link : baby.getLinks()) {
