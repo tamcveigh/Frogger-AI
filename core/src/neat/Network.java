@@ -45,6 +45,8 @@ public class Network extends ReusedCode implements NEATNetworkIF {
     /** The fitness that the agent assigned to this network scored. */
     private int fitness;
 
+    private boolean type = false;
+
     /**
      * Our network constructor. Builds an initial fully connected network of input and output nodes.
      * @param inputNum The number of input nodes to have.
@@ -164,6 +166,11 @@ public class Network extends ReusedCode implements NEATNetworkIF {
      */
     public boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2) {
         return isConnectedTo(node1, node2) || node1.getLayer() == node2.getLayer();
+    }
+
+    @Override
+    public boolean getType() {
+        return type;
     }
 
     /**

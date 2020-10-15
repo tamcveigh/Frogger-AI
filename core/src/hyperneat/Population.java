@@ -4,6 +4,7 @@ import AIinterfaces.*;
 import AIinterfaces.NetworkIF.CPPNNetworkIF;
 import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
+import AIinterfaces.NetworkIF.NetworkIF;
 import AIinterfaces.PopulationIF.HNPopulationIF;
 import AIinterfaces.SpeciesIF.HNSpeciesIF;
 import com.mygdx.kittener.game.Agent;
@@ -134,7 +135,7 @@ public class Population extends ReusedCode implements HNPopulationIF {
         removeBadSpecies();
 
         double avgSum = getAvgFitnessSum();
-        List<CPPNNetworkIF> babies = new ArrayList<>();
+        List<NetworkIF> babies = new ArrayList<>();
         for(HNSpeciesIF s : species) {
 
             // Directly clone the best network of the species.
@@ -162,13 +163,13 @@ public class Population extends ReusedCode implements HNPopulationIF {
             //  accident from a species.
             Random r = new Random();
             HNSpeciesIF s = species.get( r.nextInt(species.size() ) );
-            babies.add((CPPNNetworkIF) s.reproduce());
+            babies.add(s.reproduce());
         }
 
         // Set up our agent's with their new networks.
         int i = 0;
         for(Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
-            organism.setValue(babies.get(i));
+            organism.setValue((CPPNNetworkIF) babies.get(i));
             i++;
         }
     }

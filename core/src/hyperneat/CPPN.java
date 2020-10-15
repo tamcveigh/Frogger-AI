@@ -173,6 +173,12 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
 
     @Deprecated
     @Override
+    public boolean getType() {
+        return true;
+    }
+
+    @Deprecated
+    @Override
     public Integer getBestOrgID() {
         return null;
     }
