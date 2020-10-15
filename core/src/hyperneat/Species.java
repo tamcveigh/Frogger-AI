@@ -27,7 +27,7 @@ public class Species extends ReusedCode implements HNSpeciesIF {
      * The network other networks will be tested against to see if they are compatible with this
      * species.
      */
-    private CPPNNetworkIF compatibilityNetwork;
+    private HNNetworkIF compatibilityNetwork;
 
     /** A mapping of agent IDs to their networks. */
     private Map<Integer, CPPNNetworkIF> organisms;
@@ -56,7 +56,7 @@ public class Species extends ReusedCode implements HNSpeciesIF {
      * @param agentNetwork The network used by the first agent to be assigned to this species.
      */
     public Species(int agentID, CPPNNetworkIF agentNetwork) {
-        compatibilityNetwork = (CPPNNetworkIF) ((CPPN) agentNetwork).clone().getCPPNetwork();
+        compatibilityNetwork =  ((CPPN) agentNetwork).clone().getCPPNetwork();
         organisms = new HashMap<>();
         organisms.put(agentID, agentNetwork);
         bestOrgID = agentID;
@@ -85,7 +85,7 @@ public class Species extends ReusedCode implements HNSpeciesIF {
      * Returns the network used to test compatibility with this species.
      * @return The network used to test compatibility with this species.
      */
-    public CPPNNetworkIF getCompatibilityNetwork() {
+    public HNNetworkIF getCompatibilityNetwork() {
         return compatibilityNetwork;
     }
 
@@ -96,7 +96,7 @@ public class Species extends ReusedCode implements HNSpeciesIF {
         Random r = new Random();
         Set<Integer> keySet = organisms.keySet();
         int key = (int) keySet.toArray()[r.nextInt(keySet.size())];
-        compatibilityNetwork = (CPPNNetworkIF) organisms.get(key ).getCPPNetwork();
+        compatibilityNetwork = organisms.get(key ).getCPPNetwork();
     }
 
     /**
@@ -114,7 +114,7 @@ public class Species extends ReusedCode implements HNSpeciesIF {
      */
     public void addOrganism(int agentID, CPPNNetworkIF agentNetwork) {
 
-        organisms.put(agentID, (CPPNNetworkIF) agentNetwork);
+        organisms.put(agentID, agentNetwork);
         this.size = organisms.size();
     }
 

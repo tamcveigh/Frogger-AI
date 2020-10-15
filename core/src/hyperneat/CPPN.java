@@ -58,7 +58,7 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
     @Override
     public CPPN clone(){
         CPPN clone = new CPPN(this.inputSize,this.outputSize);
-        clone.CPPNFunction = (CPPNNetworkIF) new Network(this.CPPNFunction);
+        clone.CPPNFunction = new Network(this.CPPNFunction);
         clone.generateNetwork();
         return clone;
     }
@@ -110,26 +110,8 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
      * Gets the CPPN network
      * @return This CPPN network
      */
-    public CPPNNetworkIF getCPPNetwork(){
+    public HNNetworkIF getCPPNetwork(){
         return this.CPPNFunction;
-    }
-    
-    @Deprecated
-    @Override
-    public Integer getBestOrgID() {
-        return null;
-    }
-    
-    @Deprecated
-    @Override
-    public CPPNNetworkIF getCompatibilityNetwork() {
-        return null;
-    }
-    
-    @Deprecated
-    @Override
-    public void setCompatibilityNetwork() {
-
     }
 
     /**
@@ -165,56 +147,6 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
     public void setFitness(int fitness){
         this.fitness = fitness;
     }
-    
-    @Deprecated
-    @Override
-    public void incrementLayer() {
-
-    }
-    
-    @Deprecated
-    @Override
-    public int getNumNodes() {
-        return 0;
-    }
-
-    @Override
-    public void incrementNodes() {
-
-    }
-    
-    @Deprecated
-    @Override
-    public Map<Integer, String> getInnovationList() {
-        return null;
-    }
-    
-    @Deprecated
-    @Override
-    public int getNumLayers() {
-        return 0;
-    }
-    
-    @Deprecated
-    @Override
-    public NEATNodeIF getNode(int id) {
-        return null;
-    }
-
-    @Override
-    public NEATNodeIF[] getInputNodes() {
-        return new NEATNodeIF[0];
-    }
-
-    @Override
-    public NEATNodeIF[] getOutputNodes() {
-        return new NEATNodeIF[0];
-    }
-
-    @Override
-    public NEATNodeIF getBiasNode() {
-        return null;
-    }
 
     /**
      * Crossover a baby CPPN with this CPPN and another parent
@@ -237,5 +169,78 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
     @Override
     public boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2) {
         return false;
+    }
+
+    @Deprecated
+    @Override
+    public Integer getBestOrgID() {
+        return null;
+    }
+
+    @Deprecated
+    @Override
+    public CPPNNetworkIF getCompatibilityNetwork() {
+        return null;
+    }
+
+    @Deprecated
+    @Override
+    public void setCompatibilityNetwork() {
+
+    }
+
+
+    @Deprecated
+    @Override
+    public void incrementLayer() {
+
+    }
+
+    @Deprecated
+    @Override
+    public int getNumNodes() {
+        return 0;
+    }
+
+    @Deprecated
+    @Override
+    public void incrementNodes() {
+
+    }
+
+    @Deprecated
+    @Override
+    public Map<Integer, String> getInnovationList() {
+        return null;
+    }
+
+    @Deprecated
+    @Override
+    public int getNumLayers() {
+        return 0;
+    }
+
+    @Deprecated
+    @Override
+    public NEATNodeIF getNode(int id) {
+        return null;
+    }
+
+    @Deprecated
+    @Override
+    public NEATNodeIF[] getInputNodes() {
+        return new NEATNodeIF[0];
+    }
+
+    @Deprecated
+    @Override
+    public NEATNodeIF[] getOutputNodes() {
+        return new NEATNodeIF[0];
+    }
+
+    @Deprecated
+    @Override
+    public NEATNodeIF getBiasNode() {
+        return null;
     }
 }

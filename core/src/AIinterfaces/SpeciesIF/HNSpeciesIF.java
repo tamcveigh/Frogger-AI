@@ -11,7 +11,7 @@ public interface HNSpeciesIF extends SpeciesIF{
 
     int size();
 
-    CPPNNetworkIF getCompatibilityNetwork();
+    HNNetworkIF getCompatibilityNetwork();
 
     CPPNNetworkIF reproduce();
 
