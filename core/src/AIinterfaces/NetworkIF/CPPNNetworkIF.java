@@ -9,7 +9,7 @@ public interface CPPNNetworkIF extends HNNetworkIF{
 
     double[] runSubstrate(float[] agentVision);
 
-    CPPNNetworkIF getCPPNetwork();
+    HNNetworkIF getCPPNetwork();
 
     CPPNNetworkIF clone();
 }
