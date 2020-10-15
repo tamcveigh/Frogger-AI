@@ -2,6 +2,7 @@ package hyperneat;
 
 import AIinterfaces.*;
 import AIinterfaces.NetworkIF.CPPNNetworkIF;
+import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
 import AIinterfaces.NetworkIF.NetworkIF;
 
@@ -19,7 +20,7 @@ public class CPPN extends ReusedCode {
     private final Substrate substrate;
 
     /** The CPPN network. */
-    private CPPNNetworkIF CPPNFunction;
+    private HNNetworkIF CPPNFunction;
 
     /** The input number of nodes for the substrate. */
     private final int inputSize;
@@ -42,7 +43,7 @@ public class CPPN extends ReusedCode {
         this.outputSize = outputSize;
         this.substrate = new Substrate(inputSize, outputSize, CPPN.SUBSTRATE_SIZE);
         //2 pairs of input points, 1 output weight
-        this.CPPNFunction = (CPPNNetworkIF) new Network(4,1);
+        this.CPPNFunction = new Network(4,1);
         this.generateNetwork();
         this.fitness = 0;
     }
@@ -71,7 +72,7 @@ public class CPPN extends ReusedCode {
      */
     private double outputWeight( int xOne, int yOne, int xTwo, int yTwo){
         float[] inputValues = { xOne, yOne, xTwo, yTwo };
-        double[] outputArray = feedForward((NEATNetworkIF) CPPNFunction, inputValues);
+        double[] outputArray = feedForward(CPPNFunction, inputValues);
         return outputArray[0];
     }
 
@@ -106,7 +107,7 @@ public class CPPN extends ReusedCode {
      * Gets the CPPN network
      * @return This CPPN network
      */
-    public CPPNNetworkIF getCPPNetwork(){
+    public HNNetworkIF getCPPNetwork(){
         return this.CPPNFunction;
     }
 

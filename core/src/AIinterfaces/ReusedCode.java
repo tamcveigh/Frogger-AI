@@ -199,9 +199,7 @@ public class ReusedCode {
      * Adds a node where the specified link used to be.
      * @param link The location where the new node should be added.
      */
-    public static  void addNode(NetworkIF thisNetwork, LinkIF link) {
-        link.setEnabled(false);
-        NEATNodeIF oldInput = thisNetwork.getNode(link.getInputNodeID());
+    public static int addNodeHelper(NetworkIF thisNetwork, LinkIF link, NEATNodeIF oldInput) {
         assert oldInput != null;
         int layer = (int) Math.ceil((oldInput.getLayer() + link.getOutputNode().getLayer()) / 2.0);
 
@@ -218,18 +216,8 @@ public class ReusedCode {
 
         // Actually add the node now so it avoids having it's own layer incremented.
         thisNetwork.incrementNodes();
-        HNNodeIF toAdd = new Node(thisNetwork.getNumNodes(), layer);
-        toAdd.activate();
-        thisNetwork.getHiddenNodes().add(toAdd);
+        return layer;
 
-        // Now add links to either side of the new node. The link going from the old input to the
-        // new node gets a weight of 1 while the link going from the new node to the old output
-        // receives the weight of the now-disabled link.
-        addLink(thisNetwork, oldInput, toAdd, 1);
-        addLink(thisNetwork, toAdd, link.getOutputNode(), link.getWeight());
-
-        // Finally connect our bias node with a weight of 0 to minimize the bias' initial impact.
-        addLink(thisNetwork, thisNetwork.getBiasNode(), toAdd, 0);
     }
 
     /**
