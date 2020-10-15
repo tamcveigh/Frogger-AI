@@ -2,7 +2,7 @@ package hyperneat;
 
 
 import AIinterfaces.LinkIF;
-import AIinterfaces.NodeIF;
+import AIinterfaces.NodeIF.NEATNodeIF;
 
 /**
  * Represents a connection between two nodes in our network. Each connection is given an
@@ -18,7 +18,7 @@ public class Link implements LinkIF {
     private final int inputNodeID;
 
     /** The output node this link is connected to. */
-    private final NodeIF outputNode;
+    private final NEATNodeIF outputNode;
 
     /** The weight that is assigned to this link. Should be between -1 and 1. */
     private double weight;
@@ -33,7 +33,7 @@ public class Link implements LinkIF {
      * @param inputNodeID The supplied id number for this links input node.
      * @param outputNode The supplied node for this links output node.
      */
-    public Link(int innovationNum, int inputNodeID, NodeIF outputNode, double weight) {
+    public Link(int innovationNum, int inputNodeID, NEATNodeIF outputNode, double weight) {
         this.innovationNum = innovationNum;
         this.inputNodeID = inputNodeID;
         this.outputNode = outputNode;
@@ -61,7 +61,7 @@ public class Link implements LinkIF {
      * Returns this links output node.
      * @return This links output node.
      */
-    public NodeIF getOutputNode() {
+    public NEATNodeIF getOutputNode() {
         return outputNode;
     }
 

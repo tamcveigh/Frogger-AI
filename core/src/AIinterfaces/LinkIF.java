@@ -1,6 +1,6 @@
 package AIinterfaces;
 
-import hyperneat.Node;
+import AIinterfaces.NodeIF.NEATNodeIF;
 
 public interface LinkIF {
 
@@ -14,7 +14,7 @@ public interface LinkIF {
      * Returns this links output node.
      * @return This links output node.
      */
-    public NodeIF getOutputNode();
+    public NEATNodeIF getOutputNode();
 
     /**
      * Returns whether or not this link is enabled.

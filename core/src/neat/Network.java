@@ -1,9 +1,9 @@
 package neat;
 
-import AIinterfaces.LinkIF;
-import AIinterfaces.NetworkIF;
-import AIinterfaces.NodeIF;
-import AIinterfaces.ReusedCode;
+import AIinterfaces.*;
+import AIinterfaces.NetworkIF.NEATNetworkIF;
+import AIinterfaces.NodeIF.HNNodeIF;
+import AIinterfaces.NodeIF.NEATNodeIF;
 
 import java.util.*;
 
@@ -13,7 +13,7 @@ import java.util.*;
  * @author Chance Simmons and Brandon Townsend
  * @version 21 January 2020
  */
-public class Network extends ReusedCode implements NetworkIF {
+public class Network extends ReusedCode implements NEATNetworkIF {
     /**
      * A static mapping of innovation numbers. These help in identifying similar links across
      * multiple networks during crossover.
@@ -24,16 +24,16 @@ public class Network extends ReusedCode implements NetworkIF {
     private final List<LinkIF> links;
 
     /** A list of all input nodes in this network. No new input nodes should be added over time.*/
-    private final NodeIF[] inputNodes;
+    private final NEATNodeIF[] inputNodes;
 
     /** A list of all output nodes in this network. No new output nodes should be added over time.*/
-    private final NodeIF[] outputNodes;
+    private final NEATNodeIF[] outputNodes;
 
     /** A list of all hidden nodes in this network. This part can grow over time. */
-    private List<NodeIF> hiddenNodes;
+    private List<NEATNodeIF> hiddenNodes;
 
     /** A single bias node which should be connected to all non-input nodes. Helps with outputs. */
-    private final NodeIF biasNode;
+    private final NEATNodeIF biasNode;
 
     /** Counter to keep track of the number of nodes there are in our network. */
     private int numNodes;
@@ -54,8 +54,8 @@ public class Network extends ReusedCode implements NetworkIF {
         numLayers = 0;
         fitness = 0;
         links = new ArrayList<>();
-        inputNodes = new NodeIF[inputNum];
-        outputNodes = new NodeIF[outputNum];
+        inputNodes = new NEATNodeIF[inputNum];
+        outputNodes = new NEATNodeIF[outputNum];
         hiddenNodes = new ArrayList<>();
         biasNode = new Node(-1, numLayers);
         biasNode.setOutputValue(1);
@@ -83,7 +83,7 @@ public class Network extends ReusedCode implements NetworkIF {
      * Copy constructor used to deep copy a network.
      * @param network The network to copy.
      */
-    public Network(NetworkIF network) {
+    public Network(NEATNetworkIF network) {
         this.numNodes = network.getNumNodes();
         this.numLayers = network.getNumLayers();
         this.fitness = network.getFitness();
@@ -95,7 +95,7 @@ public class Network extends ReusedCode implements NetworkIF {
         for(int i = 0; i < network.getInputNodes().length; i++) {
             this.inputNodes[i] = new Node(network.getInputNodes()[i]);
         }
-        for(NodeIF node : network.getHiddenNodes()) {
+        for(NEATNodeIF node : network.getHiddenNodes()) {
             this.hiddenNodes.add(new Node(node));
         }
         for(int i = 0; i < network.getOutputNodes().length; i++) {
@@ -161,7 +161,7 @@ public class Network extends ReusedCode implements NetworkIF {
      * @param node2 The other node on the link.
      * @return True if the future link is bad, false otherwise.
      */
-    private boolean isBadLink(Node node1, Node node2) {
+    public boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2) {
         return isConnectedTo(node1, node2) || node1.getLayer() == node2.getLayer();
     }
 
@@ -186,21 +186,21 @@ public class Network extends ReusedCode implements NetworkIF {
      * @param id The ID number to search by.
      * @return The node that corresponds to the ID number or null.
      */
-    public NodeIF getNode(int id) {
-        for(NodeIF node : listNodesByLayer(this)) {
+    public HNNodeIF getNode(int id) {
+        for(NEATNodeIF node : listNodesByLayer(this)) {
             if(node.getId() == id) {
-                return node;
+                return (HNNodeIF) node;
             }
         }
         return null;
     }
-/////////////////////////////////////////////
+
     /**
      * Get the innovation list
      */
     @Override
     public Map<Integer, String> getInnovationList() {
-        return null;
+        return innovationList;
     }
 
     /**
@@ -209,8 +209,8 @@ public class Network extends ReusedCode implements NetworkIF {
      * @return Array containing the input nodes
      */
     @Override
-    public NodeIF[] getInputNodes() {
-        return new NodeIF[0];
+    public NEATNodeIF[] getInputNodes() {
+        return inputNodes;
     }
 
     /**
@@ -219,8 +219,8 @@ public class Network extends ReusedCode implements NetworkIF {
      * @return Array containing the output nodes
      */
     @Override
-    public NodeIF[] getOutputNodes() {
-        return new NodeIF[0];
+    public NEATNodeIF[] getOutputNodes() {
+        return outputNodes;
     }
 
     /**
@@ -229,8 +229,8 @@ public class Network extends ReusedCode implements NetworkIF {
      * @return List containing the hidden nodes
      */
     @Override
-    public List<NodeIF> getHiddenNodes() {
-        return null;
+    public List<NEATNodeIF> getHiddenNodes() {
+        return hiddenNodes;
     }
 
     /**
@@ -238,7 +238,7 @@ public class Network extends ReusedCode implements NetworkIF {
      */
     @Override
     public void incrementLayer() {
-
+        numLayers++;
     }
 
     /**
@@ -248,21 +248,7 @@ public class Network extends ReusedCode implements NetworkIF {
      */
     @Override
     public int getNumNodes() {
-        return 0;
-    }
-
-    /**
-     * Returns whether or not a link can be formed between two nodes. If the nodes are already connected, it is a bad
-     * link and if both nodes are from the same layer, it is a bad link.
-     *
-     * @param node1 One of the nodes on the link.
-     * @param node2 The other node on the link.
-     *
-     * @return True if the future link is bad, false otherwise.
-     */
-    @Override
-    public boolean isBadLink(NodeIF node1, NodeIF node2) {
-        return false;
+        return numNodes;
     }
 
     /**
@@ -270,7 +256,7 @@ public class Network extends ReusedCode implements NetworkIF {
      */
     @Override
     public void incrementNodes() {
-
+        numNodes++;
     }
 
     /**
@@ -279,8 +265,8 @@ public class Network extends ReusedCode implements NetworkIF {
      * @return The bias node
      */
     @Override
-    public NodeIF getBiasNode() {
-        return null;
+    public HNNodeIF getBiasNode() {
+        return (HNNodeIF) biasNode;
     }
 
     /**
@@ -290,31 +276,6 @@ public class Network extends ReusedCode implements NetworkIF {
      */
     @Override
     public int getNumLayers() {
-        return 0;
-    }
-
-    @Override
-    public NetworkIF getCompatibilityNetwork() {
-        return null;
-    }
-
-    @Override
-    public Integer getBestOrgID() {
-        return null;
-    }
-
-    @Override
-    public void setCompatibilityNetwork() {
-
-    }
-
-    @Override
-    public double[] runSubstrate(float[] agentVision) {
-        return new double[0];
-    }
-
-    @Override
-    public NetworkIF getCPPNetwork() {
-        return null;
+        return numLayers;
     }
 }

@@ -1,7 +1,9 @@
 package hyperneat;
 
-import AIinterfaces.NetworkIF;
-import AIinterfaces.SpeciesIF;
+import AIinterfaces.NetworkIF.CPPNNetworkIF;
+import AIinterfaces.NetworkIF.HNNetworkIF;
+import AIinterfaces.ReusedCode;
+import AIinterfaces.SpeciesIF.HNSpeciesIF;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.Array;
@@ -16,7 +18,7 @@ import java.util.*;
  * @additions Brooke Kiser and Tyler McVeigh
  * @version 24 September 2020
  */
-public class Species implements SpeciesIF {
+public class Species extends ReusedCode implements HNSpeciesIF {
 
     /** Static list of colors that are already being used by species. */
     public static List<Color> takenColors = new ArrayList<>();
@@ -25,10 +27,10 @@ public class Species implements SpeciesIF {
      * The network other networks will be tested against to see if they are compatible with this
      * species.
      */
-    private NetworkIF compatibilityNetwork;
+    private CPPNNetworkIF compatibilityNetwork;
 
     /** A mapping of agent IDs to their networks. */
-    private Map<Integer, NetworkIF> organisms;
+    private Map<Integer, CPPNNetworkIF> organisms;
 
     /** The ID number of the best organism in this species this generation. */
     private int bestOrgID;
@@ -53,8 +55,8 @@ public class Species implements SpeciesIF {
      * @param agentID The ID number of the first agent to be assigned to this species.
      * @param agentNetwork The network used by the first agent to be assigned to this species.
      */
-    public Species(int agentID, NetworkIF agentNetwork) {
-        compatibilityNetwork = ((CPPN) agentNetwork).clone().getCPPNetwork();
+    public Species(int agentID, CPPNNetworkIF agentNetwork) {
+        compatibilityNetwork = (CPPNNetworkIF) ((CPPN) agentNetwork).clone().getCPPNetwork();
         organisms = new HashMap<>();
         organisms.put(agentID, agentNetwork);
         bestOrgID = agentID;
@@ -83,7 +85,7 @@ public class Species implements SpeciesIF {
      * Returns the network used to test compatibility with this species.
      * @return The network used to test compatibility with this species.
      */
-    public NetworkIF getCompatibilityNetwork() {
+    public CPPNNetworkIF getCompatibilityNetwork() {
         return compatibilityNetwork;
     }
 
@@ -94,14 +96,14 @@ public class Species implements SpeciesIF {
         Random r = new Random();
         Set<Integer> keySet = organisms.keySet();
         int key = (int) keySet.toArray()[r.nextInt(keySet.size())];
-        compatibilityNetwork = (NetworkIF) organisms.get(key ).getCPPNetwork();
+        compatibilityNetwork = (CPPNNetworkIF) organisms.get(key ).getCPPNetwork();
     }
 
     /**
      * Returns the mapping of agent IDs and their networks.
      * @return The mapping of agent IDs and their networks.
      */
-    public Map<Integer, NetworkIF> getOrganisms() {
+    public Map<Integer, CPPNNetworkIF> getOrganisms() {
         return organisms;
     }
 
@@ -110,9 +112,9 @@ public class Species implements SpeciesIF {
      * @param agentID The ID number of the agent.
      * @param agentNetwork The network the agent uses.
      */
-    public void addOrganism(int agentID, NetworkIF agentNetwork) {
+    public void addOrganism(int agentID, CPPNNetworkIF agentNetwork) {
 
-        organisms.put(agentID, (CPPN) agentNetwork);
+        organisms.put(agentID, (CPPNNetworkIF) agentNetwork);
         this.size = organisms.size();
     }
 
@@ -137,7 +139,7 @@ public class Species implements SpeciesIF {
      */
     public void setAverageFitness() {
         double fitnessSum = 0.0;
-        for(NetworkIF network : organisms.values()) {
+        for(CPPNNetworkIF network : organisms.values()) {
             fitnessSum += network.getFitness();
         }
         if(organisms.isEmpty()) {
@@ -161,7 +163,7 @@ public class Species implements SpeciesIF {
      */
     public void setStaleness() {
         int generationMaxFitness = -1;
-        for(Map.Entry<Integer, NetworkIF> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
             if(organism.getValue().getFitness() > generationMaxFitness) {
                 generationMaxFitness = organism.getValue().getFitness();
                 bestOrgID = organism.getKey();
@@ -180,13 +182,13 @@ public class Species implements SpeciesIF {
      * that they will not pollute the gene pool.
      */
     public void cull() {
-        Map<Integer, NetworkIF> survivors = new HashMap<>();
+        Map<Integer, CPPNNetworkIF> survivors = new HashMap<>();
         //Go through each organism
-        for(Map.Entry<Integer, NetworkIF> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
             int maxOrganism = organism.getKey();
             int maxFitness = organism.getValue().getFitness();
             //Find the max fitness and organism
-            for(Map.Entry<Integer, NetworkIF> other : organisms.entrySet()) {
+            for(Map.Entry<Integer, CPPNNetworkIF> other : organisms.entrySet()) {
                 int otherOrganism = other.getKey();
                 int otherFitness = other.getValue().getFitness();
 
@@ -195,7 +197,7 @@ public class Species implements SpeciesIF {
                     maxFitness = otherFitness;
                 }
             }
-            survivors.put(maxOrganism, ((CPPN)organisms.get(maxOrganism)).clone());
+            survivors.put(maxOrganism, (CPPNNetworkIF) organisms.get(maxOrganism).clone());
             organisms.get(maxOrganism).getCPPNetwork().setFitness(-1);
 
             if(survivors.size() >= organisms.size() * Coefficients.CULL_THRESH.getValue()) {
@@ -211,7 +213,7 @@ public class Species implements SpeciesIF {
      * too large. This should prevent any one species from taking over the entire population.
      */
     public void shareFitness() {
-        for(NetworkIF network : organisms.values()) {
+        for(CPPNNetworkIF network : organisms.values()) {
             network.getCPPNetwork().setFitness(network.getFitness() / organisms.size());
         }
     }
@@ -222,23 +224,23 @@ public class Species implements SpeciesIF {
      * hopes that we find a favorable mutation.
      * @return The new network we have produced and mutated.
      */
-    public CPPN reproduce() {
+    public CPPNNetworkIF reproduce() {
 
-        CPPN baby;
+        CPPNNetworkIF baby;
 
         if(Math.random() < Coefficients.CROSSOVER_THRESH.getValue()) {
             Object[] networks = organisms.values().toArray();
-            CPPN parent1 = (CPPN) networks[new Random().nextInt(networks.length)];
-            CPPN parent2 = (CPPN) networks[new Random().nextInt(networks.length)];
+            CPPNNetworkIF parent1 = (CPPNNetworkIF) networks[new Random().nextInt(networks.length)];
+            CPPNNetworkIF parent2 = (CPPNNetworkIF) networks[new Random().nextInt(networks.length)];
             if(parent1.getFitness() < parent2.getFitness()) {
-                baby = parent2.crossover(parent1);
+                baby = (CPPNNetworkIF) crossover(parent1, parent2);
             } else {
-                baby = parent1.crossover(parent2);
+                baby = (CPPNNetworkIF) crossover(parent2, parent1);
             }
         } else {
             Object[] networks = organisms.values().toArray();
             CPPN parent = (CPPN) networks[new Random().nextInt(networks.length)];
-            baby = parent.clone();
+            baby = (CPPNNetworkIF) parent.clone();
         }
 
         baby.mutate();

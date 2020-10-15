@@ -13,7 +13,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapRenderer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Vector2;
-import AIinterfaces.PopulationInterface;
+import AIinterfaces.PopulationIF.NEATPopulationIF;
 
 import java.util.ArrayList;
 
@@ -69,7 +69,7 @@ public class GameScreen extends ScreenAdapter {
     private ArrayList<Agent> agents;
 
     /** Population of all organisms in the game. */
-    private PopulationInterface population;
+    private NEATPopulationIF population;
 
     /** Keeps track of if we've already performed natural selection for this generation. */
     private boolean performedNS;

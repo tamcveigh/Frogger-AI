@@ -1,5 +1,13 @@
 package AIinterfaces;
 
+import AIinterfaces.NetworkIF.HNNetworkIF;
+import AIinterfaces.NetworkIF.NetworkIF;
+import AIinterfaces.NetworkIF.NetworkIF;
+import AIinterfaces.NodeIF.HNNodeIF;
+import AIinterfaces.NodeIF.NEATNodeIF;
+import AIinterfaces.PopulationIF.HNPopulationIF;
+import AIinterfaces.PopulationIF.NEATPopulationIF;
+import AIinterfaces.PopulationIF.NEATPopulationIF;
 import hyperneat.*;
 import neat.Species;
 
@@ -31,8 +39,8 @@ public class ReusedCode {
      */
     public static  void copyLinks(NetworkIF network, NetworkIF thisNetwork) {
         for(LinkIF link : network.getLinks()) {
-            NodeIF input = thisNetwork.getNode(link.getInputNodeID());
-            NodeIF output = thisNetwork.getNode(link.getOutputNode().getId());
+            NEATNodeIF input = thisNetwork.getNode(link.getInputNodeID());
+            NEATNodeIF output = thisNetwork.getNode(link.getOutputNode().getId());
             assert input != null;
             assert output != null;
             addLink(thisNetwork, input, output, link.getWeight());
@@ -44,14 +52,14 @@ public class ReusedCode {
      * Helper function to fully connect the initial network of just input and output nodes. Also
      * attaches the bias node to each output node.
      */
-    public static  void generateNetwork(NetworkIF thisNetwork, NodeIF [] inputNodes, NodeIF [] outputNodes, NodeIF biasNode) {
-        for(NodeIF input : inputNodes) {
-            for(NodeIF output : outputNodes) {
+    public static  void generateNetwork(NetworkIF thisNetwork, NEATNodeIF[] inputNodes, NEATNodeIF[] outputNodes, NEATNodeIF biasNode) {
+        for(NEATNodeIF input : inputNodes) {
+            for(NEATNodeIF output : outputNodes) {
                 // Math.random() * 2 - 1 generates a random number between -1 and 1.
                 addLink(thisNetwork, input, output, Math.random() * 2 - 1);
             }
         }
-        for(NodeIF output : outputNodes) {
+        for(NEATNodeIF output : outputNodes) {
             // LinkIF the bias node and apply a random link weight. Comment out if using line below.
             addLink(thisNetwork, biasNode, output, Math.random() * 2 - 1);
             // NOTE: If you would like to control the link weight of the bias node, please use
@@ -68,7 +76,7 @@ public class ReusedCode {
      * @param output The output node to connect to.
      * @param weight The weight that should be given to the link.
      */
-    public static  void addLink(NetworkIF network, NodeIF input, NodeIF output, double weight) {
+    public static  void addLink(NetworkIF network, NEATNodeIF input, NEATNodeIF output, double weight) {
         int inputID = input.getId();
         int outputID = output.getId();
 
@@ -117,8 +125,8 @@ public class ReusedCode {
         maxLinks += thisNetwork.getInputNodes().length * thisNetwork.getOutputNodes().length;
 
         // Adding up the total links from hidden nodes to their outputs.
-        for(NodeIF node : thisNetwork.getHiddenNodes()) {
-            for (NodeIF otherNode : thisNetwork.getHiddenNodes()) {
+        for(NEATNodeIF node : thisNetwork.getHiddenNodes()) {
+            for (NEATNodeIF otherNode : thisNetwork.getHiddenNodes()) {
                 if(node.getLayer() < otherNode.getLayer()) {
                     maxLinks++;
                 }
@@ -145,7 +153,7 @@ public class ReusedCode {
         }
 
         // Activate the nodes in order from input node -> bias -> hidden -> output.
-        for(NodeIF node : listNodesByLayer(thisNetwork)) {
+        for(NEATNodeIF node : listNodesByLayer(thisNetwork)) {
             node.activate();
         }
 
@@ -156,7 +164,7 @@ public class ReusedCode {
         }
 
         // Set all input values back to 0 for the next feed forward.
-        for(NodeIF node : listNodesByLayer(thisNetwork)) {
+        for(NEATNodeIF node : listNodesByLayer(thisNetwork)) {
             node.setInputValue(0);
         }
 
@@ -169,16 +177,16 @@ public class ReusedCode {
     public static  void addLinkMutation(NetworkIF thisNetwork) {
         if(!isFullyConnected(thisNetwork)) {
             Random random = new Random();
-            List<NodeIF > allNodes = listNodesByLayer(thisNetwork);
+            List<NEATNodeIF> allNodes = listNodesByLayer(thisNetwork);
 
-            NodeIF input, output;
+            NEATNodeIF input, output;
             do {
                 input = allNodes.get(random.nextInt(allNodes.size()));
                 output = allNodes.get(random.nextInt(allNodes.size()));
             } while(thisNetwork.isBadLink(input, output));
 
             if(output.getLayer() < input.getLayer()) {
-                NodeIF temp = input;
+                NEATNodeIF temp = input;
                 input = output;
                 output = temp;
             }
@@ -193,14 +201,14 @@ public class ReusedCode {
      */
     public static  void addNode(NetworkIF thisNetwork, LinkIF link) {
         link.setEnabled(false);
-        NodeIF oldInput = thisNetwork.getNode(link.getInputNodeID());
+        NEATNodeIF oldInput = thisNetwork.getNode(link.getInputNodeID());
         assert oldInput != null;
         int layer = (int) Math.ceil((oldInput.getLayer() + link.getOutputNode().getLayer()) / 2.0);
 
         // If the layer we're placing our new node was the previous output nodes layer, we
         // move all layers that are equal to or greater than the new layer down.
         if(layer == link.getOutputNode().getLayer()) {
-            for (NodeIF node : listNodesByLayer(thisNetwork)) {
+            for (NEATNodeIF node : listNodesByLayer(thisNetwork)) {
                 if (node.getLayer() >= layer) {
                     node.incrementLayer();
                 }
@@ -210,7 +218,7 @@ public class ReusedCode {
 
         // Actually add the node now so it avoids having it's own layer incremented.
         thisNetwork.incrementNodes();
-        NodeIF toAdd = new Node(thisNetwork.getNumNodes(), layer);
+        HNNodeIF toAdd = new Node(thisNetwork.getNumNodes(), layer);
         toAdd.activate();
         thisNetwork.getHiddenNodes().add(toAdd);
 
@@ -228,11 +236,11 @@ public class ReusedCode {
      * Returns a list of all nodes in order by their layers.
      * @return A list of all nodes in order by their layers.
      */
-    public static  List<NodeIF > listNodesByLayer(NetworkIF thisNetwork) {
-        List<NodeIF > nodes = new ArrayList<>(Arrays.asList(thisNetwork.getInputNodes()));
+    public static  List<NEATNodeIF> listNodesByLayer(NetworkIF thisNetwork) {
+        List<NEATNodeIF> nodes = new ArrayList<>(Arrays.asList(thisNetwork.getInputNodes()));
         nodes.add(thisNetwork.getBiasNode());
         for(int layer = 1; layer < thisNetwork.getNumNodes(); layer++) {
-            for(NodeIF node : thisNetwork.getHiddenNodes()) {
+            for(NEATNodeIF node : thisNetwork.getHiddenNodes()) {
                 if(node.getLayer() == layer) {
                     nodes.add(node);
                 }
@@ -323,8 +331,8 @@ public class ReusedCode {
      * @param otherParent The other network to match links from.
      * @return The crossed over network.
      */
-    public static  NetworkIF crossover(NetworkIF otherParent, NetworkIF thisNetwork) {
-        NetworkIF baby = new Network(thisNetwork);
+    public static NetworkIF crossover(NetworkIF otherParent, NetworkIF thisNetwork) {
+        NetworkIF baby = (NetworkIF) new Network((HNNetworkIF) thisNetwork);
 
         // Randomly inherit traits from one of the matching links.
         for(LinkIF link : baby.getLinks()) {
@@ -357,7 +365,7 @@ public class ReusedCode {
      * @param node The supplied node to check connection with.
      * @return True if the nodes are connected, false otherwise.
      */
-    public static  boolean isConnectedTo(NodeIF input, NodeIF node) {
+    public static  boolean isConnectedTo(NEATNodeIF input, NEATNodeIF node) {
         if(input.getLayer() != node.getLayer()) {
             if(input.getLayer() < node.getLayer()) {
                 for(LinkIF link : input.getOutgoingLinks()) {
@@ -380,7 +388,7 @@ public class ReusedCode {
      * Removes all species that are over the staleness threshold, except the one that contains
      * the current best organism.
      */
-    public static  void removeStaleSpecies(PopulationInterface thisPopulation) {
+    public static  void removeStaleSpecies(HNPopulationIF thisPopulation) {
         for(int i = 0; i < thisPopulation.getSpecies().size(); i++) {
             if(!thisPopulation.getSpecies().get(i).getOrganisms().containsKey(thisPopulation.getBestAgentID())) {
                 if(thisPopulation.getSpecies().get(i).getStaleness() >= neat.Coefficients.STALENESS_THRESH.getValue()) {

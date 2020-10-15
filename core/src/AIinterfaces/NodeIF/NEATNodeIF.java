@@ -1,10 +1,11 @@
-package AIinterfaces;
+package AIinterfaces.NodeIF;
 
+import AIinterfaces.LinkIF;
 import hyperneat.Link;
 
 import java.util.List;
 
-public interface NodeIF {
+public interface NEATNodeIF {
 
     /**
      * Returns this nodes identification number.
@@ -54,34 +55,9 @@ public interface NodeIF {
      */
     public double getInputValue();
 
-
-    /**
-     * Gets the input bias layer
-     * @return The bias node input layer
-     */
-    public int getInputBiasLayer();
-
-    /**
-     * The activation function for this node
-     * @return The activation number
-     */
-    public int getRandomActive();
-
-    /**
-     * Gets the slope of the activation function
-     * @return The slope of the activation function
-     */
-    public double getSlope();
-
     /**
      * Gets the output value for this node
      * @return The output value
      */
     public double getOutputValue();
-
-    /**
-     * Learns the slope value (a) of the parameterized ReLU by taking the current a and modifying it proportionally
-     * to the fitness of the network
-     */
-    void slopeCalc();
 }

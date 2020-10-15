@@ -1,9 +1,10 @@
 package hyperneat;
 
-import AIinterfaces.NetworkIF;
-import AIinterfaces.PopulationInterface;
-import AIinterfaces.ReusedCode;
-import AIinterfaces.SpeciesIF;
+import AIinterfaces.*;
+import AIinterfaces.NetworkIF.CPPNNetworkIF;
+import AIinterfaces.NetworkIF.NEATNetworkIF;
+import AIinterfaces.PopulationIF.HNPopulationIF;
+import AIinterfaces.SpeciesIF.HNSpeciesIF;
 import com.mygdx.kittener.game.Agent;
 import com.mygdx.kittener.game.MainGame;
 
@@ -12,21 +13,21 @@ import java.io.IOException;
 import java.util.*;
 
 /**
- * Class which handles all overhead NEAT functionality and is connected to the game. Keeps track
+ * Class which handles all overhead HN functionality and is connected to the game. Keeps track
  * of the generation, the list of species, and a mapping of agents to their networks.
  * @author Chance Simmons and Brandon Townsend
  * @additions Brooke Kiser and Tyler McVeigh
  * @version 24 September 2020
  */
-public class Population extends ReusedCode implements PopulationInterface {
+public class Population extends ReusedCode implements HNPopulationIF {
     /** Keeps track of the generation of organisms we're at. */
     private int generation;
 
     /** List of every species in the game. */
-    private final List<SpeciesIF> species;
+    private final List<HNSpeciesIF> species;
 
     /** Mapping of each game agent to their network. */
-    private final Map<Integer, NetworkIF> organisms;
+    private final Map<Integer, CPPNNetworkIF> organisms;
 
     /** Identification number of the best agent. */
     private int bestAgentID;
@@ -45,7 +46,7 @@ public class Population extends ReusedCode implements PopulationInterface {
 
         //Place each agent and corresponding CPPN in the organisms
         for(Agent agent : agents) {
-            organisms.put(agent.getId(), new CPPN(input, output));
+            organisms.put(agent.getId(), (CPPNNetworkIF) new CPPN(input, output));
         }
     }
 
@@ -81,7 +82,7 @@ public class Population extends ReusedCode implements PopulationInterface {
      * @param fitness The score to be passed to the network.
      */
     public void assignFitness(int id, int fitness) {
-        NetworkIF organism = organisms.get(id);
+        CPPNNetworkIF organism = organisms.get(id);
         organism.setFitness(fitness);
     }
 
@@ -91,7 +92,7 @@ public class Population extends ReusedCode implements PopulationInterface {
      */
     public void assignColor(Agent agent) {
 
-        for(SpeciesIF s : species) {
+        for(HNSpeciesIF s : species) {
             if(organisms.get(agent.getId()) == null){
                 break;
             }
@@ -110,7 +111,7 @@ public class Population extends ReusedCode implements PopulationInterface {
      */
     private void setBestAgentID() {
         int bestFitness = organisms.get(0).getFitness();
-        for(Map.Entry<Integer, NetworkIF> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
             if(organism.getValue().getFitness() > bestFitness) {
                 bestFitness = organism.getValue().getFitness();
                 bestAgentID = organism.getKey();
@@ -119,7 +120,7 @@ public class Population extends ReusedCode implements PopulationInterface {
     }
 
     /**
-     * The main NEAT algorithmic method. Calls all needed helper methods to separate our
+     * The main HN algorithmic method. Calls all needed helper methods to separate our
      * organisms into species, cull them down so that we only get the high-performing ones, and
      * reproduces.
      */
@@ -133,7 +134,7 @@ public class Population extends ReusedCode implements PopulationInterface {
 
         double avgSum = getAvgFitnessSum();
         List<CPPN> babies = new ArrayList<>();
-        for(SpeciesIF s : species) {
+        for(HNSpeciesIF s : species) {
 
             // Directly clone the best network of the species.
             CPPN baby = (CPPN) s.getOrganisms().get(s.getBestOrgID());
@@ -159,14 +160,14 @@ public class Population extends ReusedCode implements PopulationInterface {
             //  but one. I think that somehow the best organism is being set wrong or removed on
             //  accident from a species.
             Random r = new Random();
-            SpeciesIF s = species.get( r.nextInt(species.size() ) );
+            HNSpeciesIF s = species.get( r.nextInt(species.size() ) );
             babies.add((CPPN) s.reproduce());
         }
 
         // Set up our agent's with their new networks.
         int i = 0;
-        for(Map.Entry<Integer, NetworkIF> organism : organisms.entrySet()) {
-            organism.setValue(babies.get(i));
+        for(Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
+            organism.setValue((CPPNNetworkIF) babies.get(i));
             i++;
         }
     }
@@ -177,15 +178,15 @@ public class Population extends ReusedCode implements PopulationInterface {
      */
     private void statisticsTrack() {
 
-        List<NetworkIF> organisms = new ArrayList<>();
+        List<CPPNNetworkIF> organisms = new ArrayList<>();
         //Adds all the CPPNs for a species to organisms
-        for(SpeciesIF s: species){
+        for(HNSpeciesIF s: species){
             organisms.addAll(s.getOrganisms().values());
         }
 
         int max = 0;
         //Find the max fitness of all the CPPNs for this generation
-        for(NetworkIF o: organisms){
+        for(CPPNNetworkIF o: organisms){
             int oFit = o.getFitness();
             if(oFit > max){
                 max = oFit;
@@ -194,7 +195,7 @@ public class Population extends ReusedCode implements PopulationInterface {
 
         int average = 0;
         //Get the average of the fitnesses for this generation
-        for(NetworkIF o: organisms){
+        for(CPPNNetworkIF o: organisms){
             average += o.getFitness();
         }
         average = average / organisms.size();
@@ -216,34 +217,34 @@ public class Population extends ReusedCode implements PopulationInterface {
     private void speciate() {
         // First, set up each existing species compatibility network and clear it of all
         // organisms from the last generation.
-        for(SpeciesIF s : species) {
+        for(HNSpeciesIF s : species) {
             s.setCompatibilityNetwork();
             s.getOrganisms().clear();
             s.setAverageFitness();
         }
 
         // For each organism in the population, see if it is compatible with any existing species.
-        for(Map.Entry<Integer, NetworkIF> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
             int agentID = organism.getKey();
-            NetworkIF agentNetwork = organism.getValue();
+            CPPNNetworkIF agentNetwork = organism.getValue();
             boolean speciesFound = false;
             for(int i = 0; !speciesFound && i < species.size(); i++) {
-                SpeciesIF s = species.get(i);
+                HNSpeciesIF s = species.get(i);
                 if(isCompatibleTo(agentNetwork.getCPPNetwork(), s.getCompatibilityNetwork())) {
-                    s.addOrganism(agentID, (NetworkIF) agentNetwork);
+                    s.addOrganism(agentID, (CPPNNetworkIF) agentNetwork);
                     speciesFound = true;
                 }
             }
 
             // If it is not compatible, create a new species.
             if(!speciesFound) {
-                species.add((SpeciesIF) new Species(agentID, agentNetwork));
+                species.add((HNSpeciesIF) new Species(agentID, agentNetwork));
             }
         }
 
         statisticsTrack();
         //Set the average fitness for a species
-        for (SpeciesIF s: species) {
+        for (HNSpeciesIF s: species) {
             s.setAverageFitness();
         }
     }
@@ -253,7 +254,7 @@ public class Population extends ReusedCode implements PopulationInterface {
      * species average fitness.
      */
     private void cullSpecies() {
-        for(SpeciesIF s : species) {
+        for(HNSpeciesIF s : species) {
             s.cull();
             s.setStaleness();
             s.shareFitness();
@@ -284,7 +285,7 @@ public class Population extends ReusedCode implements PopulationInterface {
      */
     private double getAvgFitnessSum() {
         double avgSum = 0.0;
-        for(SpeciesIF s : species) {
+        for(HNSpeciesIF s : species) {
             avgSum += s.getAverageFitness();
         }
         return avgSum;
@@ -294,7 +295,7 @@ public class Population extends ReusedCode implements PopulationInterface {
      * Gets the list of the species
      * @return The list of species
      */
-    public List<SpeciesIF> getSpecies() {
+    public List<HNSpeciesIF> getSpecies() {
         return species;
     }
 

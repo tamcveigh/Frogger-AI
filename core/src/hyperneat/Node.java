@@ -1,7 +1,8 @@
 package hyperneat;
 
 import AIinterfaces.LinkIF;
-import AIinterfaces.NodeIF;
+import AIinterfaces.NodeIF.HNNodeIF;
+import AIinterfaces.NodeIF.NEATNodeIF;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +14,7 @@ import java.util.Random;
  * @additions Brooke Kiser and Tyler McVeigh
  * @version 18 January 2020
  */
-public class Node implements NodeIF {
+public class Node implements HNNodeIF {
     /** The input or bias layer should always been a value of 0. */
     private final static int INPUT_BIAS_LAYER = 0;
 
@@ -56,7 +57,7 @@ public class Node implements NodeIF {
      * Copy constructor for a node
      * @param node The node to copt into a new node
      */
-    public Node(NodeIF node) {
+    public Node(HNNodeIF node) {
         this.id = node.getId();
         this.inputValue = node.getInputValue();
         this.outputValue = node.getOutputValue();
@@ -170,7 +171,7 @@ public class Node implements NodeIF {
         //Change the links to include the activated node
         for(LinkIF link : outgoingLinks) {
             if(link.isEnabled()) {
-                NodeIF outputNode = link.getOutputNode();
+                NEATNodeIF outputNode = link.getOutputNode();
                 double oldInputValue = outputNode.getInputValue();
                 outputNode.setInputValue(oldInputValue + link.getWeight() * outputValue);
             }
