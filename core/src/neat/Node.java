@@ -1,20 +1,18 @@
 package neat;
 
 import AIinterfaces.LinkIF;
-import AIinterfaces.NodeIF;
+import AIinterfaces.NodeIF.NEATNodeIF;
 import AIinterfaces.ReusedCode;
-import com.badlogic.gdx.graphics.g3d.particles.influencers.ColorInfluencer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * The node class contains all data needed by nodes to connect networks.
  * @author Chance Simmons and Brandon Townsend
  * @version 18 January 2020
  */
-public class Node extends ReusedCode implements NodeIF {
+public class Node extends ReusedCode implements NEATNodeIF {
     /** The input or bias layer should always been a value of 0. */
     private final static int INPUT_BIAS_LAYER = 0;
 
@@ -46,7 +44,7 @@ public class Node extends ReusedCode implements NodeIF {
         this.layer = layer;
     }
 
-    public Node(NodeIF node) {
+    public Node(NEATNodeIF node) {
         this.id = node.getId();
         this.inputValue = node.getInputValue();
         this.outputValue = node.getOutputValue();
@@ -70,26 +68,6 @@ public class Node extends ReusedCode implements NodeIF {
         return inputValue;
     }
 
-    @Override
-    public int getInputBiasLayer() {
-        return 0;
-    }
-
-    /**
-     * The activation function for this node
-     * @return The activation number
-     */
-    public int getRandomActive() {
-        return 0;
-    }
-
-    /**
-     * Gets the slope of the activation function
-     * @return The slope of the activation function
-     */
-    public double getSlope() {
-        return 0.0;
-    }
 
     /**
      * Sets this nodes input value to the supplied one.
@@ -106,11 +84,6 @@ public class Node extends ReusedCode implements NodeIF {
     public double getOutputValue() {
         return outputValue;
     }
-
-    /**Learns the slope value (a) of the parameterized ReLU by taking the current a and modifying it proportionally
-     * to the fitness of the network
-     */
-    public void slopeCalc() {}
 
     /**
      * Sets this nodes output value to the supplied one.
@@ -155,7 +128,7 @@ public class Node extends ReusedCode implements NodeIF {
 
         for(LinkIF link : outgoingLinks) {
             if(link.isEnabled()) {
-                NodeIF outputNode = link.getOutputNode();
+                NEATNodeIF outputNode = link.getOutputNode();
                 double oldInputValue = outputNode.getInputValue();
                 outputNode.setInputValue(oldInputValue + link.getWeight() * outputValue);
             }

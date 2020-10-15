@@ -1,8 +1,8 @@
 package neat;
 
-import AIinterfaces.NetworkIF;
+import AIinterfaces.NetworkIF.NEATNetworkIF;
 import AIinterfaces.ReusedCode;
-import AIinterfaces.SpeciesIF;
+import AIinterfaces.SpeciesIF.NEATSpeciesIF;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 import com.badlogic.gdx.utils.Array;
@@ -16,7 +16,7 @@ import java.util.*;
  * @author Chance Simmons and Brandon Townsend
  * @version 21 January 2020
  */
-public class Species extends ReusedCode implements SpeciesIF {
+public class Species extends ReusedCode implements NEATSpeciesIF {
 
     /** Static list of colors that are already being used by species. */
     public static List<Color> takenColors = new ArrayList<>();
@@ -25,10 +25,10 @@ public class Species extends ReusedCode implements SpeciesIF {
      * The network other networks will be tested against to see if they are compatible with this
      * species.
      */
-    private NetworkIF compatibilityNetwork;
+    private NEATNetworkIF compatibilityNetwork;
 
     /** A mapping of agent IDs to their networks. */
-    private Map<Integer, NetworkIF> organisms;
+    private Map<Integer, NEATNetworkIF> organisms;
 
     /** The ID number of the best organism in this species this generation. */
     private int bestOrgID;
@@ -50,7 +50,7 @@ public class Species extends ReusedCode implements SpeciesIF {
      * @param agentID The ID number of the first agent to be assigned to this species.
      * @param agentNetwork The network used by the first agent to be assigned to this species.
      */
-    public Species(int agentID, NetworkIF agentNetwork) {
+    public Species(int agentID, NEATNetworkIF agentNetwork) {
         compatibilityNetwork = new Network(agentNetwork);
         organisms = new HashMap<>();
         organisms.put(agentID, compatibilityNetwork);
@@ -79,7 +79,7 @@ public class Species extends ReusedCode implements SpeciesIF {
      * Returns the network used to test compatibility with this species.
      * @return The network used to test compatibility with this species.
      */
-    public NetworkIF getCompatibilityNetwork() {
+    public NEATNetworkIF getCompatibilityNetwork() {
         return compatibilityNetwork;
     }
 
@@ -89,14 +89,14 @@ public class Species extends ReusedCode implements SpeciesIF {
     public void setCompatibilityNetwork() {
         Object[] networks = organisms.values().toArray();
         compatibilityNetwork =
-                new Network((NetworkIF) networks[new Random().nextInt(networks.length)]);
+                new Network((NEATNetworkIF) networks[new Random().nextInt(networks.length)]);
     }
 
     /**
      * Returns the mapping of agent IDs and their networks.
      * @return The mapping of agent IDs and their networks.
      */
-    public Map<Integer, NetworkIF> getOrganisms() {
+    public Map<Integer, NEATNetworkIF> getOrganisms() {
         return organisms;
     }
 
@@ -105,7 +105,7 @@ public class Species extends ReusedCode implements SpeciesIF {
      * @param agentID The ID number of the agent.
      * @param agentNetwork The network the agent uses.
      */
-    public void addOrganism(int agentID, Network agentNetwork) {
+    public void addOrganism(int agentID, NEATNetworkIF agentNetwork) {
         organisms.put(agentID, new Network(agentNetwork));
     }
 
@@ -130,7 +130,7 @@ public class Species extends ReusedCode implements SpeciesIF {
      */
     public void setAverageFitness() {
         double fitnessSum = 0.0;
-        for(NetworkIF network : organisms.values()) {
+        for(NEATNetworkIF network : organisms.values()) {
             fitnessSum += network.getFitness();
         }
         if(organisms.isEmpty()) {
@@ -154,7 +154,7 @@ public class Species extends ReusedCode implements SpeciesIF {
      */
     public void setStaleness() {
         int generationMaxFitness = -1;
-        for(Map.Entry<Integer, NetworkIF> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, NEATNetworkIF> organism : organisms.entrySet()) {
             if(organism.getValue().getFitness() > generationMaxFitness) {
                 generationMaxFitness = organism.getValue().getFitness();
                 bestOrgID = organism.getKey();
@@ -173,13 +173,13 @@ public class Species extends ReusedCode implements SpeciesIF {
      * that they will not pollute the gene pool.
      */
     public void cull() {
-        Map<Integer, NetworkIF> survivors = new HashMap<>();
+        Map<Integer, NEATNetworkIF> survivors = new HashMap<>();
 
-        for(Map.Entry<Integer, NetworkIF> organism : organisms.entrySet()) {
+        for(Map.Entry<Integer, NEATNetworkIF> organism : organisms.entrySet()) {
             int maxOrganism = organism.getKey();
             int maxFitness = organism.getValue().getFitness();
 
-            for(Map.Entry<Integer, NetworkIF> other : organisms.entrySet()) {
+            for(Map.Entry<Integer, NEATNetworkIF> other : organisms.entrySet()) {
                 int otherOrganism = other.getKey();
                 int otherFitness = other.getValue().getFitness();
 
@@ -203,7 +203,7 @@ public class Species extends ReusedCode implements SpeciesIF {
      * too large. This should prevent any one species from taking over the entire population.
      */
     public void shareFitness() {
-        for(NetworkIF network : organisms.values()) {
+        for(NEATNetworkIF network : organisms.values()) {
             network.setFitness(network.getFitness() / organisms.size());
         }
     }
@@ -214,33 +214,23 @@ public class Species extends ReusedCode implements SpeciesIF {
      * hopes that we find a favorable mutation.
      * @return The new network we have produced and mutated.
      */
-    public NetworkIF reproduce() {
-        NetworkIF baby;
+    public NEATNetworkIF reproduce() {
+        NEATNetworkIF baby;
         if(Math.random() < Coefficients.CROSSOVER_THRESH.getValue()) {
             Object[] networks = organisms.values().toArray();
-            NetworkIF parent1 = (NetworkIF) networks[new Random().nextInt(networks.length)];
-            NetworkIF parent2 = (NetworkIF) networks[new Random().nextInt(networks.length)];
+            NEATNetworkIF parent1 = (NEATNetworkIF) networks[new Random().nextInt(networks.length)];
+            NEATNetworkIF parent2 = (NEATNetworkIF) networks[new Random().nextInt(networks.length)];
             if(parent1.getFitness() < parent2.getFitness()) {
-                baby = crossover(parent1, parent2);
+                baby = (NEATNetworkIF) crossover(parent1, parent2);
             } else {
-                baby = crossover(parent2, parent1);
+                baby = (NEATNetworkIF) crossover(parent2, parent1);
             }
         } else {
             Object[] networks = organisms.values().toArray();
-            baby = new Network((NetworkIF) networks[new Random().nextInt(networks.length)]);
+            baby = new Network((NEATNetworkIF) networks[new Random().nextInt(networks.length)]);
         }
 
         baby.mutate();
         return baby;
-    }
-
-    @Override
-    public void addOrganism(int agentID, NetworkIF agentNetwork) {
-
-    }
-
-    @Override
-    public int size() {
-        return 0;
     }
 }

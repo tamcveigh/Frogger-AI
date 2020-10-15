@@ -1,7 +1,7 @@
-package AIinterfaces;
+package AIinterfaces.PopulationIF;
 
+import AIinterfaces.SpeciesIF.NEATSpeciesIF;
 import com.mygdx.kittener.game.Agent;
-import hyperneat.Species;
 
 import java.util.List;
 
@@ -10,7 +10,7 @@ import java.util.List;
  * @author Brooke Kiser and Tyler McVeigh
  * @version 24 September 2020
  */
-public interface PopulationInterface {
+public interface NEATPopulationIF {
 
     /**
      * Returns the current generation we are at.
@@ -51,16 +51,4 @@ public interface PopulationInterface {
      * reproduces.
      */
     void naturalSelection();
-
-    /**
-     * Gets the list of the species
-     * @return The list of species
-     */
-    List<SpeciesIF> getSpecies();
-
-    /**
-     * The best agent of the population
-     * @return The ID of the best agent
-     */
-    int getBestAgentID();
 }
