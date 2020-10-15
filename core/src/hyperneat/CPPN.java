@@ -3,8 +3,11 @@ package hyperneat;
 import AIinterfaces.*;
 import AIinterfaces.NetworkIF.CPPNNetworkIF;
 import AIinterfaces.NetworkIF.HNNetworkIF;
-import AIinterfaces.NetworkIF.NEATNetworkIF;
-import AIinterfaces.NetworkIF.NetworkIF;
+import AIinterfaces.NodeIF.HNNodeIF;
+import AIinterfaces.NodeIF.NEATNodeIF;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * This class models a CPPN in the 4th dimension. This will set up the substrate and the CPPN network
@@ -14,7 +17,7 @@ import AIinterfaces.NetworkIF.NetworkIF;
  * @author Brooke Kiser and Tyler McVeigh
  * @version 23 September 2020
  */
-public class CPPN extends ReusedCode {
+public class CPPN extends ReusedCode implements CPPNNetworkIF{
 
     /** Array holding the weights between any two nodes on the substrate. */
     private final Substrate substrate;
@@ -107,8 +110,26 @@ public class CPPN extends ReusedCode {
      * Gets the CPPN network
      * @return This CPPN network
      */
-    public HNNetworkIF getCPPNetwork(){
+    public CPPNNetworkIF getCPPNetwork(){
         return this.CPPNFunction;
+    }
+    
+    @Deprecated
+    @Override
+    public Integer getBestOrgID() {
+        return null;
+    }
+    
+    @Deprecated
+    @Override
+    public CPPNNetworkIF getCompatibilityNetwork() {
+        return null;
+    }
+    
+    @Deprecated
+    @Override
+    public void setCompatibilityNetwork() {
+
     }
 
     /**
@@ -116,14 +137,22 @@ public class CPPN extends ReusedCode {
      * @param agentVision The array of what the agent can see
      * @return The array of the output values
      */
+    @Deprecated
     public double[] runSubstrate(float[] agentVision) {
         return this.substrate.feedForward(agentVision);
+    }
+
+    @Deprecated
+    @Override
+    public List<LinkIF> getLinks() {
+        return null;
     }
 
     /**
      * Gets the fitness of this CPPN
      * @return The fitness of the CPPN
      */
+    
     public int getFitness() {
         return this.fitness;
     }
@@ -136,6 +165,56 @@ public class CPPN extends ReusedCode {
     public void setFitness(int fitness){
         this.fitness = fitness;
     }
+    
+    @Deprecated
+    @Override
+    public void incrementLayer() {
+
+    }
+    
+    @Deprecated
+    @Override
+    public int getNumNodes() {
+        return 0;
+    }
+
+    @Override
+    public void incrementNodes() {
+
+    }
+    
+    @Deprecated
+    @Override
+    public Map<Integer, String> getInnovationList() {
+        return null;
+    }
+    
+    @Deprecated
+    @Override
+    public int getNumLayers() {
+        return 0;
+    }
+    
+    @Deprecated
+    @Override
+    public NEATNodeIF getNode(int id) {
+        return null;
+    }
+
+    @Override
+    public NEATNodeIF[] getInputNodes() {
+        return new NEATNodeIF[0];
+    }
+
+    @Override
+    public NEATNodeIF[] getOutputNodes() {
+        return new NEATNodeIF[0];
+    }
+
+    @Override
+    public NEATNodeIF getBiasNode() {
+        return null;
+    }
 
     /**
      * Crossover a baby CPPN with this CPPN and another parent
@@ -146,5 +225,17 @@ public class CPPN extends ReusedCode {
         CPPN baby = this.clone();
         crossover(otherParent.CPPNFunction, baby.CPPNFunction);
         return baby;
+    }
+    
+    @Deprecated
+    @Override
+    public List<HNNodeIF> getHiddenNodes() {
+        return null;
+    }
+    
+    @Deprecated
+    @Override
+    public boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2) {
+        return false;
     }
 }
