@@ -162,7 +162,7 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
     @Deprecated
     @Override
     public List<HNNodeIF> getHiddenNodes() {
-        return null;
+        return CPPNFunction.getHiddenNodes();
     }
     
     @Deprecated
@@ -196,10 +196,10 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
 
     }
 
-    @Deprecated
+
     @Override
     public int getNumNodes() {
-        return 0;
+        return CPPNFunction.getNumNodes();
     }
 
     @Deprecated
@@ -217,7 +217,7 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
     @Deprecated
     @Override
     public int getNumLayers() {
-        return 0;
+        return CPPNFunction.getNumLayers();
     }
 
     @Deprecated
@@ -226,21 +226,18 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
         return null;
     }
 
-    @Deprecated
     @Override
     public NEATNodeIF[] getInputNodes() {
-        return new NEATNodeIF[0];
+        return CPPNFunction.getInputNodes();
     }
 
-    @Deprecated
     @Override
     public NEATNodeIF[] getOutputNodes() {
-        return new NEATNodeIF[0];
+        return CPPNFunction.getOutputNodes();
     }
 
-    @Deprecated
     @Override
     public NEATNodeIF getBiasNode() {
-        return null;
+        return CPPNFunction.getBiasNode();
     }
 }

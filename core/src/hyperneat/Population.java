@@ -238,7 +238,7 @@ public class Population extends ReusedCode implements HNPopulationIF {
 
             // If it is not compatible, create a new species.
             if(!speciesFound) {
-                species.add((HNSpeciesIF) new Species(agentID, agentNetwork));
+                species.add(new Species(agentID, agentNetwork));
             }
         }
 
