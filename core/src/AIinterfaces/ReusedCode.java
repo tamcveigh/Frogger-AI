@@ -38,7 +38,6 @@ public class ReusedCode {
      * @param network The network to copy the links from.
      */
     public static  void copyLinks(NetworkIF network, NetworkIF thisNetwork) {
-        System.err.println(network);
         for(LinkIF link : network.getLinks()) {
             NEATNodeIF input = thisNetwork.getNode(link.getInputNodeID());
             NEATNodeIF output = thisNetwork.getNode(link.getOutputNode().getId());
@@ -321,7 +320,7 @@ public class ReusedCode {
      * @return The crossed over network.
      */
     public static NetworkIF crossover(NetworkIF otherParent, NetworkIF thisNetwork) {
-        NetworkIF baby = (NetworkIF) new Network((HNNetworkIF) thisNetwork);
+        NetworkIF baby = new Network((HNNetworkIF) thisNetwork);
 
         // Randomly inherit traits from one of the matching links.
         for(LinkIF link : baby.getLinks()) {

@@ -2,6 +2,7 @@ package hyperneat;
 
 import AIinterfaces.*;
 import AIinterfaces.NetworkIF.CPPNNetworkIF;
+import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
 import AIinterfaces.PopulationIF.HNPopulationIF;
 import AIinterfaces.SpeciesIF.HNSpeciesIF;
@@ -82,7 +83,7 @@ public class Population extends ReusedCode implements HNPopulationIF {
      * @param fitness The score to be passed to the network.
      */
     public void assignFitness(int id, int fitness) {
-        CPPNNetworkIF organism = organisms.get(id);
+        HNNetworkIF organism = organisms.get(id);
         organism.setFitness(fitness);
     }
 
@@ -133,11 +134,11 @@ public class Population extends ReusedCode implements HNPopulationIF {
         removeBadSpecies();
 
         double avgSum = getAvgFitnessSum();
-        List<CPPN> babies = new ArrayList<>();
+        List<CPPNNetworkIF> babies = new ArrayList<>();
         for(HNSpeciesIF s : species) {
 
             // Directly clone the best network of the species.
-            CPPN baby = (CPPN) s.getOrganisms().get(s.getBestOrgID());
+            CPPNNetworkIF baby = s.getOrganisms().get(s.getBestOrgID());
             if (baby != null ){
                 babies.add( baby );
             }
@@ -146,7 +147,7 @@ public class Population extends ReusedCode implements HNPopulationIF {
             int numBabies = (int) Math.floor( (s.getAverageFitness() / avgSum) * organisms.size() ) - 1;
 
             for(int i = 0; i < numBabies; i++) {
-                baby = (CPPN) s.reproduce();
+                baby = (CPPNNetworkIF) s.reproduce();
                 if (baby != null) {
                     babies.add(baby);
                 }
@@ -161,13 +162,13 @@ public class Population extends ReusedCode implements HNPopulationIF {
             //  accident from a species.
             Random r = new Random();
             HNSpeciesIF s = species.get( r.nextInt(species.size() ) );
-            babies.add((CPPN) s.reproduce());
+            babies.add((CPPNNetworkIF) s.reproduce());
         }
 
         // Set up our agent's with their new networks.
         int i = 0;
         for(Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
-            organism.setValue((CPPNNetworkIF) babies.get(i));
+            organism.setValue(babies.get(i));
             i++;
         }
     }
@@ -178,7 +179,7 @@ public class Population extends ReusedCode implements HNPopulationIF {
      */
     private void statisticsTrack() {
 
-        List<CPPNNetworkIF> organisms = new ArrayList<>();
+        List<HNNetworkIF> organisms = new ArrayList<>();
         //Adds all the CPPNs for a species to organisms
         for(HNSpeciesIF s: species){
             organisms.addAll(s.getOrganisms().values());
@@ -186,7 +187,7 @@ public class Population extends ReusedCode implements HNPopulationIF {
 
         int max = 0;
         //Find the max fitness of all the CPPNs for this generation
-        for(CPPNNetworkIF o: organisms){
+        for(HNNetworkIF o: organisms){
             int oFit = o.getFitness();
             if(oFit > max){
                 max = oFit;
@@ -195,7 +196,7 @@ public class Population extends ReusedCode implements HNPopulationIF {
 
         int average = 0;
         //Get the average of the fitnesses for this generation
-        for(CPPNNetworkIF o: organisms){
+        for(HNNetworkIF o: organisms){
             average += o.getFitness();
         }
         average = average / organisms.size();
