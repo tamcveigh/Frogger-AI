@@ -12,4 +12,6 @@ public interface CPPNNetworkIF extends HNNetworkIF{
     HNNetworkIF getCPPNetwork();
 
     CPPNNetworkIF clone();
+
+    void setFitness(int fitness);
 }

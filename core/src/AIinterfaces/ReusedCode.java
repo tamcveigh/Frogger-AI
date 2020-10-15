@@ -38,6 +38,7 @@ public class ReusedCode {
      * @param network The network to copy the links from.
      */
     public static  void copyLinks(NetworkIF network, NetworkIF thisNetwork) {
+        System.err.println(network);
         for(LinkIF link : network.getLinks()) {
             NEATNodeIF input = thisNetwork.getNode(link.getInputNodeID());
             NEATNodeIF output = thisNetwork.getNode(link.getOutputNode().getId());

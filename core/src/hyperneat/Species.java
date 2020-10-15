@@ -55,10 +55,10 @@ public class Species extends ReusedCode implements HNSpeciesIF {
      * @param agentID The ID number of the first agent to be assigned to this species.
      * @param agentNetwork The network used by the first agent to be assigned to this species.
      */
-    public Species(int agentID, CPPNNetworkIF agentNetwork) {
+    public Species(int agentID, HNNetworkIF agentNetwork) {
         compatibilityNetwork =  ((CPPN) agentNetwork).clone().getCPPNetwork();
         organisms = new HashMap<>();
-        organisms.put(agentID, agentNetwork);
+        organisms.put(agentID, (CPPNNetworkIF) agentNetwork);
         bestOrgID = agentID;
         bestFitness = 0;
         averageFitness = 0.0;
