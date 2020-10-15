@@ -240,7 +240,7 @@ public class Species extends ReusedCode implements HNSpeciesIF {
         } else {
             Object[] networks = organisms.values().toArray();
             CPPN parent = (CPPN) networks[new Random().nextInt(networks.length)];
-            baby = (CPPNNetworkIF) parent.clone();
+            baby = parent.clone();
         }
 
         baby.mutate();

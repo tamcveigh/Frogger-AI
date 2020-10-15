@@ -13,7 +13,7 @@ public interface HNSpeciesIF extends SpeciesIF{
 
     HNNetworkIF getCompatibilityNetwork();
 
-    CPPNNetworkIF reproduce();
+    HNNetworkIF reproduce();
 
     void addOrganism(int agentID, CPPNNetworkIF agentNetwork);
 

@@ -127,7 +127,7 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
     @Deprecated
     @Override
     public List<LinkIF> getLinks() {
-        return null;
+        return CPPNFunction.getLinks();
     }
 
     /**
