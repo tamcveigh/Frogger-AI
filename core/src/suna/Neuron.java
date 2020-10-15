@@ -9,5 +9,87 @@ package suna;
   * to them, then any other neurons that are above the activation threshold.
   * Neurons can have different activation function, exactly the same as in HyperNEAT.
   */
-public class Neuron {
+public abstract class Neuron {
+
+    private double ActivationSpeed;
+
+    private boolean isActivated;
+
+    private double inputValue;
+
+    private double outputValue;
+
+    private Activation activationType;
+
+    private double thresholdActivation;
+
+    private final int ID;
+
+    protected Neuron(int ID) {
+        this.ID = ID;
+    }
+
+    public abstract void activate();
+
+    public double getInputValue() {
+        return inputValue;
+    }
+
+    public void setInputValue(double inputValue) {
+        this.inputValue = inputValue;
+    }
+
+    public void addInputValue(double inputValue){
+        this.inputValue += inputValue;
+    }
+
+    public double getActivationSpeed() {
+        return ActivationSpeed;
+    }
+
+    public void setActivationSpeed(double activationSpeed) {
+        ActivationSpeed = activationSpeed;
+    }
+
+    public boolean isActivated() {
+        return isActivated;
+    }
+
+    public void setActivated(boolean activated) {
+        isActivated = activated;
+    }
+
+    public double getOutputValue() {
+        return outputValue;
+    }
+
+    public void setOutputValue(double outputValue) {
+        this.outputValue = outputValue;
+    }
+
+    public Activation getActivationType() {
+        return activationType;
+    }
+
+    public void setActivationType(Activation activationType) {
+        this.activationType = activationType;
+    }
+
+    public double getThresholdActivation() {
+        return thresholdActivation;
+    }
+
+    public void setThresholdActivation(double thresholdActivation) {
+        this.thresholdActivation = thresholdActivation;
+    }
+
+    enum Activation {
+        CONTROL,
+        IDENTITY,
+        INPUT,
+        OUTPUT,
+        SIGMOID,
+        THRESHOLD
+    }
+
 }
