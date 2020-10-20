@@ -215,6 +215,11 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
                 species.add(new Species(agentID, agentNetwork));
             }
         }
+        statisticsTrack();
+        //Set the average fitness for a species
+        for (NEATSpeciesIF s : species) {
+            s.setAverageFitness();
+        }
     }
 
     /**
@@ -272,6 +277,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         for(NEATSpeciesIF s: species){
             organisms.addAll(s.getOrganisms().values());
         }
+        System.err.println(organisms.size());
 
         int max = 0;
         //Find the max fitness of all the CPPNs for this generation

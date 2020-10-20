@@ -2,9 +2,10 @@ package hyperneat;
 
 /**
  * This enumeration contains coefficients that are used, so they are located in one single place.
+ *
  * @author Chance Simmons and Brandon Townsend
- * @additions Brooke Kiser and Tyler McVeigh
  * @version 21 January 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public enum Coefficients {
     // Mutation coefficients.
@@ -25,13 +26,16 @@ public enum Coefficients {
     STALENESS_THRESH(15),    // A species is stale if above this value.
     CULL_THRESH(.5),        // Used to cull the bottom half of a species.
     BIAS_NODE_LINK_WEIGHT(5); // The value used on the bias nodes outgoing
-                                                        // links.
+    // links.
 
-    /** The value of this coefficient. */
+    /**
+     * The value of this coefficient.
+     */
     private final double value;
 
     /**
      * Coefficient constructor. Assigns the supplied value.
+     *
      * @param value The value for the coefficient.
      */
     Coefficients(double value) {
@@ -40,6 +44,7 @@ public enum Coefficients {
 
     /**
      * Returns the value of the coefficient.
+     *
      * @return The value of the coefficient.
      */
     public double getValue() {

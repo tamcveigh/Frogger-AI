@@ -1,9 +1,7 @@
 package hyperneat;
 
 import AIinterfaces.LinkIF;
-import AIinterfaces.NetworkIF.CPPNNetworkIF;
 import AIinterfaces.NetworkIF.HNNetworkIF;
-import AIinterfaces.NetworkIF.NetworkIF;
 import AIinterfaces.NodeIF.HNNodeIF;
 import AIinterfaces.NodeIF.NEATNodeIF;
 import AIinterfaces.ReusedCode;
@@ -11,48 +9,66 @@ import AIinterfaces.ReusedCode;
 import java.util.*;
 
 /**
- * Class which represents the "brain" of an organism. It is a connection of nodes via links in
- * which values are passed through and a certain value is chosen as the "correct" output.
+ * Class which represents the "brain" of an organism. It is a connection of nodes via links in which values are passed
+ * through and a certain value is chosen as the "correct" output.
+ *
  * @author Chance Simmons and Brandon Townsend
- * @additions Brooke Kiser and Tyler McVeigh
  * @version 23 September 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public class Network extends ReusedCode implements HNNetworkIF {
     /**
-     * A static mapping of innovation numbers. These help in identifying similar links across
-     * multiple networks during crossover.
+     * A static mapping of innovation numbers. These help in identifying similar links across multiple networks during
+     * crossover.
      */
     private static final Map<Integer, String> innovationList = new HashMap<>();
 
-    /** A list of all links in this network. */
+    /**
+     * A list of all links in this network.
+     */
     private final List<LinkIF> links;
 
-    /** A list of all input nodes in this network. No new input nodes should be added over time.*/
+    /**
+     * A list of all input nodes in this network. No new input nodes should be added over time.
+     */
     private final HNNodeIF[] inputNodes;
 
-    /** A list of all output nodes in this network. No new output nodes should be added over time.*/
+    /**
+     * A list of all output nodes in this network. No new output nodes should be added over time.
+     */
     private final HNNodeIF[] outputNodes;
 
-    /** A list of all hidden nodes in this network. This part can grow over time. */
+    /**
+     * A list of all hidden nodes in this network. This part can grow over time.
+     */
     private final List<HNNodeIF> hiddenNodes;
 
-    /** A single bias node which should be connected to all non-input nodes. Helps with outputs. */
+    /**
+     * A single bias node which should be connected to all non-input nodes. Helps with outputs.
+     */
     private final HNNodeIF biasNode;
 
-    /** Counter to keep track of the number of nodes there are in our network. */
+    /**
+     * Counter to keep track of the number of nodes there are in our network.
+     */
     private int numNodes;
 
-    /** Counter to keep track of the number of current layers there are in our network. */
+    /**
+     * Counter to keep track of the number of current layers there are in our network.
+     */
     private int numLayers;
 
-    /** The fitness that the agent assigned to this network scored. */
+    /**
+     * The fitness that the agent assigned to this network scored.
+     */
     private int fitness;
 
-    private boolean type = true;
+    private final boolean type = true;
 
     /**
      * Our network constructor. Builds an initial fully connected network of input and output nodes.
-     * @param inputNum The number of input nodes to have.
+     *
+     * @param inputNum  The number of input nodes to have.
      * @param outputNum The number of output nodes to have.
      */
     public Network(int inputNum, int outputNum) {
@@ -68,7 +84,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
         numNodes++;
 
         //Creates the input layer
-        for(int i = 0; i < inputNum; i++) {
+        for (int i = 0; i < inputNum; i++) {
             inputNodes[i] = new Node(i, numLayers);
             numNodes++;
         }
@@ -76,7 +92,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
         numLayers++;
 
         //Creates the output layer
-        for(int i = 0; i < outputNum; i++) {
+        for (int i = 0; i < outputNum; i++) {
             // Our initial output layer is 1 since it is the layer specifically behind our input.
             // If we add a node in the hidden layer, our output layer should grow.
             outputNodes[i] = new Node(inputNodes.length + i, numLayers);
@@ -89,6 +105,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Copy constructor used to deep copy a network.
+     *
      * @param network The network to copy.
      */
     public Network(HNNetworkIF network) {
@@ -102,17 +119,17 @@ public class Network extends ReusedCode implements HNNetworkIF {
         this.biasNode = new Node((HNNodeIF) network.getBiasNode());
 
         //Copy the input layer into the new input layer
-        for(int i = 0; i < network.getInputNodes().length; i++) {
+        for (int i = 0; i < network.getInputNodes().length; i++) {
             this.inputNodes[i] = new Node((HNNodeIF) network.getInputNodes()[i]);
         }
 
         //Copy the hidden nodes into the new network
-        for(NEATNodeIF node : network.getHiddenNodes()) {
+        for (NEATNodeIF node : network.getHiddenNodes()) {
             this.hiddenNodes.add(new Node((HNNodeIF) node));
         }
 
         //Copy the output layer into the new output layer
-        for(int i = 0; i < network.getOutputNodes().length; i++) {
+        for (int i = 0; i < network.getOutputNodes().length; i++) {
             this.outputNodes[i] = new Node((HNNodeIF) network.getOutputNodes()[i]);
         }
 
@@ -121,6 +138,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Returns this network's fitness.
+     *
      * @return This network's fitness.
      */
     public int getFitness() {
@@ -129,6 +147,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Sets this network's fitness to the supplied value.
+     *
      * @param fitness The supplied value to overwrite this network's fitness.
      */
     public void setFitness(int fitness) {
@@ -137,6 +156,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Returns the list of links that this network holds.
+     *
      * @return The list of links that this network holds.
      */
     public List<LinkIF> getLinks() {
@@ -147,15 +167,15 @@ public class Network extends ReusedCode implements HNNetworkIF {
      * Mutate a node in the hidden node list. The node will have a mutated parameterized slope if that activation
      * function is in this nodes phenotype. Otherwise the node will not express the mutation.
      */
-    public void mutatePR(){
+    public void mutatePR() {
         int random = new Random().nextInt(hiddenNodes.size());
         hiddenNodes.get(random).slopeCalc();
     }
 
 
     /**
-     * Mutates this network, either with only link weights possibly being modified or by adding
-     * additional structure via new links or new nodes.
+     * Mutates this network, either with only link weights possibly being modified or by adding additional structure via
+     * new links or new nodes.
      */
     public void mutate() {
         //todo add a toggle enabled mutation where the first disabled link encountered is toggled
@@ -163,33 +183,35 @@ public class Network extends ReusedCode implements HNNetworkIF {
         //System.err.println("Network mutate reached");
         Random random = new Random();
         // Mutation for link weight. Each link is either mutated or not each generation.
-        for(LinkIF link : links) {
-            if(random.nextDouble() < Coefficients.LINK_WEIGHT_MUT.getValue()) {
+        for (LinkIF link : links) {
+            if (random.nextDouble() < Coefficients.LINK_WEIGHT_MUT.getValue()) {
                 mutateWeight(link.getWeight());
             }
         }
 
         // Mutation for adding a link between two random, unlinked nodes.
-        if(random.nextDouble() < Coefficients.ADD_LINK_MUT.getValue()) {
+        if (random.nextDouble() < Coefficients.ADD_LINK_MUT.getValue()) {
             addLinkMutation(this);
         }
 
         // Mutation for adding a new node where a link previously was.
-        if(random.nextDouble() < Coefficients.ADD_NODE_MUT.getValue()) {
+        if (random.nextDouble() < Coefficients.ADD_NODE_MUT.getValue()) {
             addNodeMutation();
         }
 
         // Mutation for adding a new node where a link previously was.
-        if(hiddenNodes.size() != 0 && random.nextDouble() < Coefficients.NODE_PR_MUT.getValue()) {
+        if (hiddenNodes.size() != 0 && random.nextDouble() < Coefficients.NODE_PR_MUT.getValue()) {
             mutatePR();
         }
     }
 
     /**
-     * Returns whether or not a link can be formed between two nodes. If the nodes are already
-     * connected, it is a bad link and if both nodes are from the same layer, it is a bad link.
+     * Returns whether or not a link can be formed between two nodes. If the nodes are already connected, it is a bad
+     * link and if both nodes are from the same layer, it is a bad link.
+     *
      * @param node1 One of the nodes on the link.
      * @param node2 The other node on the link.
+     *
      * @return True if the future link is bad, false otherwise.
      */
     public boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2) {
@@ -202,29 +224,30 @@ public class Network extends ReusedCode implements HNNetworkIF {
     }
 
     /**
-     * Adds a new node to our network where a random link used to be. Two new links appear
-     * connecting the old input and old output to the new node. The old link gets disabled so it
-     * can no longer be used to feed forward (which would bypass our hidden node, therefore
-     * reducing its ability to change the network's output).
+     * Adds a new node to our network where a random link used to be. Two new links appear connecting the old input and
+     * old output to the new node. The old link gets disabled so it can no longer be used to feed forward (which would
+     * bypass our hidden node, therefore reducing its ability to change the network's output).
      */
     private void addNodeMutation() {
         Random random = new Random();
         LinkIF link;
         do {
             link = links.get(random.nextInt(links.size()));
-        } while(link.getInputNodeID() == biasNode.getId());
+        } while (link.getInputNodeID() == biasNode.getId());
 
         addNode(link);
     }
 
     /**
      * Returns the node with the specified ID.
+     *
      * @param id The ID number to search by.
+     *
      * @return The node that corresponds to the ID number or null.
      */
     public HNNodeIF getNode(int id) {
-        for(NEATNodeIF node : listNodesByLayer(this)) {
-            if(node.getId() == id) {
+        for (NEATNodeIF node : listNodesByLayer(this)) {
+            if (node.getId() == id) {
                 return (HNNodeIF) node;
             }
         }
@@ -240,6 +263,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Get the hidden nodes of the network
+     *
      * @return List containing the hidden nodes
      */
     public List<HNNodeIF> getHiddenNodes() {
@@ -248,6 +272,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Get the input nodes of the network
+     *
      * @return Array containing the input nodes
      */
     public HNNodeIF[] getInputNodes() {
@@ -256,6 +281,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Get the output nodes of the network
+     *
      * @return Array containing the output nodes
      */
     public HNNodeIF[] getOutputNodes() {
@@ -278,6 +304,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Gets the total of number of nodes
+     *
      * @return the number of nodes
      */
     public int getNumNodes() {
@@ -286,6 +313,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Gets the bias node
+     *
      * @return The bias node
      */
     public HNNodeIF getBiasNode() {
@@ -294,6 +322,7 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Gets the total number of layers
+     *
      * @return The number of layers
      */
     public int getNumLayers() {
@@ -302,11 +331,12 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Adds a node where the specified link used to be.
+     *
      * @param link The location where the new node should be added.
      */
     public void addNode(LinkIF link) {
         link.setEnabled(false);
-        HNNodeIF oldInput = (HNNodeIF) getNode(link.getInputNodeID());
+        HNNodeIF oldInput = getNode(link.getInputNodeID());
         int layer = addNodeHelper(this, link, oldInput);
         HNNodeIF toAdd = new hyperneat.Node(getNumNodes(), layer);
         toAdd.activate();
@@ -324,10 +354,11 @@ public class Network extends ReusedCode implements HNNetworkIF {
 
     /**
      * Creates a  copy of this CPPN
+     *
      * @return the cloned CPPN
      */
     @Override
-    public Network clone(){
+    public Network clone() {
         Network clone = new Network(this.getInputNodes().length, this.getOutputNodes().length);
         generateNetwork(clone, clone.getInputNodes(), getOutputNodes(), clone.getBiasNode());
         return clone;
