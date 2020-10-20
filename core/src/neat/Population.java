@@ -1,13 +1,18 @@
 package neat;
 
-import AIinterfaces.NetworkIF.CPPNNetworkIF;
+import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
+import AIinterfaces.PopulationIF.HNPopulationIF;
 import AIinterfaces.PopulationIF.NEATPopulationIF;
+import AIinterfaces.PopulationIF.PopulationIF;
 import AIinterfaces.ReusedCode;
+import AIinterfaces.SpeciesIF.HNSpeciesIF;
 import AIinterfaces.SpeciesIF.NEATSpeciesIF;
 import com.mygdx.kittener.game.Agent;
-import AIinterfaces.PopulationIF.HNPopulationIF;
+import com.mygdx.kittener.game.MainGame;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -16,7 +21,7 @@ import java.util.*;
  * @author Chance Simmons and Brandon Townsend
  * @version 21 January 2020
  */
-public class Population extends ReusedCode implements NEATPopulationIF {
+public class Population extends ReusedCode implements PopulationIF, NEATPopulationIF {
     /** Keeps track of the generation of organisms we're at. */
     private int generation;
 
@@ -28,6 +33,8 @@ public class Population extends ReusedCode implements NEATPopulationIF {
 
     /** Identification number of the best agent. */
     private int bestAgentID;
+
+    private boolean type = true;
 
     /**
      * Constructors our population. Maps every agent to a newly formed network.
@@ -68,7 +75,7 @@ public class Population extends ReusedCode implements NEATPopulationIF {
      * @return The network output by the supplied agent ID number.
      */
     public double[] getNetworkOutput(int id, float[] agentVision) {
-        return feedForward((CPPNNetworkIF) organisms.get(id), agentVision);
+        return feedForward(organisms.get(id), agentVision);
     }
 
     /**
@@ -123,7 +130,7 @@ public class Population extends ReusedCode implements NEATPopulationIF {
         speciate();
         cullSpecies();
         setBestAgentID();
-        removeStaleSpecies((HNPopulationIF) this);
+        removeStaleSpecies((NEATPopulationIF) this);
         removeBadSpecies();
 
         double avgSum = getAvgFitnessSum();
@@ -156,6 +163,26 @@ public class Population extends ReusedCode implements NEATPopulationIF {
             organism.setValue((NEATNetworkIF) babies.get(i));
             i++;
         }
+    }
+
+    /**
+     * Gets the list of the species
+     *
+     * @return The list of species
+     */
+    @Override
+    public List<NEATSpeciesIF> getSpecies() {
+        return species;
+    }
+
+    /**
+     * The best agent of the population
+     *
+     * @return The ID of the best agent
+     */
+    @Override
+    public int getBestAgentID() {
+        return bestAgentID;
     }
 
     /**
@@ -231,4 +258,46 @@ public class Population extends ReusedCode implements NEATPopulationIF {
         }
         return avgSum;
     }
+
+    public boolean getType(){ return type;}
+
+    /**
+     * Writes statistics to a csv file. The statistic will include the generation, average fitness,
+     * and max fitness.
+     */
+    private void statisticsTrack() {
+
+        List<NEATNetworkIF> organisms = new ArrayList<>();
+        //Adds all the CPPNs for a species to organisms
+        for(NEATSpeciesIF s: species){
+            organisms.addAll(s.getOrganisms().values());
+        }
+
+        int max = 0;
+        //Find the max fitness of all the CPPNs for this generation
+        for(NEATNetworkIF o: organisms){
+            int oFit = o.getFitness();
+            if(oFit > max){
+                max = oFit;
+            }
+        }
+
+        int average = 0;
+        //Get the average of the fitnesses for this generation
+        for(NEATNetworkIF o: organisms){
+            average += o.getFitness();
+        }
+        average = average / organisms.size();
+
+        //Write to the log file
+        try {
+            FileWriter statWriter = new FileWriter(MainGame.STAT_LOG, true);
+            statWriter.write("\n" + generation + "," + average + "," + max);
+            statWriter.close();
+        } catch (IOException e) {
+            System.err.println("ERROR: Unable to track statistics for generation " + generation);
+        }
+
+    }
+
 }

@@ -194,10 +194,10 @@ public class Network extends ReusedCode implements NEATNetworkIF {
      * @param id The ID number to search by.
      * @return The node that corresponds to the ID number or null.
      */
-    public HNNodeIF getNode(int id) {
+    public NEATNodeIF getNode(int id) {
         for(NEATNodeIF node : listNodesByLayer(this)) {
             if(node.getId() == id) {
-                return (HNNodeIF) node;
+                return node;
             }
         }
         return null;
@@ -273,8 +273,8 @@ public class Network extends ReusedCode implements NEATNetworkIF {
      * @return The bias node
      */
     @Override
-    public HNNodeIF getBiasNode() {
-        return (HNNodeIF) biasNode;
+    public NEATNodeIF getBiasNode() {
+        return (NEATNodeIF) biasNode;
     }
 
     /**

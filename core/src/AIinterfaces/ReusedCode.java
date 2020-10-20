@@ -3,12 +3,10 @@ package AIinterfaces;
 import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
 import AIinterfaces.NetworkIF.NetworkIF;
-import AIinterfaces.NetworkIF.NetworkIF;
-import AIinterfaces.NodeIF.HNNodeIF;
 import AIinterfaces.NodeIF.NEATNodeIF;
 import AIinterfaces.PopulationIF.HNPopulationIF;
 import AIinterfaces.PopulationIF.NEATPopulationIF;
-import AIinterfaces.PopulationIF.NEATPopulationIF;
+import AIinterfaces.PopulationIF.PopulationIF;
 import hyperneat.*;
 import neat.Species;
 
@@ -325,7 +323,7 @@ public class ReusedCode {
         if(otherParent.getType()){
             baby = new CPPN(thisNetwork.getInputNodes().length, thisNetwork.getOutputNodes().length);
         } else {
-            baby = new Network((HNNetworkIF) thisNetwork);
+            baby = new neat.Network((NEATNetworkIF) thisNetwork);
         }
 
         // Randomly inherit traits from one of the matching links.
@@ -383,6 +381,24 @@ public class ReusedCode {
      * the current best organism.
      */
     public static  void removeStaleSpecies(HNPopulationIF thisPopulation) {
+
+        for(int i = 0; i < thisPopulation.getSpecies().size(); i++) {
+            if(!thisPopulation.getSpecies().get(i).getOrganisms().containsKey(thisPopulation.getBestAgentID())) {
+                if(thisPopulation.getSpecies().get(i).getStaleness() >= neat.Coefficients.STALENESS_THRESH.getValue()) {
+                    Species.takenColors.remove(thisPopulation.getSpecies().get(i).getColor());
+                    thisPopulation.getSpecies().remove(thisPopulation.getSpecies().get(i));
+                    i--;
+                }
+            }
+        }
+    }
+
+    /**
+     * Removes all species that are over the staleness threshold, except the one that contains
+     * the current best organism.
+     */
+    public static  void removeStaleSpecies(NEATPopulationIF thisPopulation) {
+
         for(int i = 0; i < thisPopulation.getSpecies().size(); i++) {
             if(!thisPopulation.getSpecies().get(i).getOrganisms().containsKey(thisPopulation.getBestAgentID())) {
                 if(thisPopulation.getSpecies().get(i).getStaleness() >= neat.Coefficients.STALENESS_THRESH.getValue()) {

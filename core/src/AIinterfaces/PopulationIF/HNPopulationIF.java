@@ -1,11 +1,11 @@
 package AIinterfaces.PopulationIF;
 
 import AIinterfaces.SpeciesIF.HNSpeciesIF;
-import AIinterfaces.SpeciesIF.NEATSpeciesIF;
+import AIinterfaces.SpeciesIF.SpeciesIF;
 
 import java.util.List;
 
-public interface HNPopulationIF extends NEATPopulationIF{
+public interface HNPopulationIF{
     /**
      * Gets the list of the species
      * @return The list of species

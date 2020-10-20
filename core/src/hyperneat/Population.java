@@ -3,9 +3,9 @@ package hyperneat;
 import AIinterfaces.*;
 import AIinterfaces.NetworkIF.CPPNNetworkIF;
 import AIinterfaces.NetworkIF.HNNetworkIF;
-import AIinterfaces.NetworkIF.NEATNetworkIF;
 import AIinterfaces.NetworkIF.NetworkIF;
 import AIinterfaces.PopulationIF.HNPopulationIF;
+import AIinterfaces.PopulationIF.PopulationIF;
 import AIinterfaces.SpeciesIF.HNSpeciesIF;
 import com.mygdx.kittener.game.Agent;
 import com.mygdx.kittener.game.MainGame;
@@ -21,7 +21,7 @@ import java.util.*;
  * @additions Brooke Kiser and Tyler McVeigh
  * @version 24 September 2020
  */
-public class Population extends ReusedCode implements HNPopulationIF {
+public class Population extends ReusedCode implements HNPopulationIF, PopulationIF {
     /** Keeps track of the generation of organisms we're at. */
     private int generation;
 
@@ -33,6 +33,8 @@ public class Population extends ReusedCode implements HNPopulationIF {
 
     /** Identification number of the best agent. */
     private int bestAgentID;
+
+    private boolean type = false;
 
     /**
      * Constructors our population. Maps every agent to a newly formed network.
@@ -308,4 +310,6 @@ public class Population extends ReusedCode implements HNPopulationIF {
     public int getBestAgentID(){
         return bestAgentID;
     }
+
+    public boolean getType(){ return type;}
 }
