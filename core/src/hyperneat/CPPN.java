@@ -158,31 +158,36 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
         crossover(otherParent.CPPNFunction, baby.CPPNFunction);
         return baby;
     }
-    
+
+    /** Gets the hidden nodes of the network*/
     @Deprecated
     @Override
     public List<HNNodeIF> getHiddenNodes() {
         return CPPNFunction.getHiddenNodes();
     }
-    
+
+    /** Determines if the link is bad*/
     @Deprecated
     @Override
     public boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2) {
         return false;
     }
 
+    /** Is the class neat or hyperneat*/
     @Deprecated
     @Override
     public boolean getType() {
         return true;
     }
 
+    /** Get the ID of the best organism*/
     @Deprecated
     @Override
     public Integer getBestOrgID() {
         return null;
     }
 
+    /** Get the compatible network*/
     @Deprecated
     @Override
     public CPPNNetworkIF getCompatibilityNetwork() {
@@ -246,4 +251,6 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF{
     public NEATNodeIF getBiasNode() {
         return CPPNFunction.getBiasNode();
     }
+
+
 }
