@@ -13,6 +13,10 @@ public class NormalNeuron extends Neuron{
         super.setThresholdActivation(0);
     }
 
+    public NormalNeuron(int neuronCount, Link mutatedLink) {
+        super(neuronCount);
+    }
+
     public void activate(){
         if(super.isActivated()){
             double input = super.getInputValue();
@@ -33,7 +37,7 @@ public class NormalNeuron extends Neuron{
                     }
                     break;
                 case SIGMOID:
-                    //output = sigmoid(input)
+                    output = 1.0 / (1.0 + Math.pow(Math.E, (-1 * input)));
                     break;
             }
             super.setOutputValue(output);

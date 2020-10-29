@@ -1,11 +1,24 @@
 package suna;
 
+/**
+ * Implementation of Link for a connection between a ControlNeuron and
+ * another neuron.
+ */
 public class ControlLink extends Link{
 
-    public ControlLink(ControlNeuron source, Neuron destination, double weight){
+    /**
+     * Constructor for Control Link
+     * @param source the sending ControlNeuron
+     * @param destination the receiving Neuron
+     */
+    public ControlLink(ControlNeuron source, Neuron destination){
         super(source,destination);
     }
 
+    /**
+     * Checks if the ControlNeuron should set the destination neuron's
+     * activation field or not
+     */
     @Override
     public void feedForward() {
         ControlNeuron source = (ControlNeuron) super.getSource();
@@ -13,9 +26,7 @@ public class ControlLink extends Link{
 
         if (source.isActivated() ) {
             source.activate();
-            if(source.getOutputValue() > 0){
-                destination.setActivated(true);
-            }
-        }//if source isn't activated, then it won't change its linked neurons
+            destination.setActivated(source.getOutputValue() > 0);
+        }
     }
 }

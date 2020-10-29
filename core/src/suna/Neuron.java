@@ -11,14 +11,21 @@ package suna;
   */
 public abstract class Neuron {
 
+    /** The delay on the activation of the neuron.
+     * A value of 1 is no delay
+     */
     private double ActivationSpeed;
 
+    /** Is this Neuron allowed to fire or not?*/
     private boolean isActivated;
 
+    /** The value of the inputs to this Neuron*/
     private double inputValue;
 
+    /** The value of the output of the Neuron after the activation function is used*/
     private double outputValue;
 
+    /**/
     private Activation activationType;
 
     private double thresholdActivation;

@@ -1,5 +1,8 @@
 package suna;
 
+/**
+ * Neuron whose function is to activate or deactivate other neurons in the network
+ */
 public class ControlNeuron extends Neuron {
 
     public ControlNeuron(int ID){
