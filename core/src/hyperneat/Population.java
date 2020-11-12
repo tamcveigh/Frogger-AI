@@ -124,8 +124,10 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
      * the idea of it being the best over all the generations and retain it through all of them.
      */
     private void setBestAgentID() {
+        System.err.println();
         int bestFitness = organisms.get(0).getFitness();
         for (Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
+            System.err.println("Best fitness: " + bestFitness + " : " + bestAgentID);
             if (organism.getValue().getFitness() > bestFitness) {
                 bestFitness = organism.getValue().getFitness();
                 bestAgentID = organism.getKey();
@@ -150,7 +152,9 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
         for (HNSpeciesIF s : species) {
 
             // Directly clone the best network of the species.
-            CPPNNetworkIF baby = s.getOrganisms().get(s.getBestOrgID());
+            System.err.println("pop ~ Natural Selection: " + s.getBestOrgID() + " : " + bestAgentID);
+            //CPPNNetworkIF baby = s.getOrganisms().get(s.getBestOrgID());
+            CPPNNetworkIF baby = organisms.get(bestAgentID);
             if (baby != null) {
                 babies.add(baby);
             }

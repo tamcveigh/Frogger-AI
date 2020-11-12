@@ -128,10 +128,15 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
     public void naturalSelection() {
         // Set up for producing babies.
         speciate();
+        System.err.println("speciate done");
         cullSpecies();
+        System.err.println("cull done");
         setBestAgentID();
-        removeStaleSpecies((NEATPopulationIF) this);
+        System.err.println("best agent done");
+        removeStaleSpecies(this);
+        System.err.println("remove stale done");
         removeBadSpecies();
+        System.err.println("remove bad done");
 
         double avgSum = getAvgFitnessSum();
         List<NEATNetworkIF> babies = new ArrayList<>();
