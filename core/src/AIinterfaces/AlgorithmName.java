@@ -3,7 +3,7 @@ package AIinterfaces;
 /**
  * Enum to allow launchers to use the same base code but select which algorithm to use
  * @author Brooke Kiser and Tyler McVeigh
- * @version 24 September 2020
+ * @version 22 November, 2020
  */
 public enum AlgorithmName {
 

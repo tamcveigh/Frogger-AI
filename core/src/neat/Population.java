@@ -1,12 +1,9 @@
 package neat;
 
-import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
-import AIinterfaces.PopulationIF.HNPopulationIF;
 import AIinterfaces.PopulationIF.NEATPopulationIF;
 import AIinterfaces.PopulationIF.PopulationIF;
 import AIinterfaces.ReusedCode;
-import AIinterfaces.SpeciesIF.HNSpeciesIF;
 import AIinterfaces.SpeciesIF.NEATSpeciesIF;
 import com.mygdx.kittener.game.Agent;
 import com.mygdx.kittener.game.MainGame;
@@ -19,7 +16,8 @@ import java.util.*;
  * Class which handles all overhead HN functionality and is connected to the game. Keeps track
  * of the generation, the list of species, and a mapping of agents to their networks.
  * @author Chance Simmons and Brandon Townsend
- * @version 21 January 2020
+ * @version 22nd November, 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public class Population extends ReusedCode implements PopulationIF, NEATPopulationIF {
     /** Keeps track of the generation of organisms we're at. */
@@ -34,6 +32,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
     /** Identification number of the best agent. */
     private int bestAgentID;
 
+    /** The type of AI. */
     private boolean type = true;
 
     /**
@@ -61,9 +60,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         return generation;
     }
 
-    /**
-     * Increments the generation by one. Represents moving to the next generational step.
-     */
+    /** Increments the generation by one. Represents moving to the next generational step. */
     public void incrementGeneration() {
         generation++;
     }
@@ -93,10 +90,6 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
      * @param agent The agent to modify the color of.
      */
     public void assignColor(Agent agent) {
-
-        //FIXME: 1/22/2020 This method should be checked. It looks like they could be getting
-        // assigned the wrong color, but I'm not sure.
-
         for(NEATSpeciesIF s : species) {
             if(isCompatibleTo(organisms.get(agent.getId()), s.getCompatibilityNetwork())) {
                 agent.setColor(s.getColor());
@@ -105,11 +98,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         }
     }
 
-    /**
-     * Sets the best agent of this generation.
-     *todo currently is the best agent of the generation. Possibly entertain the idea of it
-     * being the best over all the generations and retain it through all of them.
-     */
+    /** Sets the best agent of this generation. */
     private void setBestAgentID() {
         int bestFitness = organisms.get(0).getFitness();
         for(Map.Entry<Integer, NEATNetworkIF> organism : organisms.entrySet()) {
@@ -155,10 +144,6 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
 
         // If we don't have enough babies, produce them from random species.
         while(babies.size() < organisms.size()) {
-            //FIXME: 1/22/2020 Sometimes when we get to this step we have a species size of 0. I
-            // have no idea how that occurs since removing the stale and bad should remove all
-            // but one. I think that somehow the best organism is being set wrong or removed on
-            // accident from a species.
             babies.add((NEATNetworkIF) species.get(new Random().nextInt(species.size())).reproduce());
         }
 
@@ -172,7 +157,6 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
 
     /**
      * Gets the list of the species
-     *
      * @return The list of species
      */
     @Override
@@ -182,7 +166,6 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
 
     /**
      * The best agent of the population
-     *
      * @return The ID of the best agent
      */
     @Override
@@ -190,9 +173,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         return bestAgentID;
     }
 
-    /**
-     * Separates this populations list of organisms into separate species.
-     */
+    /** Separates this populations list of organisms into separate species. */
     private void speciate() {
         // First, set up each existing species compatibility network and clear it of all
         // organisms from the last generation.
@@ -240,9 +221,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         }
     }
 
-    /**
-     * Removes any species who would produce zero babies this generation.
-     */
+    /** Removes any species who would produce zero babies this generation. */
     private void removeBadSpecies() {
         double avgSum = getAvgFitnessSum();
 

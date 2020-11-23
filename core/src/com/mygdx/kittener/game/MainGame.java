@@ -14,8 +14,8 @@ import java.time.Instant;
  * Class which controls the screen we are viewing in our game and holds all sprites, fonts, and
  * the application width and height.
  * @author Brandon Townsend
+ * @version 22nd November, 2020
  * @additions Brooke Kiser and Tyler McVeigh
- * @version 23 September 2020
  */
 public class MainGame extends com.badlogic.gdx.Game {
     /** The width of the application window. */

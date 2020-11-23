@@ -6,7 +6,6 @@ import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NodeIF.HNNodeIF;
 import AIinterfaces.NodeIF.NEATNodeIF;
 import AIinterfaces.ReusedCode;
-
 import java.util.List;
 import java.util.Map;
 
@@ -16,39 +15,30 @@ import java.util.Map;
  * weights are also set since the substrate in a part of the CPPN itself.
  *
  * @author Brooke Kiser and Tyler McVeigh
- * @version 23 September 2020
+ * @version 22nd November, 2020
  */
 public class CPPN extends ReusedCode implements CPPNNetworkIF {
 
-    /**
-     * The size of the substrate .
-     */
+    /** The size of the substrate. */
     private static final int SUBSTRATE_SIZE = 11;
-    /**
-     * Array holding the weights between any two nodes on the substrate.
-     */
+
+    /** Array holding the weights between any two nodes on the substrate. */
     private final Substrate substrate;
-    /**
-     * The input number of nodes for the substrate.
-     */
+
+    /** The input number of nodes for the substrate. */
     private final int inputSize;
 
-    /**
-     * The output number of nodes for the substrate.
-     */
+    /** The output number of nodes for the substrate. */
     private final int outputSize;
-    /**
-     * The CPPN network.
-     */
+
+    /** The CPPN network. */
     private HNNetworkIF CPPNFunction;
-    /**
-     * The fitness of the CPPN.
-     */
+
+    /** The fitness of the CPPN. */
     private int fitness;
 
     /**
      * Constructor of the CPPN. Creates the substrate and network for the CPPN to run with.
-     *
      * @param inputSize the size of the square matrix of the substrate
      */
     public CPPN(int inputSize, int outputSize) {
@@ -63,7 +53,6 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
 
     /**
      * Creates a  copy of this CPPN
-     *
      * @return the cloned CPPN
      */
     @Override
@@ -76,12 +65,10 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
 
     /**
      * Takes any two points on an array and feeds those points forward in the CPPN network to get an output
-     *
      * @param xOne x coordinate of the first point on the substrate
      * @param yOne y coordinate of the first point on the substrate
      * @param xTwo x coordinate of the second point on the substrate
      * @param yTwo y coordinate of the second point on the substrate
-     *
      * @return the weight of the connection between these two points
      */
     private double outputWeight(int xOne, int yOne, int xTwo, int yTwo) {
@@ -109,9 +96,7 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
 
     }
 
-    /**
-     * Mutates the CPPN network
-     */
+    /** Mutates the CPPN network */
     public void mutate() {
         this.CPPNFunction.mutate();
         this.generateNetwork();
@@ -119,7 +104,6 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
 
     /**
      * Gets the CPPN network
-     *
      * @return This CPPN network
      */
     public HNNetworkIF getCPPNetwork() {
@@ -128,9 +112,7 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
 
     /**
      * Feeds the network to get new output values
-     *
      * @param agentVision The array of what the agent can see
-     *
      * @return The array of the output values
      */
     @Deprecated
@@ -138,6 +120,10 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
         return this.substrate.feedForward(agentVision);
     }
 
+    /**
+     * Gets the links in the CPPN
+     * @return The CPPN Links
+     */
     @Deprecated
     @Override
     public List<LinkIF> getLinks() {
@@ -146,7 +132,6 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
 
     /**
      * Gets the fitness of this CPPN
-     *
      * @return The fitness of the CPPN
      */
 
@@ -156,7 +141,6 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
 
     /**
      * Sets the fitness for the CPPN
-     *
      * @param fitness The new fitness for the CPPN
      */
     public void setFitness(int fitness) {
@@ -165,9 +149,7 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
 
     /**
      * Crossover a baby CPPN with this CPPN and another parent
-     *
      * @param otherParent The second parent to make the baby
-     *
      * @return The baby of the two parent CPPNs
      */
     public CPPN crossover(CPPN otherParent) {
@@ -176,108 +158,101 @@ public class CPPN extends ReusedCode implements CPPNNetworkIF {
         return baby;
     }
 
-    /**
-     * Gets the hidden nodes of the network
-     */
+    /** Gets the hidden nodes of the network */
     @Deprecated
     @Override
     public List<HNNodeIF> getHiddenNodes() {
         return CPPNFunction.getHiddenNodes();
     }
 
-    /**
-     * Determines if the link is bad
-     */
+    /** Determines if the link is bad */
     @Deprecated
     @Override
     public boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2) {
         return false;
     }
 
-    /**
-     * Is the class neat or hyperneat
-     */
+    /** Is the class neat or HyperNEAT */
     @Deprecated
     @Override
     public boolean getType() {
         return true;
     }
 
-    /**
-     * Get the ID of the best organism
-     */
+    /** CPPN has no layer to increment */
     @Deprecated
     @Override
-    public Integer getBestOrgID() {
-        return null;
-    }
+    public void incrementLayer() {}
 
     /**
-     * Get the compatible network
+     * Get the number of nodes in the CPPN network
+     * @return The number of nodes
      */
-    @Deprecated
-    @Override
-    public CPPNNetworkIF getCompatibilityNetwork() {
-        return null;
-    }
-
-    @Deprecated
-    @Override
-    public void setCompatibilityNetwork() {
-
-    }
-
-
-    @Deprecated
-    @Override
-    public void incrementLayer() {
-
-    }
-
-
     @Override
     public int getNumNodes() {
         return CPPNFunction.getNumNodes();
     }
 
+    /** CPPN does not increment nodes as it has no nodes */
     @Deprecated
     @Override
-    public void incrementNodes() {
+    public void incrementNodes() {}
 
-    }
-
+    /**
+     * There is no innovation list
+     * @return null because it doesn't exist
+     */
     @Deprecated
     @Override
     public Map<Integer, String> getInnovationList() {
         return null;
     }
 
+    /**
+     * Gets the number of layers
+     * @return the number of layers
+     */
     @Deprecated
     @Override
     public int getNumLayers() {
         return CPPNFunction.getNumLayers();
     }
 
+    /**
+     * There is no node list to get the ID of
+     * @param id The ID number to search by.
+     * @return null because no node exists
+     */
     @Deprecated
     @Override
     public NEATNodeIF getNode(int id) {
         return null;
     }
 
+    /**
+     * Get the input nodes
+     * @return The network input nodes
+     */
     @Override
     public NEATNodeIF[] getInputNodes() {
         return CPPNFunction.getInputNodes();
     }
 
+    /**
+     * Get the output nodes
+     * @return The network output nodes
+     */
     @Override
     public NEATNodeIF[] getOutputNodes() {
         return CPPNFunction.getOutputNodes();
     }
 
+    /**
+     * Get the network bias node
+     * @return the bias node
+     */
     @Override
     public NEATNodeIF getBiasNode() {
         return CPPNFunction.getBiasNode();
     }
-
-
 }

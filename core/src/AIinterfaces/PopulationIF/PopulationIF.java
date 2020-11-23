@@ -1,15 +1,11 @@
 package AIinterfaces.PopulationIF;
 
-import AIinterfaces.SpeciesIF.NEATSpeciesIF;
-import AIinterfaces.SpeciesIF.SpeciesIF;
 import com.mygdx.kittener.game.Agent;
-
-import java.util.List;
 
 /**
  * Interface to allow the Population classes to be interchangeable
  * @author Brooke Kiser and Tyler McVeigh
- * @version 24 September 2020
+ * @version 22 November, 2020
  */
 public interface PopulationIF {
 
@@ -19,9 +15,7 @@ public interface PopulationIF {
      */
     int getGeneration();
 
-    /**
-     * Increments the generation by one. Represents moving to the next generational step.
-     */
+    /** Increments the generation by one. Represents moving to the next generational step. */
     void incrementGeneration();
 
     /**

@@ -18,33 +18,28 @@ import java.util.*;
  * Class which handles all overhead HN functionality and is connected to the game. Keeps track of the generation, the
  * list of species, and a mapping of agents to their networks.
  *
- * @author Chance Simmons and Brandon Townsend
- * @version 24 September 2020
- * @additions Brooke Kiser and Tyler McVeigh
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 22nd November, 2020
  */
 public class Population extends ReusedCode implements HNPopulationIF, PopulationIF {
-    /**
-     * List of every species in the game.
-     */
+
+    /** List of every species in the game. */
     private final List<HNSpeciesIF> species;
-    /**
-     * Mapping of each game agent to their network.
-     */
+
+    /** Mapping of each game agent to their network. */
     private final Map<Integer, CPPNNetworkIF> organisms;
-    /**
-     * Keeps track of the generation of organisms we're at.
-     */
+
+    /** Keeps track of the generation of organisms we're at. */
     private int generation;
-    /**
-     * Identification number of the best agent.
-     */
+
+    /** Identification number of the best agent. */
     private int bestAgentID;
 
+    /** The type of AI */
     private final boolean type = false;
 
     /**
      * Constructors our population. Maps every agent to a newly formed network.
-     *
      * @param agents The list of agents to connect via mapping.
      * @param input  The number of inputs we're expecting.
      * @param output The number of outputs we're expecting.
@@ -63,26 +58,21 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
 
     /**
      * Returns the current generation we are at.
-     *
      * @return The current generation we are at.
      */
     public int getGeneration() {
         return generation;
     }
 
-    /**
-     * Increments the generation by one. Represents moving to the next generational step.
-     */
+    /** Increments the generation by one. Represents moving to the next generational step. */
     public void incrementGeneration() {
         generation++;
     }
 
     /**
      * Returns the network output given the supplied agent ID number and it's vision.
-     *
      * @param id          The agent ID number to search for in our mapping.
      * @param agentVision The array of what the agent can see
-     *
      * @return The network output by the supplied agent ID number.
      */
     public double[] getNetworkOutput(int id, float[] agentVision) {
@@ -91,7 +81,6 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
 
     /**
      * Passes along the score of an agent to its network so that the species class can have access to its score.
-     *
      * @param id      The identification number of the agent to be used as a key to grab the network.
      * @param fitness The score to be passed to the network.
      */
@@ -102,7 +91,6 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
 
     /**
      * Sets the supplied agent with a certain species color.
-     *
      * @param agent The agent to modify the color of.
      */
     public void assignColor(Agent agent) {
@@ -119,10 +107,7 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
         }
     }
 
-    /**
-     * Sets the best agent of this generation. todo currently is the best agent of the generation. Possibly entertain
-     * the idea of it being the best over all the generations and retain it through all of them.
-     */
+    /** Sets the best agent of this generation. */
     private void setBestAgentID() {
         System.err.println();
         int bestFitness = organisms.get(0).getFitness();
@@ -173,10 +158,6 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
 
         // If we don't have enough babies, produce them from random species.
         while (babies.size() < organisms.size()) {
-            // FIXME: Sometimes when we get to this step we have a species size of 0.
-            //  I have no idea how that occurs since removing the stale and bad should remove all
-            //  but one. I think that somehow the best organism is being set wrong or removed on
-            //  accident from a species.
             Random r = new Random();
             HNSpeciesIF s = species.get(r.nextInt(species.size()));
             babies.add(s.reproduce());
@@ -190,9 +171,7 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
         }
     }
 
-    /**
-     * Writes statistics to a csv file. The statistic will include the generation, average fitness, and max fitness.
-     */
+    /** Writes statistics to a csv file. The statistic will include the generation, average fitness, and max fitness. */
     private void statisticsTrack() {
 
         List<HNNetworkIF> organisms = new ArrayList<>();
@@ -230,9 +209,7 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
 
     }
 
-    /**
-     * Separates this populations list of organisms into separate species.
-     */
+    /** Separates this populations list of organisms into separate species. */
     private void speciate() {
         // First, set up each existing species compatibility network and clear it of all
         // organisms from the last generation.
@@ -281,9 +258,7 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
         }
     }
 
-    /**
-     * Removes any species who would produce zero babies this generation.
-     */
+    /** Removes any species who would produce zero babies this generation. */
     private void removeBadSpecies() {
         double avgSum = getAvgFitnessSum();
         for (int i = 0; i < species.size(); i++) {
@@ -300,7 +275,6 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
 
     /**
      * Returns the sum of the averaged fitness of each species.
-     *
      * @return The sum of the averaged fitness of each species.
      */
     private double getAvgFitnessSum() {
@@ -313,7 +287,6 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
 
     /**
      * Gets the list of the species
-     *
      * @return The list of species
      */
     public List<HNSpeciesIF> getSpecies() {
@@ -322,13 +295,16 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
 
     /**
      * The best agent of the population
-     *
      * @return The ID of the best agent
      */
     public int getBestAgentID() {
         return bestAgentID;
     }
 
+    /**
+     * Get the type of AI
+     * @return False if HyperNEAT and True if NEAT
+     */
     public boolean getType() {
         return type;
     }

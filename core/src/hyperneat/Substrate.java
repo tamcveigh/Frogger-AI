@@ -7,45 +7,31 @@ import java.util.List;
 
 /**
  * This models a substrate with input layer, output layer, or sandwich layers.
- *
  * @author Brooke Kiser and Tyler McVeigh
- * @version 24 September 2020
+ * @version 22nd November, 2020
  */
 public class Substrate {
 
-    /**
-     * Size of the substrate layers
-     */
+    /** Size of the substrate layers */
     private final int substrateSize;
 
-    /**
-     * A list of all input nodes in this network. No new input nodes should be added over time.
-     */
+    /** A list of all input nodes in this network. No new input nodes should be added over time. */
     private final List<Node> inputNodes;
 
-    /**
-     * A list of all output nodes in this network. No new output nodes should be added over time.
-     */
+    /** A list of all output nodes in this network. No new output nodes should be added over time. */
     private final List<Node> outputNodes;
 
-    /**
-     * A double array for the input layer
-     */
+    /** A double array for the input layer */
     private final Node[][] inputLayer;
 
-    /**
-     * A double array for the sandwich layer
-     */
+    /** A double array for the sandwich layer */
     private final Node[][] sandwichLayer;
 
-    /**
-     * A double array for the output layer
-     */
+    /** A double array for the output layer */
     private final Node[][] outputLayer;
 
     /**
      * Our network constructor. Builds an initial fully connected network of input and output nodes.
-     *
      * @param inputNum  The number of input nodes to have.
      * @param outputNum The number of output nodes to have.
      */
@@ -74,9 +60,7 @@ public class Substrate {
 
     /**
      * Populates a layer of the substrate with nodes
-     *
      * @param layerNum The number responding to the layer
-     *
      * @return The double array containing the populated layer
      */
     private Node[][] generateNodes(int layerNum) {
@@ -94,7 +78,6 @@ public class Substrate {
     /**
      * Create the links between all the layers. The weight of the links will initially be set to 0. This will set up the
      * links between the input and outgoing nodes in the substrate.
-     *
      * @param inputLayer    The layer with the input nodes
      * @param outgoingLayer The output layer to set to the input layer
      */
@@ -115,7 +98,6 @@ public class Substrate {
 
     /**
      * Connects an input node to an output node by a link of a determined link weight.
-     *
      * @param inputX The first value of the input node
      * @param inputY The second value of the input node
      * @param outX   The first value of the output node
@@ -153,9 +135,7 @@ public class Substrate {
     /**
      * Activates every node in the network in a certain specified order. Should traverse from input -> bias -> hidden ->
      * output.
-     *
      * @param inputValues The values to be set as our input layer nodes' output values.
-     *
      * @return The output values in our output nodes after every node has been activated.
      */
     public double[] feedForward(float[] inputValues) {

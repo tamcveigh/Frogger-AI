@@ -1,109 +1,92 @@
 package AIinterfaces.NetworkIF;
 
 import AIinterfaces.LinkIF;
-import AIinterfaces.NodeIF.HNNodeIF;
 import AIinterfaces.NodeIF.NEATNodeIF;
-
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This interface is a broad overview for all methods the implementing interfaces also need.
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 22nd November, 2020
+ */
 public interface NetworkIF {
-
-    /*getFitness
-
-    getInnovationList
-
-    getLinks
-
-    getNumLayers
-
-    getNumeNode
-
-    incrementLayer
-
-    incrementNodes
-
-    mutate
-
-    setFitness*/
 
     /**
      * Returns the list of links that this network holds.
      * @return The list of links that this network holds.
      */
-    public List<LinkIF> getLinks();
+    List<LinkIF> getLinks();
 
     /**
      * Returns this network's fitness.
      * @return This network's fitness.
      */
-    public int getFitness();
+    int getFitness();
 
+    /**
+     * Mutates this network, either with only link weights possibly being modified or by adding additional structure via
+     * new links or new nodes.
+     */
     void mutate();
 
     /**
-     *
-     * @param fitness
+     * Set the new fitness
+     * @param fitness the new fitness
      */
     void setFitness(int fitness);
 
-    /**
-     * Increment the number of layers
-     */
-    public void incrementLayer();
+    /** Increment the number of layers */
+    void incrementLayer();
 
     /**
      * Gets the total of number of nodes
      * @return the number of nodes
      */
-    public int getNumNodes();
+    int getNumNodes();
 
-    /**
-     * Increment the total number of nodes
-     */
-    public void incrementNodes();
+    /** Increment the total number of nodes */
+    void incrementNodes();
 
-    /**
-     * Get the innovation list
-     */
-    public Map<Integer, String> getInnovationList();
+    /** Get the innovation list */
+    Map<Integer, String> getInnovationList();
 
     /**
      * Gets the total number of layers
      * @return The number of layers
      */
-    public int getNumLayers();
+    int getNumLayers();
 
     /**
      * Returns the node with the specified ID.
      * @param id The ID number to search by.
      * @return The node that corresponds to the ID number or null.
      */
-    public NEATNodeIF getNode(int id);
+    NEATNodeIF getNode(int id);
 
     /**
      * Get the input nodes of the network
      * @return Array containing the input nodes
      */
-    public NEATNodeIF[] getInputNodes();
+    NEATNodeIF[] getInputNodes();
 
     /**
      * Get the output nodes of the network
      * @return Array containing the output nodes
      */
-    public NEATNodeIF[] getOutputNodes();
+    NEATNodeIF[] getOutputNodes();
 
     /**
      * Gets the bias node
      * @return The bias node
      */
-    public NEATNodeIF getBiasNode();
+    NEATNodeIF getBiasNode();
 
     /**
      * Get the hidden nodes of the network
      * @return List containing the hidden nodes
      */
-    public List<? extends NEATNodeIF> getHiddenNodes();
+    List<? extends NEATNodeIF> getHiddenNodes();
 
 
     /**
@@ -113,7 +96,11 @@ public interface NetworkIF {
      * @param node2 The other node on the link.
      * @return True if the future link is bad, false otherwise.
      */
-    public boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2);
+    boolean isBadLink(NEATNodeIF node1, NEATNodeIF node2);
 
+    /**
+     * Get which type of AI is being used
+     * @return True if HyperNEAT and false if NEAT
+     */
     boolean getType();
 }

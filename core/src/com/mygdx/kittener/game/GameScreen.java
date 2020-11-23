@@ -22,6 +22,7 @@ import java.util.ArrayList;
  * game information to the NEAT part of the application.
  * @author Brandon Townsend
  * @version 21 January 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public class GameScreen extends ScreenAdapter {
     /** Reference to the game class which 'runs' the game. */
