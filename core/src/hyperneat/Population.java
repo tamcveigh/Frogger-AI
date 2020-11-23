@@ -127,7 +127,7 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
         System.err.println();
         int bestFitness = organisms.get(0).getFitness();
         for (Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
-            System.err.println("Best fitness: " + bestFitness + " : " + bestAgentID);
+            //System.err.println("Best fitness: " + bestFitness + " : " + bestAgentID);
             if (organism.getValue().getFitness() > bestFitness) {
                 bestFitness = organism.getValue().getFitness();
                 bestAgentID = organism.getKey();
@@ -152,18 +152,19 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
         for (HNSpeciesIF s : species) {
 
             // Directly clone the best network of the species.
-            System.err.println("pop ~ Natural Selection: " + s.getBestOrgID() + " : " + bestAgentID);
-            //CPPNNetworkIF baby = s.getOrganisms().get(s.getBestOrgID());
-            CPPNNetworkIF baby = organisms.get(bestAgentID);
-            if (baby != null) {
-                babies.add(baby);
+            //System.err.println("pop ~ Natural Selection: " + s.getBestOrgID() + " : " + bestAgentID);
+            CPPNNetworkIF babyS = s.getOrganisms().get(s.getBestOrgID());
+            CPPNNetworkIF babyO = organisms.get(bestAgentID);
+            if (babyS != null && babyO != null) {
+                babies.add(babyS);
+                babies.add(babyO);
             }
 
             // Find the correct number of babies and reproduce them.
             int numBabies = (int) Math.floor((s.getAverageFitness() / avgSum) * organisms.size()) - 1;
 
             for (int i = 0; i < numBabies; i++) {
-                baby = s.reproduce();
+                CPPNNetworkIF baby = s.reproduce();
                 if (baby != null) {
                     babies.add(baby);
                 }
@@ -195,9 +196,11 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
     private void statisticsTrack() {
 
         List<HNNetworkIF> organisms = new ArrayList<>();
+        String colorsUsed = "";
         //Adds all the CPPNs for a species to organisms
         for (HNSpeciesIF s : species) {
             organisms.addAll(s.getOrganisms().values());
+            colorsUsed += s.getColor() + " : ";
         }
 
         int max = 0;
@@ -219,7 +222,7 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
         //Write to the log file
         try {
             FileWriter statWriter = new FileWriter(MainGame.STAT_LOG, true);
-            statWriter.write("\n" + generation + "," + average + "," + max);
+            statWriter.write("\n" + generation + "," + average + "," + max + "," + colorsUsed);
             statWriter.close();
         } catch (IOException e) {
             System.err.println("ERROR: Unable to track statistics for generation " + generation);

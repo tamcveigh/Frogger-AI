@@ -116,8 +116,10 @@ public class GameScreen extends ScreenAdapter {
         // Assigning our constructed agents to our population.
         if (this.game.aiName == AlgorithmName.NEAT){
             population = new neat.Population(agents, hazards.size(), 5);
-        }else if(this.game.aiName == AlgorithmName.HyperNEAT){
+        }else if(this.game.aiName == AlgorithmName.HyperNEAT) {
             population = new hyperneat.Population(agents, hazards.size(), 5);
+        /*}else if(this.game.aiName == AlgorithmName.SUNA){
+            population = new suna.Population(agents, hazards.size(), 5);*/
         }else{
             System.exit(10);
         }

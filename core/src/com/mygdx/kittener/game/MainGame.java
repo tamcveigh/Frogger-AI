@@ -57,7 +57,7 @@ public class MainGame extends com.badlogic.gdx.Game {
             MainGame.STAT_LOG = new File("logs",aiName + "-" + timestamp.getEpochSecond() + ".csv" );
             MainGame.STAT_LOG.createNewFile();
             FileWriter statSetup = new FileWriter(MainGame.STAT_LOG);
-            statSetup.write("Generation,Average,Maximum");
+            statSetup.write("Generation,Average,Maximum,Color");
             statSetup.close();
         } catch (IOException e) {
             e.printStackTrace();

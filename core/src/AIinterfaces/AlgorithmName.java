@@ -10,7 +10,9 @@ public enum AlgorithmName {
     /** Value to specify the NEAT algorithm */
     NEAT(0),
     /** Value to specify the HyperNEAT algorithm*/
-    HyperNEAT(1);
+    HyperNEAT(1),
+    /** Value to Specifiy the SUNA algorithm */
+    SUNA(2);
 
     /** The value to specify which algorithm is being used*/
     private final int value;

@@ -384,8 +384,8 @@ public class ReusedCode {
 
         for(int i = 0; i < thisPopulation.getSpecies().size(); i++) {
             if(!thisPopulation.getSpecies().get(i).getOrganisms().containsKey(thisPopulation.getBestAgentID())) {
-                if(thisPopulation.getSpecies().get(i).getStaleness() >= neat.Coefficients.STALENESS_THRESH.getValue()) {
-                    Species.takenColors.remove(thisPopulation.getSpecies().get(i).getColor());
+                if(thisPopulation.getSpecies().get(i).getStaleness() >= hyperneat.Coefficients.STALENESS_THRESH.getValue()) {
+                    hyperneat.Species.takenColors.remove(thisPopulation.getSpecies().get(i).getColor());
                     thisPopulation.getSpecies().remove(thisPopulation.getSpecies().get(i));
                     i--;
                 }
