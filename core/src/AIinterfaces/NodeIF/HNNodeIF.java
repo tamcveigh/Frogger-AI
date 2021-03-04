@@ -1,5 +1,10 @@
 package AIinterfaces.NodeIF;
 
+/**
+ * This interface is a specific implementation of some methods. This interfaces includes all the methods in NEATNodeIF
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 22nd November, 2020
+ */
 public interface HNNodeIF extends NEATNodeIF{
     /**
      * The activation function for this node

@@ -14,7 +14,8 @@ import java.util.*;
  * protects new innovations in each network as organisms will compete within their species
  * instead of the total population.
  * @author Chance Simmons and Brandon Townsend
- * @version 21 January 2020
+ * @version 22nd November, 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public class Species extends ReusedCode implements NEATSpeciesIF {
 
@@ -83,9 +84,7 @@ public class Species extends ReusedCode implements NEATSpeciesIF {
         return compatibilityNetwork;
     }
 
-    /**
-     * Sets the compatibility network to a random organism that is in this species.
-     */
+    /** Sets the compatibility network to a random organism that is in this species. */
     public void setCompatibilityNetwork() {
         Object[] networks = organisms.values().toArray();
         compatibilityNetwork =
@@ -125,9 +124,7 @@ public class Species extends ReusedCode implements NEATSpeciesIF {
         return averageFitness;
     }
 
-    /**
-     * Calculates the average fitness for this species and sets it.
-     */
+    /** Calculates the average fitness for this species and sets it. */
     public void setAverageFitness() {
         double fitnessSum = 0.0;
         for(NEATNetworkIF network : organisms.values()) {

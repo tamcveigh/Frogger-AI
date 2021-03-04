@@ -10,7 +10,8 @@ import java.util.List;
 /**
  * The node class contains all data needed by nodes to connect networks.
  * @author Chance Simmons and Brandon Townsend
- * @version 18 January 2020
+ * @version 22nd November, 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public class Node extends ReusedCode implements NEATNodeIF {
     /** The input or bias layer should always been a value of 0. */
@@ -44,6 +45,10 @@ public class Node extends ReusedCode implements NEATNodeIF {
         this.layer = layer;
     }
 
+    /**
+     * Copy constructor
+     * @param node The node to copy
+     */
     public Node(NEATNodeIF node) {
         this.id = node.getId();
         this.inputValue = node.getInputValue();
@@ -109,9 +114,7 @@ public class Node extends ReusedCode implements NEATNodeIF {
         return layer;
     }
 
-    /**
-     * Increments this nodes layer by 1.
-     */
+    /** Increments this nodes layer by 1. */
     public void incrementLayer() {
         this.layer++;
     }

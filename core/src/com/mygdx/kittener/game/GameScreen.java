@@ -22,13 +22,14 @@ import java.util.ArrayList;
  * game information to the NEAT part of the application.
  * @author Brandon Townsend
  * @version 21 January 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public class GameScreen extends ScreenAdapter {
     /** Reference to the game class which 'runs' the game. */
     private final MainGame game;
 
     /** The constant number of agents we should spawn. */
-    public static final int NUM_AGENTS = 30;
+    private final int NUM_AGENTS = 30;
 
     /** Variable to keep track of the highest overall score we have seen. */
     private int highestOverallScore = 0;
@@ -116,11 +117,11 @@ public class GameScreen extends ScreenAdapter {
         // Assigning our constructed agents to our population.
         if (this.game.aiName == AlgorithmName.NEAT){
             population = new neat.Population(agents, hazards.size(), 5);
-        }else if(this.game.aiName == AlgorithmName.HyperNEAT){
+        }else if(this.game.aiName == AlgorithmName.HyperNEAT) {
             population = new hyperneat.Population(agents, hazards.size(), 5);
-        }else if(this.game.aiName == AlgorithmName.SUNA){
-            population = new suna.Population(agents,hazards.size(),5);
-        }else {
+        /*}else if(this.game.aiName == AlgorithmName.SUNA){
+            population = new suna.Population(agents, hazards.size(), 5);*/
+        }else{
             System.exit(10);
         }
         performedNS = false;

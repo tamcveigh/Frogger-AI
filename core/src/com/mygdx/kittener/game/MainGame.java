@@ -15,8 +15,8 @@ import java.time.Instant;
  * Class which controls the screen we are viewing in our game and holds all sprites, fonts, and
  * the application width and height.
  * @author Brandon Townsend
+ * @version 22nd November, 2020
  * @additions Brooke Kiser and Tyler McVeigh
- * @version 23 September 2020
  */
 public class MainGame extends com.badlogic.gdx.Game {
     /** The width of the application window. */
@@ -60,7 +60,7 @@ public class MainGame extends com.badlogic.gdx.Game {
             MainGame.STAT_LOG = new File("logs",aiName + "-" + timestamp.getEpochSecond() + ".csv" );
             MainGame.STAT_LOG.createNewFile();
             FileWriter statSetup = new FileWriter(MainGame.STAT_LOG);
-            statSetup.write("Generation,Average,Maximum");
+            statSetup.write("Generation,Average,Maximum,Color");
             statSetup.close();
             MainGame.NETWORK_LOG = new File("logs", aiName + "-Network-" + timestamp.getEpochSecond() + ".csv" );
             MainGame.STAT_LOG.createNewFile();

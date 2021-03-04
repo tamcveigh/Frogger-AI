@@ -14,60 +14,40 @@ import java.util.*;
  * Class which represents a group of similar organisms, therefore forming a species. This protects new innovations in
  * each network as organisms will compete within their species instead of the total population.
  *
- * @author Chance Simmons and Brandon Townsend
- * @version 24 September 2020
- * @additions Brooke Kiser and Tyler McVeigh
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 22nd November, 2020
  */
 public class Species extends ReusedCode implements HNSpeciesIF {
 
-    /**
-     * Static list of colors that are already being used by species.
-     */
+    /** Static list of colors that are already being used by species. */
     public static List<Color> takenColors = new ArrayList<>();
 
-    /**
-     * The network other networks will be tested against to see if they are compatible with this species.
-     */
+    /** The network other networks will be tested against to see if they are compatible with this species. */
     private CPPNNetworkIF compatibilityNetwork;
 
-    /**
-     * A mapping of agent IDs to their networks.
-     */
+    /** A mapping of agent IDs to their networks. */
     private Map<Integer, CPPNNetworkIF> organisms;
 
-    /**
-     * The ID number of the best organism in this species this generation.
-     */
+    /** The ID number of the best organism in this species this generation. */
     private int bestOrgID;
 
-    /**
-     * The highest recorded fitness for this species over all generations.
-     */
+    /** The highest recorded fitness for this species over all generations. */
     private int bestFitness;
 
-    /**
-     * The average fitness of this species this generation.
-     */
+    /** The average fitness of this species this generation. */
     private double averageFitness;
 
-    /**
-     * The staleness (number of generations of no improvement).
-     */
+    /** The staleness (number of generations of no improvement). */
     private int staleness;
 
-    /**
-     * The color assigned to the agents that belong to this species.
-     */
+    /** The color assigned to the agents that belong to this species. */
     private Color color;
 
-    /**
-     * The size of the organisms.
-     */
+    /** The size of the organisms. */
     private int size;
 
     /**
      * Constructor for an organism's species.
-     *
      * @param agentID      The ID number of the first agent to be assigned to this species.
      * @param agentNetwork The network used by the first agent to be assigned to this species.
      */
@@ -92,7 +72,6 @@ public class Species extends ReusedCode implements HNSpeciesIF {
 
     /**
      * Returns the color assigned to this species.
-     *
      * @return The color assigned to this species.
      */
     public Color getColor() {
@@ -101,16 +80,13 @@ public class Species extends ReusedCode implements HNSpeciesIF {
 
     /**
      * Returns the network used to test compatibility with this species.
-     *
      * @return The network used to test compatibility with this species.
      */
     public HNNetworkIF getCompatibilityNetwork() {
         return compatibilityNetwork.getCPPNetwork();
     }
 
-    /**
-     * Sets the compatibility network to a random organism that is in this species.
-     */
+    /** Sets the compatibility network to a random organism that is in this species. */
     public void setCompatibilityNetwork() {
         Random r = new Random();
         Set<Integer> keySet = organisms.keySet();
@@ -120,7 +96,6 @@ public class Species extends ReusedCode implements HNSpeciesIF {
 
     /**
      * Returns the mapping of agent IDs and their networks.
-     *
      * @return The mapping of agent IDs and their networks.
      */
     public Map<Integer, CPPNNetworkIF> getOrganisms() {
@@ -129,7 +104,6 @@ public class Species extends ReusedCode implements HNSpeciesIF {
 
     /**
      * Adds an organism to the mapping of organisms in this species.
-     *
      * @param agentID      The ID number of the agent.
      * @param agentNetwork The network the agent uses.
      */
@@ -141,7 +115,6 @@ public class Species extends ReusedCode implements HNSpeciesIF {
 
     /**
      * Returns the ID number mapped to best network this generation.
-     *
      * @return The ID number mapped to the best network.
      */
     public int getBestOrgID() {
@@ -150,16 +123,13 @@ public class Species extends ReusedCode implements HNSpeciesIF {
 
     /**
      * Returns the average fitness of this species.
-     *
      * @return The average fitness of this species.
      */
     public double getAverageFitness() {
         return averageFitness;
     }
 
-    /**
-     * Calculates the average fitness for this species and sets it.
-     */
+    /** Calculates the average fitness for this species and sets it. */
     public void setAverageFitness() {
         double fitnessSum = 0.0;
         for (CPPNNetworkIF network : organisms.values()) {
@@ -174,7 +144,6 @@ public class Species extends ReusedCode implements HNSpeciesIF {
 
     /**
      * Returns the staleness of this species.
-     *
      * @return The staleness of this species.
      */
     public int getStaleness() {
@@ -245,7 +214,6 @@ public class Species extends ReusedCode implements HNSpeciesIF {
     /**
      * Generates a new network either through crossover of two random parent networks or through a direct clone of a
      * random network in the species. The new network is then mutated in the hopes that we find a favorable mutation.
-     *
      * @return The new network we have produced and mutated.
      */
     public CPPNNetworkIF reproduce() {
@@ -273,7 +241,6 @@ public class Species extends ReusedCode implements HNSpeciesIF {
 
     /**
      * The size of the organisms
-     *
      * @return The number of organisms
      */
     public int size() {

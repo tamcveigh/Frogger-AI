@@ -4,6 +4,11 @@ import AIinterfaces.SpeciesIF.NEATSpeciesIF;
 
 import java.util.List;
 
+/**
+ * This interface is a broad overview for all methods concerning NEAT populations
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 22nd November, 2020
+ */
 public interface NEATPopulationIF {
 
     /**

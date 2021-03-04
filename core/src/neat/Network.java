@@ -1,9 +1,7 @@
 package neat;
 
 import AIinterfaces.*;
-import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
-import AIinterfaces.NodeIF.HNNodeIF;
 import AIinterfaces.NodeIF.NEATNodeIF;
 
 import java.util.*;
@@ -12,9 +10,11 @@ import java.util.*;
  * Class which represents the "brain" of an organism. It is a connection of nodes via links in
  * which values are passed through and a certain value is chosen as the "correct" output.
  * @author Chance Simmons and Brandon Townsend
- * @version 21 January 2020
+ * @version 22nd November, 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public class Network extends ReusedCode implements NEATNetworkIF {
+
     /**
      * A static mapping of innovation numbers. These help in identifying similar links across
      * multiple networks during crossover.
@@ -31,7 +31,7 @@ public class Network extends ReusedCode implements NEATNetworkIF {
     private final NEATNodeIF[] outputNodes;
 
     /** A list of all hidden nodes in this network. This part can grow over time. */
-    private List<NEATNodeIF> hiddenNodes;
+    private final List<NEATNodeIF> hiddenNodes;
 
     /** A single bias node which should be connected to all non-input nodes. Helps with outputs. */
     private final NEATNodeIF biasNode;
@@ -45,6 +45,7 @@ public class Network extends ReusedCode implements NEATNetworkIF {
     /** The fitness that the agent assigned to this network scored. */
     private int fitness;
 
+    /** The type of AI */
     private boolean type = false;
 
     /**
@@ -136,9 +137,6 @@ public class Network extends ReusedCode implements NEATNetworkIF {
      * additional structure via new links or new nodes.
      */
     public void mutate() {
-        //todo add a toggle enabled mutation where the first disabled link encountered is toggled
-        // back on.
-
         // Mutation for link weight. Each link is either mutated or not each generation.
         for(LinkIF link : links) {
             if(Math.random() < Coefficients.LINK_WEIGHT_MUT.getValue()) {
@@ -168,6 +166,10 @@ public class Network extends ReusedCode implements NEATNetworkIF {
         return isConnectedTo(node1, node2) || node1.getLayer() == node2.getLayer();
     }
 
+    /**
+     * Get the type of AI
+     * @return True if HyperNEAT and false if NEAT
+     */
     @Override
     public boolean getType() {
         return type;
@@ -203,9 +205,7 @@ public class Network extends ReusedCode implements NEATNetworkIF {
         return null;
     }
 
-    /**
-     * Get the innovation list
-     */
+    /** Get the innovation list */
     @Override
     public Map<Integer, String> getInnovationList() {
         return innovationList;
@@ -213,7 +213,6 @@ public class Network extends ReusedCode implements NEATNetworkIF {
 
     /**
      * Get the input nodes of the network
-     *
      * @return Array containing the input nodes
      */
     @Override
@@ -223,7 +222,6 @@ public class Network extends ReusedCode implements NEATNetworkIF {
 
     /**
      * Get the output nodes of the network
-     *
      * @return Array containing the output nodes
      */
     @Override
@@ -233,7 +231,6 @@ public class Network extends ReusedCode implements NEATNetworkIF {
 
     /**
      * Get the hidden nodes of the network
-     *
      * @return List containing the hidden nodes
      */
     @Override
@@ -241,9 +238,7 @@ public class Network extends ReusedCode implements NEATNetworkIF {
         return hiddenNodes;
     }
 
-    /**
-     * Increment the number of layers
-     */
+    /** Increment the number of layers */
     @Override
     public void incrementLayer() {
         numLayers++;
@@ -251,7 +246,6 @@ public class Network extends ReusedCode implements NEATNetworkIF {
 
     /**
      * Gets the total of number of nodes
-     *
      * @return the number of nodes
      */
     @Override
@@ -259,9 +253,7 @@ public class Network extends ReusedCode implements NEATNetworkIF {
         return numNodes;
     }
 
-    /**
-     * Increment the total number of nodes
-     */
+    /** Increment the total number of nodes */
     @Override
     public void incrementNodes() {
         numNodes++;
@@ -269,7 +261,6 @@ public class Network extends ReusedCode implements NEATNetworkIF {
 
     /**
      * Gets the bias node
-     *
      * @return The bias node
      */
     @Override
@@ -279,7 +270,6 @@ public class Network extends ReusedCode implements NEATNetworkIF {
 
     /**
      * Gets the total number of layers
-     *
      * @return The number of layers
      */
     @Override

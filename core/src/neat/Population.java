@@ -6,19 +6,18 @@ import AIinterfaces.PopulationIF.PopulationIF;
 import AIinterfaces.ReusedCode;
 import AIinterfaces.SpeciesIF.NEATSpeciesIF;
 import com.mygdx.kittener.game.Agent;
-import com.mygdx.kittener.game.GameScreen;
 import com.mygdx.kittener.game.MainGame;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Class which handles all overhead HN functionality and is connected to the game. Keeps track
  * of the generation, the list of species, and a mapping of agents to their networks.
  * @author Chance Simmons and Brandon Townsend
- * @version 21 January 2020
+ * @version 22nd November, 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public class Population extends ReusedCode implements PopulationIF, NEATPopulationIF {
     /** Keeps track of the generation of organisms we're at. */
@@ -33,6 +32,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
     /** Identification number of the best agent. */
     private int bestAgentID;
 
+    /** The type of AI. */
     private boolean type = true;
 
     /**
@@ -60,9 +60,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         return generation;
     }
 
-    /**
-     * Increments the generation by one. Represents moving to the next generational step.
-     */
+    /** Increments the generation by one. Represents moving to the next generational step. */
     public void incrementGeneration() {
         generation++;
     }
@@ -92,10 +90,6 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
      * @param agent The agent to modify the color of.
      */
     public void assignColor(Agent agent) {
-
-        //FIXME: 1/22/2020 This method should be checked. It looks like they could be getting
-        // assigned the wrong color, but I'm not sure.
-
         for(NEATSpeciesIF s : species) {
             if(isCompatibleTo(organisms.get(agent.getId()), s.getCompatibilityNetwork())) {
                 agent.setColor(s.getColor());
@@ -104,11 +98,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         }
     }
 
-    /**
-     * Sets the best agent of this generation.
-     *todo currently is the best agent of the generation. Possibly entertain the idea of it
-     * being the best over all the generations and retain it through all of them.
-     */
+    /** Sets the best agent of this generation. */
     private void setBestAgentID() {
         int bestFitness = organisms.get(0).getFitness();
         for(Map.Entry<Integer, NEATNetworkIF> organism : organisms.entrySet()) {
@@ -127,68 +117,46 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
     public void naturalSelection() {
         // Set up for producing babies.
         speciate();
-
-        statisticsTrack();
-        //System.err.println("speciate done");
+        System.err.println("speciate done");
         cullSpecies();
-        //System.err.println("cull done");
+        System.err.println("cull done");
         setBestAgentID();
-        //System.err.println("best agent done");
+        System.err.println("best agent done");
         removeStaleSpecies(this);
-        //System.err.println("remove stale done");
+        System.err.println("remove stale done");
         removeBadSpecies();
-        //System.err.println("remove bad done");
+        System.err.println("remove bad done");
 
         double avgSum = getAvgFitnessSum();
         List<NEATNetworkIF> babies = new ArrayList<>();
-
-
-        if(species.isEmpty()) {
-            List<NEATNetworkIF> population = organisms.values().stream()
-                    .sorted(Comparator.comparingDouble(NEATNetworkIF::getFitness).reversed())
-                    .collect(Collectors.toList());
-            int i = population.size() - 1;
-            int numToCull = (int) Math.ceil((i+1) * Coefficients.CULL_THRESH.getValue());
-            for(; i >= numToCull; i--) {
-                int pos = -1;
-                for (Integer key : this.organisms.keySet()) {
-                    if (population.get(i).equals(this.organisms.get(key))) {
-                        pos = key;
-                        break;
-                    }
-                }
-                this.organisms.remove(pos);
-            }
-            this.speciate();
-        }
 
         for(NEATSpeciesIF s : species) {
             // Directly clone the best network of the species.
             babies.add((NEATNetworkIF) new Network(s.getOrganisms().get(s.getBestOrgID())));
 
             // Find the correct number of babies and reproduce them.
-            int numBabies = (int) Math.floor(s.getAverageFitness() / avgSum * organisms.size() ) - 1;
+            int numBabies = (int) Math.floor(s.getAverageFitness() / avgSum * organisms.size()) - 1;
 
             for(int i = 0; i < numBabies; i++) {
-                babies.add((NEATNetworkIF) s.reproduce() );
+                babies.add((NEATNetworkIF) s.reproduce());
             }
         }
 
         // If we don't have enough babies, produce them from random species.
-        while(babies.size() < GameScreen.NUM_AGENTS) {
-            babies.add((NEATNetworkIF) species.get(new Random().nextInt(species.size() ) ).reproduce() );
+        while(babies.size() < organisms.size()) {
+            babies.add((NEATNetworkIF) species.get(new Random().nextInt(species.size())).reproduce());
         }
 
         // Set up our agent's with their new networks.
-
-        for(int i = 0; i < GameScreen.NUM_AGENTS; i++) {
-            this.organisms.put(i,babies.get(i) );
+        int i = 0;
+        for(Map.Entry<Integer, NEATNetworkIF> organism : organisms.entrySet()) {
+            organism.setValue((NEATNetworkIF) babies.get(i));
+            i++;
         }
     }
 
     /**
      * Gets the list of the species
-     *
      * @return The list of species
      */
     @Override
@@ -198,7 +166,6 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
 
     /**
      * The best agent of the population
-     *
      * @return The ID of the best agent
      */
     @Override
@@ -206,9 +173,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         return bestAgentID;
     }
 
-    /**
-     * Separates this populations list of organisms into separate species.
-     */
+    /** Separates this populations list of organisms into separate species. */
     private void speciate() {
         // First, set up each existing species compatibility network and clear it of all
         // organisms from the last generation.
@@ -236,6 +201,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
                 species.add(new Species(agentID, agentNetwork));
             }
         }
+        statisticsTrack();
         //Set the average fitness for a species
         for (NEATSpeciesIF s : species) {
             s.setAverageFitness();
@@ -255,9 +221,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         }
     }
 
-    /**
-     * Removes any species who would produce zero babies this generation.
-     */
+    /** Removes any species who would produce zero babies this generation. */
     private void removeBadSpecies() {
         double avgSum = getAvgFitnessSum();
 
@@ -297,7 +261,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         for(NEATSpeciesIF s: species){
             organisms.addAll(s.getOrganisms().values());
         }
-        //System.err.println(organisms.size());
+        System.err.println(organisms.size());
 
         int max = 0;
         //Find the max fitness of all the CPPNs for this generation

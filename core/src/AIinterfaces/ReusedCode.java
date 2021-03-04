@@ -1,22 +1,23 @@
 package AIinterfaces;
 
-import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
 import AIinterfaces.NetworkIF.NetworkIF;
 import AIinterfaces.NodeIF.NEATNodeIF;
 import AIinterfaces.PopulationIF.HNPopulationIF;
 import AIinterfaces.PopulationIF.NEATPopulationIF;
-import AIinterfaces.PopulationIF.PopulationIF;
 import hyperneat.*;
 import neat.Species;
 
 import java.util.*;
 
+/**
+ * This interface allows for the link classes to be interchangeable
+ * @author Brooke Kiser, Chance Simmons, Brandom Townsend, and Tyler McVeigh
+ * @version 22nd November, 2020
+ */
 public class ReusedCode {
 
-    /**
-     * Mutates the weight of this link either completely or slightly.
-     */
+    /** Mutates the weight of this link either completely or slightly. */
     public static void mutateWeight(double weight) {
         if(Math.random() < 0.1) {      // Completely change the weight.
             weight = Math.random() * 2 - 1;
@@ -170,9 +171,7 @@ public class ReusedCode {
         return outputs;
     }
 
-    /**
-     * Adds a link between two randomly selected nodes.
-     */
+    /** Adds a link between two randomly selected nodes. */
     public static  void addLinkMutation(NetworkIF thisNetwork) {
         if(!isFullyConnected(thisNetwork)) {
             Random random = new Random();
@@ -338,17 +337,6 @@ public class ReusedCode {
                 }
             }
         }
-
-        // FIXME: 1/22/2020
-//        if(otherParent.getFitness() == baby.getFitness()) {
-//            for(LinkIF link : otherParent.getLinks()) {
-//                if(!baby.links.contains(link)) {
-//                    add the link to the baby
-//                    error arises when we attempt to add a link, but the baby does not have the
-//                    needed nodes.
-//                }
-//            }
-//        }
         return baby;
     }
 

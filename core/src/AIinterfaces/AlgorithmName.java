@@ -3,7 +3,7 @@ package AIinterfaces;
 /**
  * Enum to allow launchers to use the same base code but select which algorithm to use
  * @author Brooke Kiser and Tyler McVeigh
- * @version 24 September 2020
+ * @version 22 November, 2020
  */
 public enum AlgorithmName {
 
@@ -11,7 +11,7 @@ public enum AlgorithmName {
     NEAT(0),
     /** Value to specify the HyperNEAT algorithm*/
     HyperNEAT(1),
-    /** Value to specify the SUNA algorithm */
+    /** Value to Specifiy the SUNA algorithm */
     SUNA(2);
 
     /** The value to specify which algorithm is being used*/

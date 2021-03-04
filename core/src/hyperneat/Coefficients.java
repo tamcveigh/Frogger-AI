@@ -4,7 +4,7 @@ package hyperneat;
  * This enumeration contains coefficients that are used, so they are located in one single place.
  *
  * @author Chance Simmons and Brandon Townsend
- * @version 21 January 2020
+ * @version 22nd November, 2020
  * @additions Brooke Kiser and Tyler McVeigh
  */
 public enum Coefficients {

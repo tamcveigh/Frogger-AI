@@ -1,28 +1,28 @@
 package neat;
 
-import java.util.Random;
-
 /**
  * Represents a connection between two nodes in our network. Each connection is given an
  * innovation number which assists in crossover between two separate networks.
  * @author Chance Simmons and Brandon Townsend
- * @version 21 January 2020
+ * @version 22nd November, 2020
+ * @additions Brooke Kiser and Tyler McVeigh
  */
 public class Link {
+
     /** The innovation number assigned to this link. */
-    private int innovationNum;
+    private final int innovationNum;
 
     /** The input node this link is connected to. */
-    private int inputNodeID;
+    private final int inputNodeID;
 
     /** The output node this link is connected to. */
-    private Node outputNode;
+    private final Node outputNode;
 
     /** The weight that is assigned to this link. Should be between -1 and 1. */
     private double weight;
 
     /** Represents whether this link is enabled in our network or not. */
-    private boolean enabled;
+    private final boolean enabled;
 
     /**
      * Constructor for links. Accepts an innovation number, the identification numbers of the
@@ -85,14 +85,6 @@ public class Link {
      */
     public boolean isEnabled() {
         return enabled;
-    }
-
-    /**
-     * Sets whether or not this link is enabled.
-     * @param enabled True if this link should be enabled, false if it should be disabled.
-     */
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
     }
 
     /**

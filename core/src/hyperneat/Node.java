@@ -11,51 +11,38 @@ import java.util.Random;
 /**
  * The node class contains all data needed by nodes to connect networks.
  *
- * @author Chance Simmons and Brandon Townsend
- * @version 18 January 2020
- * @additions Brooke Kiser and Tyler McVeigh
+ * @author Brooke Kiser and Tyler McVeigh
+ * @version 22nd November, 2020
  */
 public class Node implements HNNodeIF {
-    /**
-     * The input or bias layer should always been a value of 0.
-     */
+
+    /** The input or bias layer should always been a value of 0. */
     private final static int INPUT_BIAS_LAYER = 0;
 
-    /**
-     * The identification number for this node.
-     */
+    /** The identification number for this node. */
     private final int id;
-    /**
-     * List of all outgoing links.
-     */
+
+    /** List of all outgoing links. */
     private final List<LinkIF> outgoingLinks;
-    /**
-     * The sum of inputs before the node is activated.
-     */
+
+    /** The sum of inputs before the node is activated. */
     private double inputValue;
-    /**
-     * The value generated after activation.
-     */
+
+    /** The value generated after activation. */
     private double outputValue;
-    /**
-     * The layer this node resides in.
-     */
+
+    /** The layer this node resides in. */
     private int layer;
 
-    /**
-     * The random activation function.
-     */
+    /** The random activation function. */
     private int randomActive = new Random().nextInt(4);
 
-    /**
-     * The slope for the activation function.
-     */
+    /** The slope for the activation function. */
     private double slope = 4.0;
 
 
     /**
      * Constructor for a node. Takes an identification number and layer for this node.
-     *
      * @param id    The supplied identification number.
      * @param layer The supplied layer this node should reside in.
      */
@@ -69,7 +56,6 @@ public class Node implements HNNodeIF {
 
     /**
      * Copy constructor for a node
-     *
      * @param node The node to copt into a new node
      */
     public Node(HNNodeIF node) {
@@ -84,7 +70,6 @@ public class Node implements HNNodeIF {
 
     /**
      * Returns this nodes identification number.
-     *
      * @return This nodes identification number.
      */
     public int getId() {
@@ -93,7 +78,6 @@ public class Node implements HNNodeIF {
 
     /**
      * Returns this nodes value before activation.
-     *
      * @return This nodes value before activation.
      */
     public double getInputValue() {
@@ -102,20 +86,22 @@ public class Node implements HNNodeIF {
 
     /**
      * Sets this nodes input value to the supplied one.
-     *
      * @param inputValue The supplied input value.
      */
     public void setInputValue(double inputValue) {
         this.inputValue = inputValue;
     }
 
+    /**
+     * Get the Bias Layer
+     * @return Should always return 0
+     */
     public int getInputBiasLayer() {
         return INPUT_BIAS_LAYER;
     }
 
     /**
      * Returns the output value of this node.
-     *
      * @return The output value of this node.
      */
     public double getOutputValue() {
@@ -124,7 +110,6 @@ public class Node implements HNNodeIF {
 
     /**
      * Sets this nodes output value to the supplied one.
-     *
      * @param outputValue The supplied output value.
      */
     public void setOutputValue(double outputValue) {
@@ -133,7 +118,6 @@ public class Node implements HNNodeIF {
 
     /**
      * Adds a link to the outgoing links
-     *
      * @param link The link that is being added
      */
     public void addLink(LinkIF link) {
@@ -142,7 +126,6 @@ public class Node implements HNNodeIF {
 
     /**
      * Returns this nodes outgoing links.
-     *
      * @return This nodes outgoing links.
      */
     public List<LinkIF> getOutgoingLinks() {
@@ -151,16 +134,13 @@ public class Node implements HNNodeIF {
 
     /**
      * Returns the layer this node resides on.
-     *
      * @return The layer this node resides on.
      */
     public int getLayer() {
         return layer;
     }
 
-    /**
-     * Increments this nodes layer by 1.
-     */
+    /** Increments this nodes layer by 1. */
     public void incrementLayer() {
         this.layer++;
     }
@@ -184,7 +164,7 @@ public class Node implements HNNodeIF {
                     outputValue = activationFunctionPR(inputValue);
                     break;
                 case 3:
-                    outputValue = acitvationFunctionSw(inputValue);
+                    outputValue = activationFunctionSw(inputValue);
                     break;
             }
         }
@@ -201,9 +181,7 @@ public class Node implements HNNodeIF {
 
     /**
      * Helper function to call the activation function. Right now, it is a sigmoid function.
-     *
      * @param value The value to call the function on.
-     *
      * @return The value after the function has finished.
      */
     private double activationFunctionS(double value) {
@@ -212,9 +190,7 @@ public class Node implements HNNodeIF {
 
     /**
      * Helper function for the Tanh activation function option.
-     *
      * @param value The value to call the function on.
-     *
      * @return The value after the function has finished.
      */
     private double activationFunctionT(double value) {
@@ -223,9 +199,7 @@ public class Node implements HNNodeIF {
 
     /**
      * Helper function for the Parameterized ReLU
-     *
      * @param value The value to call the function on.
-     *
      * @return The value after the function has finished.
      */
     private double activationFunctionPR(double value) {
@@ -238,12 +212,10 @@ public class Node implements HNNodeIF {
 
     /**
      * Helper function for the Swish activation function
-     *
      * @param value The value to call the function on.
-     *
      * @return The value after the function has finished.
      */
-    private double acitvationFunctionSw(double value) {
+    private double activationFunctionSw(double value) {
         return value * (1.0 / (1.0 + Math.pow(Math.E, (-1 * value))));
     }
 
@@ -257,9 +229,7 @@ public class Node implements HNNodeIF {
 
     /**
      * Returns whether or not this node's id number is the same as the supplied object.
-     *
      * @param obj The supplied object.
-     *
      * @return True if the supplied objects id number is the same as this nodes.
      */
     @Override
@@ -273,7 +243,6 @@ public class Node implements HNNodeIF {
 
     /**
      * The activation function for this node
-     *
      * @return The activation number
      */
     public int getRandomActive() {
@@ -282,7 +251,6 @@ public class Node implements HNNodeIF {
 
     /**
      * Gets the slope of the activation function
-     *
      * @return The slope of the activation function
      */
     public double getSlope() {
