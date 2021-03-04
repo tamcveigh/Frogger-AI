@@ -1,19 +1,18 @@
 package neat;
 
-import AIinterfaces.NetworkIF.HNNetworkIF;
 import AIinterfaces.NetworkIF.NEATNetworkIF;
-import AIinterfaces.PopulationIF.HNPopulationIF;
 import AIinterfaces.PopulationIF.NEATPopulationIF;
 import AIinterfaces.PopulationIF.PopulationIF;
 import AIinterfaces.ReusedCode;
-import AIinterfaces.SpeciesIF.HNSpeciesIF;
 import AIinterfaces.SpeciesIF.NEATSpeciesIF;
 import com.mygdx.kittener.game.Agent;
+import com.mygdx.kittener.game.GameScreen;
 import com.mygdx.kittener.game.MainGame;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class which handles all overhead HN functionality and is connected to the game. Keeps track
@@ -128,45 +127,62 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
     public void naturalSelection() {
         // Set up for producing babies.
         speciate();
-        System.err.println("speciate done");
+
+        statisticsTrack();
+        //System.err.println("speciate done");
         cullSpecies();
-        System.err.println("cull done");
+        //System.err.println("cull done");
         setBestAgentID();
-        System.err.println("best agent done");
+        //System.err.println("best agent done");
         removeStaleSpecies(this);
-        System.err.println("remove stale done");
+        //System.err.println("remove stale done");
         removeBadSpecies();
-        System.err.println("remove bad done");
+        //System.err.println("remove bad done");
 
         double avgSum = getAvgFitnessSum();
         List<NEATNetworkIF> babies = new ArrayList<>();
+
+
+        if(species.isEmpty()) {
+            List<NEATNetworkIF> population = organisms.values().stream()
+                    .sorted(Comparator.comparingDouble(NEATNetworkIF::getFitness).reversed())
+                    .collect(Collectors.toList());
+            int i = population.size() - 1;
+            int numToCull = (int) Math.ceil((i+1) * Coefficients.CULL_THRESH.getValue());
+            for(; i >= numToCull; i--) {
+                int pos = -1;
+                for (Integer key : this.organisms.keySet()) {
+                    if (population.get(i).equals(this.organisms.get(key))) {
+                        pos = key;
+                        break;
+                    }
+                }
+                this.organisms.remove(pos);
+            }
+            this.speciate();
+        }
 
         for(NEATSpeciesIF s : species) {
             // Directly clone the best network of the species.
             babies.add((NEATNetworkIF) new Network(s.getOrganisms().get(s.getBestOrgID())));
 
             // Find the correct number of babies and reproduce them.
-            int numBabies = (int) Math.floor(s.getAverageFitness() / avgSum * organisms.size()) - 1;
+            int numBabies = (int) Math.floor(s.getAverageFitness() / avgSum * organisms.size() ) - 1;
 
             for(int i = 0; i < numBabies; i++) {
-                babies.add((NEATNetworkIF) s.reproduce());
+                babies.add((NEATNetworkIF) s.reproduce() );
             }
         }
 
         // If we don't have enough babies, produce them from random species.
-        while(babies.size() < organisms.size()) {
-            //FIXME: 1/22/2020 Sometimes when we get to this step we have a species size of 0. I
-            // have no idea how that occurs since removing the stale and bad should remove all
-            // but one. I think that somehow the best organism is being set wrong or removed on
-            // accident from a species.
-            babies.add((NEATNetworkIF) species.get(new Random().nextInt(species.size())).reproduce());
+        while(babies.size() < GameScreen.NUM_AGENTS) {
+            babies.add((NEATNetworkIF) species.get(new Random().nextInt(species.size() ) ).reproduce() );
         }
 
         // Set up our agent's with their new networks.
-        int i = 0;
-        for(Map.Entry<Integer, NEATNetworkIF> organism : organisms.entrySet()) {
-            organism.setValue((NEATNetworkIF) babies.get(i));
-            i++;
+
+        for(int i = 0; i < GameScreen.NUM_AGENTS; i++) {
+            this.organisms.put(i,babies.get(i) );
         }
     }
 
@@ -220,7 +236,6 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
                 species.add(new Species(agentID, agentNetwork));
             }
         }
-        statisticsTrack();
         //Set the average fitness for a species
         for (NEATSpeciesIF s : species) {
             s.setAverageFitness();
@@ -282,7 +297,7 @@ public class Population extends ReusedCode implements PopulationIF, NEATPopulati
         for(NEATSpeciesIF s: species){
             organisms.addAll(s.getOrganisms().values());
         }
-        System.err.println(organisms.size());
+        //System.err.println(organisms.size());
 
         int max = 0;
         //Find the max fitness of all the CPPNs for this generation

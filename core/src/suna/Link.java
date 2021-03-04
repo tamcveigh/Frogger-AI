@@ -8,13 +8,13 @@ public abstract class Link {
     /** The Neuron that sends it's output out*/
     private Neuron source;
 
-    /** The Neuron that recieves output into it's input */
+    /** The Neuron that receives output into it's input */
     private Neuron destination;
 
     /**
      * Assigns the sending and receiving neurons
      * @param source the originating neuron
-     * @param destination the reveiving neuron
+     * @param destination the receiving neuron
      */
     public Link(Neuron source, Neuron destination){
         this.source = source;

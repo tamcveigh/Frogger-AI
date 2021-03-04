@@ -1,7 +1,7 @@
 package suna;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
+
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Colors;
 
@@ -12,6 +12,8 @@ public class Species {
     private int[] spectralDiversityArray;
 
     private Color color;
+
+    static List<Color> takenColors = new ArrayList<>();
 
     private Network bestNetwork;
 
@@ -25,6 +27,7 @@ public class Species {
         this.members = new ArrayList<Network>();
         this.spectralDiversityArray = spectralDiversityArray;
         this.color = color;
+        Species.takenColors.add(color);
         this.bestFitness = 0;
         this.avgFitness = 0;
         this.bestNetwork = null;
@@ -47,7 +50,9 @@ public class Species {
     }
 
     public void setColor(Color color) {
+        Species.takenColors.remove(this.color);
         this.color = color;
+        Species.takenColors.add(color);
     }
 
     public Network getBestNetwork() {
@@ -58,17 +63,22 @@ public class Species {
         this.bestNetwork = bestNetwork;
     }
 
+
     public int getBestFitness() {
         return bestFitness;
     }
 
     public void setBestFitness() {
         int bestFitness = 0;
+        Network bestNetwork = null;
         for(Network n: this.members){
             if (n.getFitness() > bestFitness){
                 bestFitness = n.getFitness();
+                bestNetwork = n;
             }
         }
+        this.bestNetwork = bestNetwork;
+        this.bestFitness = bestFitness;
     }
 
     public int getAvgFitness() {
@@ -83,5 +93,8 @@ public class Species {
         this.avgFitness = sum / this.members.size();
     }
 
+    public List<Network> getMembers(){
+        return this.members;
+    }
 
 }

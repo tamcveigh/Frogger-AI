@@ -4,6 +4,7 @@ import AIinterfaces.AlgorithmName;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.sun.tools.javac.Main;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -42,6 +43,8 @@ public class MainGame extends com.badlogic.gdx.Game {
     /** CSV file to hold statistics of the run*/
     public static File STAT_LOG;
 
+    public static File NETWORK_LOG;
+
     /**
      * Passing the application window size to the game.
      * @param width The width of the window.
@@ -59,6 +62,11 @@ public class MainGame extends com.badlogic.gdx.Game {
             FileWriter statSetup = new FileWriter(MainGame.STAT_LOG);
             statSetup.write("Generation,Average,Maximum");
             statSetup.close();
+            MainGame.NETWORK_LOG = new File("logs", aiName + "-Network-" + timestamp.getEpochSecond() + ".csv" );
+            MainGame.STAT_LOG.createNewFile();
+            FileWriter networkSetup = new FileWriter(MainGame.NETWORK_LOG);
+            networkSetup.write("Generation,NetworkID,1,2,3,4,5,6,7,8,9,10");
+            networkSetup.close();
         } catch (IOException e) {
             e.printStackTrace();
             //System.err.println("ERROR: Unable to create statistics log file");

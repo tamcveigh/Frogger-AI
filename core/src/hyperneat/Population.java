@@ -127,7 +127,7 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
         System.err.println();
         int bestFitness = organisms.get(0).getFitness();
         for (Map.Entry<Integer, CPPNNetworkIF> organism : organisms.entrySet()) {
-            System.err.println("Best fitness: " + bestFitness + " : " + bestAgentID);
+            //System.err.println("Best fitness: " + bestFitness + " : " + bestAgentID);
             if (organism.getValue().getFitness() > bestFitness) {
                 bestFitness = organism.getValue().getFitness();
                 bestAgentID = organism.getKey();
@@ -152,18 +152,19 @@ public class Population extends ReusedCode implements HNPopulationIF, Population
         for (HNSpeciesIF s : species) {
 
             // Directly clone the best network of the species.
-            System.err.println("pop ~ Natural Selection: " + s.getBestOrgID() + " : " + bestAgentID);
-            //CPPNNetworkIF baby = s.getOrganisms().get(s.getBestOrgID());
-            CPPNNetworkIF baby = organisms.get(bestAgentID);
-            if (baby != null) {
-                babies.add(baby);
+            //System.err.println("pop ~ Natural Selection: " + s.getBestOrgID() + " : " + bestAgentID);
+            CPPNNetworkIF babyS = s.getOrganisms().get(s.getBestOrgID());
+            CPPNNetworkIF babyO = organisms.get(bestAgentID);
+            if (babyS != null && babyO != null) {
+                babies.add(babyS);
+                babies.add(babyO);
             }
 
             // Find the correct number of babies and reproduce them.
             int numBabies = (int) Math.floor((s.getAverageFitness() / avgSum) * organisms.size()) - 1;
 
             for (int i = 0; i < numBabies; i++) {
-                baby = s.reproduce();
+                CPPNNetworkIF baby = s.reproduce();
                 if (baby != null) {
                     babies.add(baby);
                 }

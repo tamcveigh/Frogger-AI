@@ -47,11 +47,20 @@ public class Network {
             }
         }
         this.fitness = 0;
+        for(int i = 0; i < Coefficients.INITIAL_MUTATIONS.getValue(); i++){
+            mutate();
+        }
     }
 
 
     public Network(Network original) {
-
+        //TODO: Create copy constructor
+        this.neuronsList = original.neuronsList;
+        this.connections = original.connections;
+        this.inputNeurons = original.inputNeurons;
+        this.outputNeurons = original.outputNeurons;
+        this.neuronCount = neuronsList.size();
+        this.fitness = 0;
     }
 
     public void mutate() {
@@ -141,13 +150,17 @@ public class Network {
             }
         }
 
+        List<Link> toRemove = new ArrayList<>();
         for(Link l: this.connections){
             if(removedNeuron.equals(l.getSource() ) ){
-                this.connections.remove(l);
+                toRemove.add(l);
             }
             if(removedNeuron.equals(l.getDestination() ) ){
-                this.connections.remove(l);
+                toRemove.add(l);
             }
+        }
+        for(Link l: toRemove){
+            this.connections.remove(l);
         }
 
     }
@@ -199,5 +212,16 @@ public class Network {
 
     public void setFitness(int fitness) {
         this.fitness = fitness;
+    }
+
+    public double[] feedForward(float[] agentVision) {
+        for(Neuron n : neuronsList){
+            n.activate();
+        }
+        double output[] =  new double[this.outputNeurons.length];
+        for(int i = 0; i < this.outputNeurons.length; i++){
+            output[i] = this.outputNeurons[i].getOutputValue();
+        }
+        return output;
     }
 }

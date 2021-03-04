@@ -106,7 +106,7 @@ public class Species extends ReusedCode implements NEATSpeciesIF {
      * @param agentNetwork The network the agent uses.
      */
     public void addOrganism(int agentID, NEATNetworkIF agentNetwork) {
-        organisms.put(agentID, new Network(agentNetwork));
+        organisms.put(agentID, agentNetwork );
     }
 
     /**

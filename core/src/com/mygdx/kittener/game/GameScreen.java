@@ -28,7 +28,7 @@ public class GameScreen extends ScreenAdapter {
     private final MainGame game;
 
     /** The constant number of agents we should spawn. */
-    private final int NUM_AGENTS = 30;
+    public static final int NUM_AGENTS = 30;
 
     /** Variable to keep track of the highest overall score we have seen. */
     private int highestOverallScore = 0;
@@ -118,7 +118,9 @@ public class GameScreen extends ScreenAdapter {
             population = new neat.Population(agents, hazards.size(), 5);
         }else if(this.game.aiName == AlgorithmName.HyperNEAT){
             population = new hyperneat.Population(agents, hazards.size(), 5);
-        }else{
+        }else if(this.game.aiName == AlgorithmName.SUNA){
+            population = new suna.Population(agents,hazards.size(),5);
+        }else {
             System.exit(10);
         }
         performedNS = false;

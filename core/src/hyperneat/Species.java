@@ -85,7 +85,8 @@ public class Species extends ReusedCode implements HNSpeciesIF {
         do {
             // Randomly generate a color till we have a good one.
             color = colors.get(new Random().nextInt(colors.size));
-        } while (takenColors.contains(color) && color != Color.CLEAR);
+            System.err.println("Color: ");
+        } while (takenColors.contains(color) || color == Color.CLEAR);
         takenColors.add(color);
     }
 
